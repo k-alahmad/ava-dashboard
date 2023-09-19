@@ -21,6 +21,7 @@ import {
   MenuItem,
 } from "@mui/material";
 
+import { API_BASE_URL } from "../../constants";
 const defaultFormState = {
   id: "",
   Name: "",
@@ -125,13 +126,14 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     formData.append("Email", form.Email);
     formData.append("DOB", form.DOB);
     formData.append("Gender", form.Gender);
-    formData.append("Password", form.Password);
     formData.append("PhoneNo", form.PhoneNo);
     formData.append("roleID", form.roleID);
     formData.append("teamID", form.teamID);
     formData.append("ActiveStatus", form.ActiveStatus);
     formData.append("Image", form.Image);
     if (drawerID == "") {
+      formData.append("Password", form.Password);
+
       //add
       addUser({ formData });
     } else {
@@ -212,20 +214,22 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             disabled={drawerID !== ""}
           />
         </div>
-        <div className="flex m-4">
-          <TextField
-            fullWidth
-            type="password"
-            name="Password"
-            label="Password"
-            id="Password"
-            onChange={handleChange}
-            value={form.Password === "" ? "" : form.Password}
-            variant="outlined"
-            size="small"
-            required
-          />
-        </div>
+        {drawerID == "" && (
+          <div className="flex m-4">
+            <TextField
+              fullWidth
+              type="password"
+              name="Password"
+              label="Password"
+              id="Password"
+              onChange={handleChange}
+              value={form.Password === "" ? "" : form.Password}
+              variant="outlined"
+              size="small"
+              required
+            />
+          </div>
+        )}
         <div className="flex m-4">
           <TextField
             fullWidth

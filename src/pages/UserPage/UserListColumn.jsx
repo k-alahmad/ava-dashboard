@@ -1,8 +1,9 @@
 import React from "react";
 import { IconButton } from "@mui/material";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import LockResetIcon from "@mui/icons-material/LockReset";
 
-export const ComposeColumns = (onDelete) => {
+export const ComposeColumns = (onDelete, onChangePassowrd) => {
   return [
     {
       Header: "Name",
@@ -81,6 +82,7 @@ export const ComposeColumns = (onDelete) => {
       show: false,
       checked: true,
     },
+
     {
       Header: "Action",
       id: "action",
@@ -94,6 +96,12 @@ export const ComposeColumns = (onDelete) => {
               onClick={(ev) => onDelete(ev, row.original)}
             >
               <DeleteRoundedIcon color="action" />
+            </IconButton>
+            <IconButton
+              className="p-4"
+              onClick={(ev) => onChangePassowrd(ev, row.original)}
+            >
+              <LockResetIcon color="action" />
             </IconButton>
           </div>
         );

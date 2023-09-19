@@ -12,6 +12,7 @@ import PageSimple from "../../components/Admin/layout/PageSimple";
 
 import { CircularProgress } from "@mui/material";
 import DeleteDialog from "../../components/Admin/DeleteDialog";
+import CustomDialog from "../../components/Admin/CustomDialog";
 import {
   closeDeleteDialog,
   openDeleteDialog,
@@ -20,9 +21,14 @@ import { hideMessage, showMessage } from "../../redux/messageAction.slice";
 import {
   useDeleteUserMutation,
   useGetUsersQuery,
+  useUpdateUserMutation,
 } from "../../redux/users/usersSlice";
 import UserDrawer from "./UserDrawer";
-
+import {
+  closeCustomDialog,
+  openCustomDialog,
+} from "../../redux/customDialogAction";
+import { TextField } from "@mui/material";
 const UserPage = () => {
   const {
     data: users,
@@ -41,9 +47,21 @@ const UserPage = () => {
       isLoading: deleteLoading,
     },
   ] = useDeleteUserMutation();
+  const [
+    updateUser,
+    {
+      isSuccess: updateIsSuccess,
+      isError: updateIsError,
+      error: updateError,
+      isLoading: updateLoading,
+    },
+  ] = useUpdateUserMutation();
+
   const dispatch = useDispatch();
   const pageLayout = useRef(null);
   const [deletedName, setDeletedName] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordTwo, setPasswordTwo] = useState("");
   const [searchText, setSearchText] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerID, setDrawerID] = useState("");
@@ -52,6 +70,11 @@ const UserPage = () => {
     event.stopPropagation();
     setDeletedName(model.Email);
     dispatch(openDeleteDialog(model));
+  };
+  const onChangePassowrd = (event, model) => {
+    event.preventDefault();
+    event.stopPropagation();
+    dispatch(openCustomDialog(model));
   };
 
   useEffect(() => {
@@ -71,6 +94,14 @@ const UserPage = () => {
         })
       );
     }
+    if (updateIsSuccess) {
+      dispatch(
+        showMessage({
+          message: "Passowrd Updated",
+          variant: "success",
+        })
+      );
+    }
     if (deleteIsError) {
       dispatch(
         showMessage({
@@ -79,8 +110,18 @@ const UserPage = () => {
         })
       );
     }
+    if (updateIsError) {
+      dispatch(
+        showMessage({
+          message: updateError,
+          variant: "error",
+        })
+      );
+    }
   }, [isError, deleteIsError, deleteIsSuccess]);
-  const [columns, setColumns] = useState(ComposeColumns(onDelete));
+  const [columns, setColumns] = useState(
+    ComposeColumns(onDelete, onChangePassowrd)
+  );
   function yesDeleteContact(flg, data) {
     if (flg === true) {
       //delete
@@ -94,6 +135,27 @@ const UserPage = () => {
     } else {
       //do nothing
       dispatch(closeDeleteDialog());
+    }
+  }
+  function yesChangePassword(flg, data) {
+    if (flg === true) {
+      //delete
+      updateUser({ id: data.id, formData: { Password: password } })
+        .then((payload) => {
+          dispatch(closeCustomDialog());
+          setPassword("");
+          setPasswordTwo("");
+        })
+        .catch(() => {
+          dispatch(closeCustomDialog());
+          setPassword("");
+          setPasswordTwo("");
+        });
+    } else {
+      //do nothing
+      dispatch(closeCustomDialog());
+      setPassword("");
+      setPasswordTwo("");
     }
   }
   const handleToggleColumn = (columnId) => {
@@ -176,6 +238,50 @@ const UserPage = () => {
         yesDeleteClick={(bool, data) => {
           yesDeleteContact(bool, data);
         }}
+      />
+      <CustomDialog
+        loading={updateLoading}
+        confirmClick={(bool, data) => {
+          yesChangePassword(bool, data);
+        }}
+        disabled={
+          password !== passwordTwo ||
+          password.replace(/ /g, "") == "" ||
+          passwordTwo.replace(/ /g, "") == ""
+        }
+        confirmButtonName={"change Password"}
+        body={
+          <>
+            <div className="flex m-4">
+              <TextField
+                fullWidth
+                type="password"
+                name="Password"
+                label="Password"
+                id="Password"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+                variant="outlined"
+                size="small"
+                required
+              />
+            </div>
+            <div className="flex m-4">
+              <TextField
+                fullWidth
+                type="password"
+                name="Password"
+                label="Re-Type Password"
+                id="Password"
+                onChange={(e) => setPasswordTwo(e.target.value)}
+                value={passwordTwo}
+                variant="outlined"
+                size="small"
+                required
+              />
+            </div>
+          </>
+        }
       />
     </>
   );

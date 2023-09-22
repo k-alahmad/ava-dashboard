@@ -20,7 +20,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     // console.log("sending refresh token");
     //send the refresh token to get new access token
     const refreshResult = await baseQuery(
-      "/users/refreshToken",
+      "/auth/refreshToken",
       api,
       extraOptions
     );
@@ -54,6 +54,8 @@ export const apiSlice = createApi({
     "Teams",
     "ActiveTeams",
     "Resources",
+    "LNG",
+    "Articles",
   ],
   endpoints: (builder) => ({}),
 });

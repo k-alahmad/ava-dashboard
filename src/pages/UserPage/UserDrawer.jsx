@@ -67,7 +67,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       if (drawerID !== "") {
         getUserById({ id: drawerID });
         if (isSuccess) {
-          setOldImage(data.Image?.url);
+          setOldImage(data.Image?.URL);
           setForm(data);
         }
       } else {

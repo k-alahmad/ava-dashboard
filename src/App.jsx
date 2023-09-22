@@ -9,6 +9,8 @@ import DashboardPage from "./pages/DashboardPage/DashboardPage";
 import RolePage from "./pages/RolePage/RolePage";
 import UserPage from "./pages/UserPage/UserPage";
 import TeamPage from "./pages/TeamPage/TeamPage";
+import LNGPage from "./pages/LanguagePage/LanguagePage";
+import ArticlePage from "./pages/ArticlesPage/ArticlesPage";
 const App = () => {
   return (
     <Routes>
@@ -32,6 +34,8 @@ const App = () => {
         <Route path="/roles" element={<RolePage />} />
         <Route path="/users" element={<UserPage />} />
         <Route path="/teams" element={<TeamPage />} />
+        <Route path="/lngs" element={<LNGPage />} />
+        <Route path="/articles" element={<ArticlePage />} />
 
         <Route path="*" element={<DashboardPage />} />
       </Route>

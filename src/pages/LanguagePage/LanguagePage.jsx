@@ -2,79 +2,52 @@ import React, { useState, useEffect, useRef } from "react";
 import PageCard from "../../components/Admin/PageCard";
 import { useDispatch } from "react-redux";
 import AdminTable from "../../components/Admin/table/AdminTable";
-import { ComposeColumns } from "./UserListColumn";
-import {
-  toggleAllColumns,
-  toggleColumn,
-  exportToCSV,
-} from "../../utils/table-helper";
+import { ComposeColumns } from "./LanguageListColumns";
+import { toggleAllColumns, exportToCSV } from "../../utils/table-helper";
 import PageSimple from "../../components/Admin/layout/PageSimple";
 
 import { CircularProgress } from "@mui/material";
 import DeleteDialog from "../../components/Admin/DeleteDialog";
-import CustomDialog from "../../components/Admin/CustomDialog";
 import {
   closeDeleteDialog,
   openDeleteDialog,
 } from "../../redux/deleteAction.slice";
 import { hideMessage, showMessage } from "../../redux/messageAction.slice";
+
 import {
-  useDeleteUserMutation,
-  useGetUsersQuery,
-  useUpdateUserMutation,
-} from "../../redux/users/usersSlice";
-import UserDrawer from "./UserDrawer";
-import {
-  closeCustomDialog,
-  openCustomDialog,
-} from "../../redux/customDialogAction";
-import { TextField } from "@mui/material";
-const UserPage = () => {
+  useGetLNGQuery,
+  useDeleteLNGMutation,
+} from "../../redux/languages/languagesSlice";
+import LanguagesDrawer from "./LanguagesDrawer";
+const LNGPage = () => {
   const {
-    data: users,
+    data: lngs,
     isLoading,
     isFetching,
     isSuccess,
     isError,
     error,
-  } = useGetUsersQuery();
+  } = useGetLNGQuery();
   const [
-    deleteUser,
+    deleteLNG,
     {
       isSuccess: deleteIsSuccess,
       isError: deleteIsError,
       error: deleteError,
       isLoading: deleteLoading,
     },
-  ] = useDeleteUserMutation();
-  const [
-    updateUser,
-    {
-      isSuccess: updateIsSuccess,
-      isError: updateIsError,
-      error: updateError,
-      isLoading: updateLoading,
-    },
-  ] = useUpdateUserMutation();
-
+  ] = useDeleteLNGMutation();
   const dispatch = useDispatch();
   const pageLayout = useRef(null);
   const [deletedName, setDeletedName] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordTwo, setPasswordTwo] = useState("");
   const [searchText, setSearchText] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerID, setDrawerID] = useState("");
   const onDelete = (event, model) => {
     event.preventDefault();
     event.stopPropagation();
-    setDeletedName(model.Email);
+    setDeletedName(model.Name);
     dispatch(openDeleteDialog(model));
-  };
-  const onChangePassowrd = (event, model) => {
-    event.preventDefault();
-    event.stopPropagation();
-    dispatch(openCustomDialog(model));
   };
 
   useEffect(() => {
@@ -94,14 +67,6 @@ const UserPage = () => {
         })
       );
     }
-    if (updateIsSuccess) {
-      dispatch(
-        showMessage({
-          message: "Passowrd Updated",
-          variant: "success",
-        })
-      );
-    }
     if (deleteIsError) {
       dispatch(
         showMessage({
@@ -110,22 +75,12 @@ const UserPage = () => {
         })
       );
     }
-    if (updateIsError) {
-      dispatch(
-        showMessage({
-          message: updateError,
-          variant: "error",
-        })
-      );
-    }
-  }, [isError, deleteIsError, deleteIsSuccess, updateIsSuccess]);
-  const [columns, setColumns] = useState(
-    ComposeColumns(onDelete, onChangePassowrd)
-  );
+  }, [isError, deleteIsError, deleteIsSuccess]);
+  const [columns, setColumns] = useState(ComposeColumns(onDelete));
   function yesDeleteContact(flg, data) {
     if (flg === true) {
       //delete
-      deleteUser({ id: data.id })
+      deleteLNG({ id: data.id })
         .then((payload) => {
           dispatch(closeDeleteDialog());
         })
@@ -137,27 +92,6 @@ const UserPage = () => {
       dispatch(closeDeleteDialog());
     }
   }
-  function yesChangePassword(flg, data) {
-    if (flg === true) {
-      //delete
-      updateUser({ id: data.id, formData: { Password: password } })
-        .then((payload) => {
-          dispatch(closeCustomDialog());
-          setPassword("");
-          setPasswordTwo("");
-        })
-        .catch(() => {
-          dispatch(closeCustomDialog());
-          setPassword("");
-          setPasswordTwo("");
-        });
-    } else {
-      //do nothing
-      dispatch(closeCustomDialog());
-      setPassword("");
-      setPasswordTwo("");
-    }
-  }
   const handleToggleColumn = (columnId) => {
     //it's a toggle all
     if (!columnId) setColumns(toggleAllColumns(columns));
@@ -167,11 +101,11 @@ const UserPage = () => {
     dispatch(hideMessage());
   }, [isSuccess]);
   const handleOnCSVExport = () => {
-    exportToCSV("Users", columns, users);
+    exportToCSV("Languages", columns, lngs);
   };
   return (
     <>
-      <UserDrawer
+      <LanguagesDrawer
         drawerOpen={drawerOpen}
         setDrawerOpen={setDrawerOpen}
         drawerID={drawerID}
@@ -183,7 +117,7 @@ const UserPage = () => {
           <PageCard
             searchText={searchText}
             handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel="New User"
+            PrimaryButtonlabel="New Language"
             onClickPrimaryBtn={(ev) => {
               setDrawerID("");
               setDrawerOpen(true);
@@ -196,12 +130,12 @@ const UserPage = () => {
               ) : (
                 isSuccess && (
                   <AdminTable
-                    noDataMessage="There are no Users"
+                    noDataMessage="There are no Languages"
                     searchText={searchText}
                     columns={columns}
                     loading={isLoading}
-                    data={users?.entities}
-                    dataCount={users?.ids?.length}
+                    data={lngs?.entities}
+                    dataCount={lngs?.ids?.length}
                     onRowClick={(ev, row) => {
                       setDrawerID(row.original?.id);
                       setDrawerOpen(true);
@@ -239,52 +173,8 @@ const UserPage = () => {
           yesDeleteContact(bool, data);
         }}
       />
-      <CustomDialog
-        loading={updateLoading}
-        confirmClick={(bool, data) => {
-          yesChangePassword(bool, data);
-        }}
-        disabled={
-          password !== passwordTwo ||
-          password.replace(/ /g, "") == "" ||
-          passwordTwo.replace(/ /g, "") == ""
-        }
-        confirmButtonName={"change Password"}
-        body={
-          <>
-            <div className="flex m-4">
-              <TextField
-                fullWidth
-                type="password"
-                name="Password"
-                label="Password"
-                id="Password"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-                variant="outlined"
-                size="small"
-                required
-              />
-            </div>
-            <div className="flex m-4">
-              <TextField
-                fullWidth
-                type="password"
-                name="Password"
-                label="Re-Type Password"
-                id="Password"
-                onChange={(e) => setPasswordTwo(e.target.value)}
-                value={passwordTwo}
-                variant="outlined"
-                size="small"
-                required
-              />
-            </div>
-          </>
-        }
-      />
     </>
   );
 };
 
-export default UserPage;
+export default LNGPage;

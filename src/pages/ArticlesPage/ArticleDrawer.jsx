@@ -1,0 +1,369 @@
+import React, { useEffect, useState, useRef } from "react";
+import PageDrawer from "../../components/Admin/layout/PageDrawer";
+import {
+  useAddArticleMutation,
+  useLazyGetArticleByIdQuery,
+  useUpdateArticleMutation,
+} from "../../redux/articles/articlesSlice";
+import Slider from "react-slick";
+import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
+import {
+  CircularProgress,
+  TextField,
+  FormGroup,
+  FormControlLabel,
+  Switch,
+} from "@mui/material";
+import Button from "../../components/UI/Button";
+import { API_BASE_URL } from "../../constants";
+import RichTextBox from "../../components/Forms/RichTextBox";
+const defaultFormState = {
+  id: "",
+  MinRead: "",
+  Image: "",
+  ActiveStatus: true,
+  User: {},
+  usersID: "88731610-6adf-4ea9-893f-c59e50582a0b",
+};
+const ArticleDrawer = ({
+  drawerOpen,
+  setDrawerOpen,
+  drawerID,
+  setDrawerID,
+}) => {
+  const [form, setForm] = useState(defaultFormState);
+  const [image, setImage] = useState();
+  const [oldImage, setOldImage] = useState();
+  const [imageURL, setImageURL] = useState();
+  const [articles_Translation, setArticles_Translation] = useState([]);
+  const sliderRef = useRef();
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const {
+    data: lngs,
+    isLoading: lngIsLoading,
+    isFetching: lngIsFethcing,
+    isSuccess: lngisSuccess,
+    isError: lngIsError,
+    error: lngError,
+  } = useGetLNGQuery();
+  const [
+    getArticleById,
+    { data, isLoading, isFetching, isError, error, isSuccess },
+  ] = useLazyGetArticleByIdQuery();
+  const [addArticle, { isLoading: addLoading, isSuccess: addSuccess }] =
+    useAddArticleMutation();
+  const [
+    updateArticle,
+    { isLoading: updateLoading, isSuccess: updateSuccess },
+  ] = useUpdateArticleMutation();
+
+  useEffect(() => {
+    if (drawerOpen) {
+      if (drawerID !== "") {
+        getArticleById({ id: drawerID });
+        if (isSuccess) {
+          setOldImage(data.Image?.URL);
+          setForm(data);
+          setArticles_Translation(data.Articles_Translation);
+        }
+      } else {
+        setForm(defaultFormState);
+        if (lngisSuccess) {
+          let translations = [];
+          lngs.normalData.map((item) => {
+            translations.push({
+              languagesID: item.id,
+              Language: {
+                Name: item.Name,
+                Code: item.Code,
+              },
+              Title: "",
+              Description: "",
+              Caption: "",
+            });
+          });
+          setArticles_Translation(translations);
+        }
+      }
+    }
+  }, [drawerID, data, lngs, drawerOpen]);
+
+  useEffect(() => {
+    if (!image) {
+      setImageURL(undefined);
+    } else {
+      const objectUrl = URL.createObjectURL(image);
+      setImageURL(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl);
+    }
+  }, [image]);
+  function onImageChange(e) {
+    if (!e.target.files || e.target.files.length === 0) {
+      setImage(undefined);
+    }
+    setImage(e.target.files[0]);
+    setForm({ ...form, Image: e.target.files[0] });
+  }
+  function handleChange(e) {
+    setForm({
+      ...form,
+      [e.target.name]:
+        e.target.type === "checkbox" ? e.target.checked : e.target.value,
+    });
+  }
+  function handleTranslationChange(e, item, type) {
+    // if (drawerID !== "")
+    setArticles_Translation((current) =>
+      current.map((obj) => {
+        if (obj.Language.Code == item.Language.Code) {
+          return {
+            ...obj,
+            Title: type == "Title" ? e.target.value : obj.Title,
+            Caption: type == "Caption" ? e.target.value : obj.Caption,
+            Description: type == "Desc" ? e : obj.Description,
+          };
+        }
+        return obj;
+      })
+    );
+  }
+  useEffect(() => {
+    if (addSuccess || updateSuccess) {
+      setForm(defaultFormState);
+      closeDrawer();
+    }
+  }, [addSuccess, updateSuccess]);
+  const closeDrawer = () => {
+    setDrawerID("");
+    setDrawerOpen(false);
+    setForm(defaultFormState);
+    setImage(null);
+    setImageURL(null);
+    setOldImage(null);
+    setArticles_Translation([]);
+    setCurrentSlide(0);
+  };
+  function handleSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData();
+
+    formData.append("ActiveStatus", form.ActiveStatus);
+    formData.append("MinRead", form.MinRead);
+    formData.append("usersID", form.usersID);
+    formData.append("Image", form.Image);
+    // articles_Translation.map((t) => {
+    //   formData.append("Articles_Translation", t);
+    // });
+    for (let i = 0; i < articles_Translation.length; i++) {
+      formData.append(
+        "Articles_Translation",
+        JSON.stringify(articles_Translation[i])
+      );
+    }
+    if (drawerID == "") {
+      //add
+      addArticle({ formData });
+    } else {
+      //update
+      updateArticle({ id: drawerID, formData });
+    }
+  }
+  const hiddenFileInput = React.useRef(null);
+  const formRef = useRef(null);
+
+  const formElements = () => {
+    return (
+      <form ref={formRef} className="flex flex-col justify-center">
+        <div className="py-1 mx-8">
+          <div className="flex flex-row items-center justify-center">
+            <div className="flex flex-col m-4">
+              <Button
+                textColor={"text-white font-medium"}
+                text={"Upload Image"}
+                bgColor={"bg-primary"}
+                customStyle={"py-2 px-4"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  hiddenFileInput.current.click();
+                }}
+              />
+              <input
+                type="file"
+                accept="images/*"
+                onChange={onImageChange}
+                style={{ display: "none" }}
+                ref={hiddenFileInput}
+              />
+            </div>
+            {imageURL && (
+              <div className="flex flex-col m-4">
+                <p className="text-smaller font-MED pb-1">New image</p>
+                <img className="h-[200px] w-[200px] " src={imageURL} alt="" />
+              </div>
+            )}
+            {oldImage && (
+              <div className="flex flex-col m-4">
+                <p className="text-smaller font-MED pb-1">Current image</p>
+
+                <img
+                  className="h-[200px] w-[200px] "
+                  src={API_BASE_URL + oldImage}
+                  alt=""
+                />
+              </div>
+            )}
+          </div>
+          <div className="flex m-4">
+            <TextField
+              fullWidth
+              type="number"
+              name="MinRead"
+              label={`Minutes Of Read`}
+              id="MinRead"
+              onChange={handleChange}
+              value={form.MinRead}
+              variant="outlined"
+              size="small"
+              required
+            />
+          </div>
+          <div className="w-full flex justify-center items-center">
+            <Slider
+              dots={false}
+              arrows={false}
+              infinite={false}
+              slidesToShow={lngs.normalData.length ?? 4}
+              slidesToScroll={1}
+              className="overflow-hidden h-full w-full max-w-[1024px]"
+            >
+              {lngs.normalData.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={`max-w-[95%] py-1 px-2 text-center ${
+                      currentSlide == index
+                        ? "bg-primary text-secondary"
+                        : "bg-secondary text-white"
+                    } cursor-pointer transition-all duration-500 text-black rounded-md`}
+                    onClick={() => {
+                      sliderRef.current.slickGoTo(index);
+                      setCurrentSlide(index);
+                    }}
+                  >
+                    {item.Name}
+                  </div>
+                );
+              })}
+            </Slider>
+          </div>
+          <Slider
+            ref={sliderRef}
+            dots={false}
+            touchMove={false}
+            swipe={false}
+            arrows={false}
+            initialSlide={0}
+            infinite={false}
+            className="overflow-hidden h-full w-full"
+          >
+            {articles_Translation.map((item, index) => {
+              return (
+                <div key={index} className="pb-12">
+                  <div className="flex m-4">
+                    <TextField
+                      fullWidth
+                      type="text"
+                      name={"Title" + item.Language.Code}
+                      label={`${item.Language.Name} Title`}
+                      id={"Title" + item.Language.Code}
+                      onChange={(e) =>
+                        handleTranslationChange(e, item, "Title")
+                      }
+                      value={item.Title}
+                      variant="outlined"
+                      size="small"
+                      required
+                    />
+                  </div>
+                  <div className="flex m-4">
+                    <TextField
+                      fullWidth
+                      type="text"
+                      name={"Caption" + item.Language.Code}
+                      label={`${item.Language.Name} Caption`}
+                      id={"Caption" + item.Language.Code}
+                      onChange={(e) =>
+                        handleTranslationChange(e, item, "Caption")
+                      }
+                      value={item.Caption}
+                      variant="outlined"
+                      size="small"
+                      required
+                      multiline
+                      rows={5}
+                    />
+                  </div>
+                  <RichTextBox
+                    label={`${item.Language.Name} Body`}
+                    value={item.Description}
+                    onChange={(e) => handleTranslationChange(e, item, "Desc")}
+                  />
+                </div>
+              );
+            })}
+          </Slider>
+          <div className="flex m-4">
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch
+                    onChange={handleChange}
+                    name="ActiveStatus"
+                    value={form.ActiveStatus}
+                    checked={form.ActiveStatus}
+                  />
+                }
+                label={form.ActiveStatus ? "Active" : "InActive"}
+              />
+            </FormGroup>
+          </div>
+        </div>
+      </form>
+    );
+  };
+  return (
+    <PageDrawer
+      isOpen={drawerOpen}
+      title={drawerID == "" ? "New Article" : form.titleEn}
+      newItem={drawerID == "" && true}
+      editable={true}
+      onCancelClick={closeDrawer}
+      onSaveClick={handleSubmit}
+      // disabled={
+      //   valueAr == "" ||
+      //   valueEn == "" ||
+      //   form.capAr == "" ||
+      //   form.capEn == "" ||
+      //   form.titleAr == "" ||
+      //   form.titleEn == "" ||
+      //   form.image == ""
+      // }
+      children={
+        isLoading ||
+        addLoading ||
+        updateLoading ||
+        isFetching ||
+        lngIsLoading ||
+        lngIsFethcing ? (
+          <div className="flex flex-row justify-center items-center h-full w-full">
+            <CircularProgress color="primary" />
+          </div>
+        ) : (
+          <div className="text-med font-LIT">{formElements()}</div>
+        )
+      }
+    />
+  );
+};
+
+export default ArticleDrawer;

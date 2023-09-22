@@ -49,7 +49,7 @@ const CategoryDrawer = ({
       if (drawerID !== "") {
         getCategoryById({ id: drawerID });
         if (isSuccess) {
-          setOldImage(data.image?.url);
+          setOldImage(data.image?.URL);
           setForm(data);
         }
       } else {

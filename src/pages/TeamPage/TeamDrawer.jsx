@@ -46,7 +46,7 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       if (drawerID !== "") {
         getTeamById({ id: drawerID });
         if (isSuccess) {
-          setOldImage(data.Image?.url);
+          setOldImage(data.Image?.URL);
           setForm(data);
         }
       } else {

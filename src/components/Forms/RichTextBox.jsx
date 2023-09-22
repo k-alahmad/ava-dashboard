@@ -4,7 +4,7 @@ import { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "../../styles/quillStyles.css";
 
-const RichTextBox = ({ value, setValue, moreStyle, label }) => {
+const RichTextBox = ({ value, setValue, moreStyle, label, onChange }) => {
   const fontSizeArr = [
     // "8px",
     // "9px",
@@ -27,13 +27,14 @@ const RichTextBox = ({ value, setValue, moreStyle, label }) => {
   Quill.register(Size, true);
   return (
     <div className={`flex flex-col m-4 h-[600px] ${moreStyle}`}>
-      <div className="text-tiny"> {label}</div>
+      <div className="text-tiny pb-2"> {label}</div>
       <ReactQuill
         theme="snow"
         value={value}
-        onChange={(value) => {
-          setValue(value);
-        }}
+        // onChange={(value) => {
+        //   setValue(value);
+        // }}
+        onChange={onChange}
         className="w-full h-[600px]"
         modules={{
           toolbar: [

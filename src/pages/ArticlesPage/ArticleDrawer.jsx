@@ -50,11 +50,23 @@ const ArticleDrawer = ({
     getArticleById,
     { data, isLoading, isFetching, isError, error, isSuccess },
   ] = useLazyGetArticleByIdQuery();
-  const [addArticle, { isLoading: addLoading, isSuccess: addSuccess }] =
-    useAddArticleMutation();
+  const [
+    addArticle,
+    {
+      isLoading: addLoading,
+      isSuccess: addSuccess,
+      isError: addIsError,
+      error: addError,
+    },
+  ] = useAddArticleMutation();
   const [
     updateArticle,
-    { isLoading: updateLoading, isSuccess: updateSuccess },
+    {
+      isLoading: updateLoading,
+      isSuccess: updateSuccess,
+      isError: updateIsError,
+      error: updateError,
+    },
   ] = useUpdateArticleMutation();
 
   useEffect(() => {
@@ -128,11 +140,11 @@ const ArticleDrawer = ({
     );
   }
   useEffect(() => {
-    if (addSuccess || updateSuccess) {
+    if (addSuccess || updateSuccess || addIsError || updateIsError) {
       setForm(defaultFormState);
       closeDrawer();
     }
-  }, [addSuccess, updateSuccess]);
+  }, [addSuccess, updateSuccess, addIsError, updateIsError]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
@@ -149,18 +161,10 @@ const ArticleDrawer = ({
 
     formData.append("ActiveStatus", form.ActiveStatus);
     formData.append("MinRead", form.MinRead);
-    formData.append("usersID", form.usersID);
-    formData.append("Image", form.Image);
-    // articles_Translation.map((t) => {
-    //   formData.append("Articles_Translation", t);
-    // });
+    formData.append("AuthorID", form.usersID);
+    formData.append("Image", image);
+
     for (let i = 0; i < articles_Translation.length; i++) {
-      // let atObj = {
-      //   languagesID: articles_Translation[i].languagesID,
-      //   Title: articles_Translation[i].Title,
-      //   Description: articles_Translation[i].Description,
-      //   Caption: articles_Translation[i].Caption,
-      // };
       formData.append(
         `Articles_Translation[${i}][Title]`,
         articles_Translation[i].Title

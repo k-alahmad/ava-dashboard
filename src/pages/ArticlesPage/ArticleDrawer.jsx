@@ -155,9 +155,27 @@ const ArticleDrawer = ({
     //   formData.append("Articles_Translation", t);
     // });
     for (let i = 0; i < articles_Translation.length; i++) {
+      // let atObj = {
+      //   languagesID: articles_Translation[i].languagesID,
+      //   Title: articles_Translation[i].Title,
+      //   Description: articles_Translation[i].Description,
+      //   Caption: articles_Translation[i].Caption,
+      // };
       formData.append(
-        "Articles_Translation",
-        JSON.stringify(articles_Translation[i])
+        `Articles_Translation[${i}][Title]`,
+        articles_Translation[i].Title
+      );
+      formData.append(
+        `Articles_Translation[${i}][Description]`,
+        articles_Translation[i].Description
+      );
+      formData.append(
+        `Articles_Translation[${i}][Caption]`,
+        articles_Translation[i].Caption
+      );
+      formData.append(
+        `Articles_Translation[${i}][languagesID]`,
+        articles_Translation[i].languagesID
       );
     }
     if (drawerID == "") {

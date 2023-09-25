@@ -7,12 +7,17 @@ import {
 } from "../../redux/articles/articlesSlice";
 import Slider from "react-slick";
 import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
+import { useGetUsersQuery } from "../../redux/users/usersSlice";
 import {
   CircularProgress,
   TextField,
   FormGroup,
   FormControlLabel,
   Switch,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem,
 } from "@mui/material";
 import Button from "../../components/UI/Button";
 import { API_BASE_URL } from "../../constants";
@@ -23,8 +28,9 @@ const defaultFormState = {
   Image: "",
   ActiveStatus: true,
   User: {},
-  usersID: "88731610-6adf-4ea9-893f-c59e50582a0b",
+  usersID: "",
 };
+
 const ArticleDrawer = ({
   drawerOpen,
   setDrawerOpen,
@@ -46,6 +52,14 @@ const ArticleDrawer = ({
     isError: lngIsError,
     error: lngError,
   } = useGetLNGQuery();
+  const {
+    data: users,
+    isLoading: usersIsLoading,
+    isFetching: usersIsFethcing,
+    isSuccess: usersisSuccess,
+    isError: usersIsError,
+    error: usersError,
+  } = useGetUsersQuery();
   const [
     getArticleById,
     { data, isLoading, isFetching, isError, error, isSuccess },
@@ -161,7 +175,7 @@ const ArticleDrawer = ({
     formData.append("ActiveStatus", form.ActiveStatus);
     formData.append("MinRead", form.MinRead);
     formData.append("AuthorID", form.usersID);
-    formData.append("Image", image);
+    if (image) formData.append("Image", image);
     for (let i = 0; i < articles_Translation.length; i++) {
       formData.append(
         `Articles_Translation[${i}][Title]`,
@@ -246,6 +260,34 @@ const ArticleDrawer = ({
               size="small"
               required
             />
+          </div>
+          <div className="flex m-4">
+            {usersisSuccess && !usersIsLoading && (
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Author</InputLabel>
+                <Select
+                  labelId="Author"
+                  name="usersID"
+                  id="usersID"
+                  value={form.usersID === "" ? "" : form.usersID}
+                  label="Author"
+                  onChange={handleChange}
+                  MenuProps={{
+                    style: {
+                      maxHeight: "400px",
+                    },
+                  }}
+                >
+                  {users.ids?.map((item, j) => {
+                    return (
+                      <MenuItem key={j} value={item}>
+                        {users.entities[item].Name}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            )}
           </div>
           <div className="w-full flex justify-center items-center">
             <Slider

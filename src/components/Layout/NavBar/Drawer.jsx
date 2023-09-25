@@ -1,9 +1,7 @@
 import React from "react";
 import { Close as MdClose } from "@mui/icons-material";
 import Logo from "../../../assets/logo/logo.svg";
-import { useTranslation } from "react-i18next";
 export default function Drawer({ children, isOpen, setIsOpen }) {
-  const { i18n } = useTranslation();
   return (
     <main
       className={
@@ -19,7 +17,7 @@ export default function Drawer({ children, isOpen, setIsOpen }) {
           (isOpen ? " -translate-x-0" : " -translate-x-full")
         }
       >
-        <article className="relative w-screen max-w-sm pb-10 flex flex-col justify-start items-center space-y-6 overflow-y-scroll h-full">
+        <article className="relative w-screen max-w-sm pb-10 flex flex-col justify-start items-center space-y-6 overflow-y-auto h-full">
           <header className="p-4 font-bold w-full flex items-center justify-between">
             <img
               className="h-[80px] sm:h-[80px] cursor-pointer"
@@ -40,7 +38,7 @@ export default function Drawer({ children, isOpen, setIsOpen }) {
         </article>
       </section>
       <section
-        className=" w-screen h-full cursor-pointer "
+        className={`w-screen h-full cursor-pointer `}
         onClick={() => {
           setIsOpen(false);
         }}

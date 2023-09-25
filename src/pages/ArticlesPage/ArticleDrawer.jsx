@@ -37,7 +37,7 @@ const ArticleDrawer = ({
   const [imageURL, setImageURL] = useState();
   const [articles_Translation, setArticles_Translation] = useState([]);
   const sliderRef = useRef();
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState();
   const {
     data: lngs,
     isLoading: lngIsLoading,
@@ -153,17 +153,15 @@ const ArticleDrawer = ({
     setImageURL(null);
     setOldImage(null);
     setArticles_Translation([]);
-    setCurrentSlide(0);
+    setCurrentSlide();
   };
   function handleSubmit(event) {
     event.preventDefault();
     const formData = new FormData();
-
     formData.append("ActiveStatus", form.ActiveStatus);
     formData.append("MinRead", form.MinRead);
     formData.append("AuthorID", form.usersID);
     formData.append("Image", image);
-
     for (let i = 0; i < articles_Translation.length; i++) {
       formData.append(
         `Articles_Translation[${i}][Title]`,
@@ -257,22 +255,23 @@ const ArticleDrawer = ({
               slidesToShow={lngs.normalData.length ?? 4}
               slidesToScroll={1}
               className="overflow-hidden h-full w-full max-w-[1024px]"
+              initialSlide={currentSlide}
             >
-              {lngs.normalData.map((item, index) => {
+              {articles_Translation.map((item, index) => {
                 return (
                   <div
                     key={index}
                     className={`max-w-[95%] py-1 px-2 text-center ${
-                      currentSlide == index
+                      currentSlide == item.Language.Code
                         ? "bg-primary text-secondary"
                         : "bg-secondary text-white"
                     } cursor-pointer transition-all duration-500 text-black rounded-md`}
                     onClick={() => {
                       sliderRef.current.slickGoTo(index);
-                      setCurrentSlide(index);
+                      setCurrentSlide(item.Language.Code);
                     }}
                   >
-                    {item.Name}
+                    {item.Language.Name}
                   </div>
                 );
               })}
@@ -284,7 +283,7 @@ const ArticleDrawer = ({
             touchMove={false}
             swipe={false}
             arrows={false}
-            initialSlide={0}
+            initialSlide={currentSlide}
             infinite={false}
             className="overflow-hidden h-full w-full"
           >

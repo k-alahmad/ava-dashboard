@@ -99,7 +99,7 @@ const DashboardPage = () => {
         onClick={() => navigate(navigateLink)}
         className={`${
           loading && "animate-pulse"
-        }  flex flex-col justify-between items-start rounded-2xl bg-secondary text-third hover:text-brwon shadow-2xl p-8 w-[420px] h-[300px] cursor-pointer transition-all duration-500 group hover:shadow-secondary hover:bg-gradiant`}
+        }  flex flex-col justify-between items-start rounded-2xl bg-secondary text-third hover:text-brwon shadow-2xl p-8 w-[350px] h-[300px] cursor-pointer transition-all duration-500 group hover:shadow-secondary hover:bg-gradiant`}
       >
         <p className="text-4xl font-bold uppercase">{title}</p>
         {!loading && (
@@ -124,7 +124,7 @@ const DashboardPage = () => {
     );
   };
   return (
-    <div className="w-full grid lg:grid-cols-2 xl:grid-cols-3 2xl:gap-x-20 gap-x-12 gap-y-8 px-[5%] place-items-center">
+    <div className="w-full grid lg:grid-cols-2 xl:grid-cols-4 2xl:gap-x-16 gap-x-12 gap-y-8 px-[5%] place-items-center">
       <Card
         title={"Roles"}
         count={roles?.count}

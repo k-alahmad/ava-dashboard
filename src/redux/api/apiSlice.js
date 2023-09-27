@@ -58,6 +58,10 @@ export const apiSlice = createApi({
     "Articles",
     "Address",
     "ActiveAddress",
+    "Currency",
+    "ActiveCurrency",
+    "Unit",
+    "ActiveUnit",
   ],
   endpoints: (builder) => ({}),
 });

@@ -24,4 +24,20 @@ export const data = [
     name: "Articles",
     link: "/articles",
   },
+  {
+    name: "Currencies",
+    link: "/currency",
+  },
+  {
+    name: "Units",
+    link: "/unit",
+  },
+  {
+    name: "Developers",
+    link: "/developers",
+  },
+  {
+    name: "Categories",
+    link: "/category",
+  },
 ];

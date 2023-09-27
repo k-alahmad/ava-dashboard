@@ -1,8 +1,97 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useGetRolesQuery } from "../../redux/roles/rolesSlice";
+import { useGetUsersQuery } from "../../redux/users/usersSlice";
+import { useGetTeamsQuery } from "../../redux/teams/teamsSlice";
+import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
+import { useGetAddressQuery } from "../../redux/addresses/addressesSlice";
+import { useGetArticlesQuery } from "../../redux/articles/articlesSlice";
+import { useGetCurrencyQuery } from "../../redux/currencies/currenciesSlice";
+import { useGetUnitQuery } from "../../redux/units/unitsSlice";
+import { useGetDevelopersQuery } from "../../redux/developers/developersSlice";
+import { useGetCategoryQuery } from "../../redux/categories/categoriesSlice";
 const DashboardPage = () => {
   const navigate = useNavigate();
+  const {
+    data: roles,
+    isLoading: rolesIsLoading,
+    isFetching: rolesIsFetching,
+    isError: rolesIsError,
+    error: rolesError,
+    isSuccess: rolesIsSuccess,
+  } = useGetRolesQuery();
+  const {
+    data: users,
+    isLoading: usersIsLoading,
+    isFetching: usersIsFetching,
+    isError: usersIsError,
+    error: usersError,
+    isSuccess: usersIsSuccess,
+  } = useGetUsersQuery();
+  const {
+    data: teams,
+    isLoading: teamsIsLoading,
+    isFetching: teamsIsFetching,
+    isError: teamsIsError,
+    error: teamsError,
+    isSuccess: teamsIsSuccess,
+  } = useGetTeamsQuery();
+  const {
+    data: lngs,
+    isLoading: lngsIsLoading,
+    isFetching: lngsIsFetching,
+    isError: lngsIsError,
+    error: lngsError,
+    isSuccess: lngsIsSuccess,
+  } = useGetLNGQuery();
+  const {
+    data: addresses,
+    isLoading: addressesIsLoading,
+    isFetching: addressesIsFetching,
+    isError: addressesIsError,
+    error: addressesError,
+    isSuccess: addressesIsSuccess,
+  } = useGetAddressQuery();
+  const {
+    data: articles,
+    isLoading: articlesIsLoading,
+    isFetching: articlesIsFetching,
+    isError: articlesIsError,
+    error: articlesError,
+    isSuccess: articlesIsSuccess,
+  } = useGetArticlesQuery();
+  const {
+    data: currencies,
+    isLoading: currenciesIsLoading,
+    isFetching: currenciesIsFetching,
+    isError: currenciesIsError,
+    error: currenciesError,
+    isSuccess: currenciesIsSuccess,
+  } = useGetCurrencyQuery();
+  const {
+    data: units,
+    isLoading: unitsIsLoading,
+    isFetching: unitsIsFetching,
+    isError: unitsIsError,
+    error: unitsError,
+    isSuccess: unitsIsSuccess,
+  } = useGetUnitQuery();
+  const {
+    data: developers,
+    isLoading: developersIsLoading,
+    isFetching: developersIsFetching,
+    isError: developersIsError,
+    error: developersError,
+    isSuccess: developersIsSuccess,
+  } = useGetDevelopersQuery();
+  const {
+    data: categories,
+    isLoading: categoriesIsLoading,
+    isFetching: categoriesIsFetching,
+    isError: categoriesIsError,
+    error: categoriesError,
+    isSuccess: categoriesIsSuccess,
+  } = useGetCategoryQuery();
 
   const Card = ({ title, count, aCount, navigateLink, loading }) => {
     return (
@@ -10,7 +99,7 @@ const DashboardPage = () => {
         onClick={() => navigate(navigateLink)}
         className={`${
           loading && "animate-pulse"
-        }  flex flex-col justify-between items-start rounded-2xl bg-secondary text-third hover:text-brwon shadow-2xl  p-8 w-[420px] h-[300px] cursor-pointer transition-all duration-500 group hover:shadow-secondary hover:bg-gradiant`}
+        }  flex flex-col justify-between items-start rounded-2xl bg-secondary text-third hover:text-brwon shadow-2xl p-8 w-[420px] h-[300px] cursor-pointer transition-all duration-500 group hover:shadow-secondary hover:bg-gradiant`}
       >
         <p className="text-4xl font-bold uppercase">{title}</p>
         {!loading && (
@@ -35,8 +124,77 @@ const DashboardPage = () => {
     );
   };
   return (
-    <div className="flex flex-col justify-start items-center xl:px-[1%] 2xl:px-[5%] mt-12 h-screen">
-      <div className=" grid lg:grid-cols-2 xl:grid-cols-3 2xl:gap-x-20 gap-x-12 gap-y-8"></div>
+    <div className="w-full grid lg:grid-cols-2 xl:grid-cols-3 2xl:gap-x-20 gap-x-12 gap-y-8 px-[5%] place-items-center">
+      <Card
+        title={"Roles"}
+        count={roles?.count}
+        aCount={roles?.activeCount}
+        navigateLink={"/roles"}
+        loading={rolesIsLoading}
+      />
+      <Card
+        title={"Users"}
+        count={users?.count}
+        aCount={users?.activeCount}
+        navigateLink={"/users"}
+        loading={usersIsLoading}
+      />
+      <Card
+        title={"Teams"}
+        count={teams?.count}
+        aCount={teams?.activeCount}
+        navigateLink={"/teams"}
+        loading={teamsIsLoading}
+      />
+      <Card
+        title={"Languages"}
+        count={lngs?.count}
+        aCount={lngs?.activeCount}
+        navigateLink={"/lngs"}
+        loading={lngsIsLoading}
+      />
+      <Card
+        title={"Addresses"}
+        count={addresses?.count}
+        aCount={addresses?.activeCount}
+        navigateLink={"/address"}
+        loading={addressesIsLoading}
+      />
+      <Card
+        title={"Articles"}
+        count={articles?.count}
+        aCount={articles?.activeCount}
+        navigateLink={"/articles"}
+        loading={articlesIsLoading}
+      />
+      <Card
+        title={"Currencies"}
+        count={currencies?.count}
+        aCount={currencies?.activeCount}
+        navigateLink={"/currency"}
+        loading={currenciesIsLoading}
+      />
+      <Card
+        title={"Units"}
+        count={units?.count}
+        aCount={units?.activeCount}
+        navigateLink={"/unit"}
+        loading={unitsIsLoading}
+      />
+      <Card
+        title={"Developers"}
+        count={developers?.count}
+        aCount={developers?.activeCount}
+        navigateLink={"/developers"}
+        loading={developersIsLoading}
+      />
+      <Card
+        title={"Cateogries"}
+        count={categories?.count}
+        aCount={categories?.activeCount}
+        navigateLink={"/category"}
+        loading={categoriesIsLoading}
+      />
     </div>
   );
 };

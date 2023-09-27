@@ -17,6 +17,10 @@ export const data = [
     link: "/lngs",
   },
   {
+    name: "Addresses",
+    link: "/address",
+  },
+  {
     name: "Articles",
     link: "/articles",
   },

@@ -15,30 +15,30 @@ import {
 } from "../../redux/deleteAction.slice";
 import { hideMessage, showMessage } from "../../redux/messageAction.slice";
 import {
-  useGetCategoriesQuery,
-  useDeleteCategoryMutation,
-} from "../../redux/categories/categoriesSlice";
-import CategoryDrawer from "./CategoriesDrawer";
+  useGetAddressQuery,
+  useDeleteAddressMutation,
+} from "../../redux/addresses/addressesSlice";
+import AddressDrawer from "./AddressDrawer";
 
-const CategoriesPage = () => {
+const AddressPage = () => {
   const {
-    data: cats,
-    isLoading: catsLoading,
-    isFetching: catsFetching,
-    isSuccess: catsSuccess,
-    isError: catsIsError,
-    error: catsError,
-  } = useGetCategoriesQuery();
+    data: addresses,
+    isLoading,
+    isFetching,
+    isSuccess,
+    isError,
+    error,
+  } = useGetAddressQuery();
 
   const [
-    deleteCategory,
+    deleteAddress,
     {
-      isSuccess: catDeleteIsSuccess,
-      isError: catDeleteIsError,
-      error: catDeleteError,
-      isLoading: catDeleteLoading,
+      isSuccess: deleteIsSuccess,
+      isError: deleteIsError,
+      error: deleteError,
+      isLoading: deleteLoading,
     },
-  ] = useDeleteCategoryMutation();
+  ] = useDeleteAddressMutation();
 
   const dispatch = useDispatch();
   const pageLayout = useRef(null);
@@ -55,16 +55,16 @@ const CategoriesPage = () => {
   };
 
   useEffect(() => {
-    if (catsIsError) {
+    if (isError) {
       dispatch(
         showMessage({
-          message: catsError,
+          message: error,
           variant: "error",
         })
       );
     }
 
-    if (catDeleteIsSuccess) {
+    if (deleteIsSuccess) {
       dispatch(
         showMessage({
           message: "Deleted!",
@@ -73,19 +73,19 @@ const CategoriesPage = () => {
       );
     }
 
-    if (catDeleteIsError) {
+    if (deleteIsError) {
       dispatch(
         showMessage({
-          message: catDeleteError,
+          message: deleteError,
           variant: "error",
         })
       );
     }
-  }, [catsIsError, catDeleteIsError, catDeleteIsSuccess]);
+  }, [isError, deleteIsError, deleteIsSuccess]);
   function yesDeleteContact(flg, data) {
     if (flg === true) {
       //delete
-      deleteCategory({ id: data.id })
+      deleteAddress({ id: data.id })
         .then((payload) => {
           dispatch(closeDeleteDialog());
         })
@@ -99,29 +99,41 @@ const CategoriesPage = () => {
   }
   useEffect(() => {
     dispatch(hideMessage());
-  }, [catsSuccess]);
+  }, [isSuccess]);
+
   const handleChildren = (item) =>
-    cats?.ids?.map((item1) => {
-      if (item === cats?.entities[item1]?.parentId) {
+    addresses?.ids?.map((item1) => {
+      if (item === addresses?.entities[item1]?.addressID) {
         return (
           <TreeItem
             nodeId={item1 + item1 + 4}
             key={item1}
-            // expandIcon={true}
-            // collapseIcon={true}
             label={
               <div className="flex justify-center items-center">
                 <div className="grid grid-cols-7 flex-1">
-                  <p className="text-xl ">{cats?.entities[item1]?.nameEn}</p>
-                  <p className="text-xl ">{cats?.entities[item1]?.nameAr}</p>
-                  {cats?.entities[item1]?.isActive === true ? (
+                  <p className="text-xl font-bold">
+                    {
+                      addresses?.entities[item1]?.Address_Translation.find(
+                        (x) => x.Language.Code == "En"
+                      ).Name
+                    }
+                  </p>
+                  <p className="text-xl ">
+                    {" Longitude: "}
+                    {addresses?.entities[item1]?.Longitude}
+                  </p>
+                  <p className="text-xl ">
+                    {" Latitude: "}
+                    {addresses?.entities[item1]?.Latitude}
+                  </p>
+                  {addresses?.entities[item1]?.ActiveStatus === true ? (
                     <div className="text-[green] mx-2">{"Active"}</div>
                   ) : (
                     <div className="text-[red] mx-2">{"Inactive"}</div>
                   )}
                 </div>
                 <div
-                  className="self-center  font-bold text-xl rounded px-2 py-1  bg-secondary hover:bg-primary hover:text-secondary text-[#E8E8E8] mx-2 pb-2"
+                  className="self-center font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-primary hover:text-secondary text-[#E8E8E8] mx-2 pb-2"
                   style={{ transition: "0.3s" }}
                   onClick={() => {
                     setDrawerId("");
@@ -147,7 +159,7 @@ const CategoriesPage = () => {
                   className="self-center  font-bold text-xl rounded px-2 py-1  hover:bg-secondary text-red-700 mx-2 pb-2"
                   style={{ transition: "0.3s" }}
                   onClick={(ev) => {
-                    onDelete(ev, cats?.entities[item1]);
+                    onDelete(ev, addresses?.entities[item1]);
                   }}
                 >
                   <DeleteRounded />
@@ -163,7 +175,7 @@ const CategoriesPage = () => {
     });
   return (
     <>
-      <CategoryDrawer
+      <AddressDrawer
         drawerID={DrawerId}
         drawerOpen={DrawerOpen}
         setDrawerID={setDrawerId}
@@ -183,20 +195,20 @@ const CategoriesPage = () => {
             <PageCard
               searchText={searchText}
               handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-              PrimaryButtonlabel="New Category"
+              PrimaryButtonlabel="New Main Address"
               onClickPrimaryBtn={(ev) => {
                 setParentId("");
                 setDrawerId("");
                 setDrawerOpen(true);
               }}
               table={
-                catsLoading || catsFetching ? (
+                isLoading || isFetching ? (
                   <div className="flex flex-row justify-center items-center p-44">
                     <CircularProgress color="inherit" />
                   </div>
-                ) : catsSuccess && cats?.ids?.length === 0 ? (
+                ) : isSuccess && addresses?.ids?.length === 0 ? (
                   <div className="col-span-12 flex flex-row justify-center items-center p-24 ">
-                    <p className="font-[FBold] text-5xl"> No Categries Yet</p>
+                    <p className="font-[FBold] text-5xl"> No Addresses Yet</p>
                   </div>
                 ) : (
                   <>
@@ -209,34 +221,41 @@ const CategoriesPage = () => {
                         overflowY: "auto",
                       }}
                     >
-                      {cats?.ids?.map((item) => {
-                        if (cats?.entities[item].parentId == null)
+                      {addresses?.ids?.map((item, index) => {
+                        if (addresses?.entities[item].addressID == null)
                           if (
-                            cats?.entities[item].nameEn
-                              .toLowerCase()
-                              .includes(searchText.toLowerCase()) ||
-                            cats?.entities[item].nameAr
-                              .toLowerCase()
-                              .includes(
-                                searchText.toLowerCase() || searchText === ""
-                              )
+                            addresses?.entities[
+                              item
+                            ]?.Address_Translation[0]?.Name.toLowerCase().includes(
+                              searchText.toLowerCase()
+                            )
                           )
                             return (
                               <TreeItem
                                 nodeId={item}
-                                key={item}
+                                key={index}
                                 label={
                                   <div className="flex justify-center items-center">
                                     <div className="grid grid-cols-7 flex-1 gap-0">
-                                      <p className="text-xl">
-                                        {cats?.entities[item].nameEn}
+                                      <p className="text-xl font-bold">
+                                        {
+                                          addresses?.entities[
+                                            item
+                                          ]?.Address_Translation.find(
+                                            (x) => x.Language.Code == "En"
+                                          ).Name
+                                        }
                                       </p>
                                       <p className="text-xl">
-                                        {cats?.entities[item].nameAr}
+                                        {" Longitude: "}
+                                        {addresses?.entities[item].Longitude}
                                       </p>
-
-                                      {cats?.entities[item].isActive ===
-                                      true ? (
+                                      <p className="text-xl">
+                                        {" Latitude: "}
+                                        {addresses?.entities[item].Latitude}
+                                      </p>
+                                      {addresses?.entities[item]
+                                        .ActiveStatus === true ? (
                                         <div className="text-[green] mx-2">
                                           {"Active"}
                                         </div>
@@ -246,10 +265,9 @@ const CategoriesPage = () => {
                                         </div>
                                       )}
                                     </div>
-
                                     <div className="flex items-center justify-center">
                                       <div
-                                        className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-primary text-[#E8E8E8] hover:text-secondary  mx-2 pb-2"
+                                        className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-primary text-[#E8E8E8] hover:text-secondary mx-2 pb-2"
                                         style={{ transition: "0.3s" }}
                                         onClick={() => {
                                           setDrawerId("");
@@ -260,7 +278,7 @@ const CategoriesPage = () => {
                                         New Child
                                       </div>
                                       <div
-                                        className="self-center  font-bold text-xl rounded px-2 py-1  bg-secondary hover:bg-primary hover:text-secondary text-[#E8E8E8] mx-2 pb-2"
+                                        className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-primary hover:text-secondary text-[#E8E8E8] mx-2 pb-2"
                                         style={{ transition: "0.3s" }}
                                         onClick={() => {
                                           setDrawerId(item);
@@ -270,12 +288,11 @@ const CategoriesPage = () => {
                                         <EditOutlined />
                                       </div>
                                     </div>
-
                                     <div
                                       className="self-center  font-bold text-xl rounded px-2 py-1 hover:bg-secondary text-red-700 mx-2 pb-2"
                                       style={{ transition: "0.3s" }}
                                       onClick={(ev) => {
-                                        onDelete(ev, cats?.entities[item]);
+                                        onDelete(ev, addresses?.entities[item]);
                                       }}
                                     >
                                       <DeleteRounded />
@@ -301,7 +318,7 @@ const CategoriesPage = () => {
       />
       <DeleteDialog
         deletedName={deletedName}
-        loading={catDeleteLoading}
+        loading={deleteLoading}
         yesDeleteClick={(bool, data) => {
           yesDeleteContact(bool, data);
         }}
@@ -310,4 +327,4 @@ const CategoriesPage = () => {
   );
 };
 
-export default CategoriesPage;
+export default AddressPage;

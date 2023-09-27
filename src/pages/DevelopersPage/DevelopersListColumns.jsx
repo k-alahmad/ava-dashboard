@@ -21,10 +21,10 @@ export const ComposeColumns = (onDelete) => {
       lockToggle: false,
     },
     {
-      Header: "Title",
-      id: "Title",
+      Header: "Name",
+      id: "Name",
       accessor: (d) =>
-        d.Articles_Translation.find((x) => x.Language.Code == "En").Title,
+        d.Developer_Translation.find((x) => x.Language.Code == "En").Name,
       className: "font-bold",
       sortable: true,
       show: false,
@@ -32,23 +32,19 @@ export const ComposeColumns = (onDelete) => {
       lockToggle: false,
     },
     {
-      Header: "Minutes Read",
-      id: "MinRead",
-      accessor: (d) => d.MinRead,
+      Header: "View Tag",
+      id: "ViewTag",
+      accessor: (d) =>
+        d.ViewTag === true ? (
+          <div className="text-[green]"> {"Yes"} </div>
+        ) : (
+          <div className="text-[red]"> {"No"} </div>
+        ),
       className: "font-bold",
       sortable: true,
       show: false,
       checked: true,
       lockToggle: false,
-    },
-    {
-      Header: "Author",
-      id: "User",
-      accessor: (d) => d.User.Name,
-      className: "font-bold",
-      sortable: true,
-      show: false,
-      checked: true,
     },
     {
       Header: "Created At",

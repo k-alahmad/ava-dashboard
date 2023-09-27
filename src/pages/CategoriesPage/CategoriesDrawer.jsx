@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import PageDrawer from "../../components/Admin/layout/PageDrawer";
 import {
-  useAddAddressMutation,
-  useLazyGetAddressByIdQuery,
-  useUpdateAddressMutation,
-} from "../../redux/addresses/addressesSlice";
-import Button from "../../components/UI/Button";
+  useAddCategoryMutation,
+  useLazyGetCategoryByIdQuery,
+  useUpdateCategoryMutation,
+} from "../../redux/categories/categoriesSlice";
 import {
   CircularProgress,
   TextField,
@@ -15,19 +14,16 @@ import {
 } from "@mui/material";
 import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
 import Slider from "react-slick";
-import { API_BASE_URL } from "../../constants";
 import { showMessage } from "../../redux/messageAction.slice";
 import { useDispatch } from "react-redux";
 const defaultFormState = {
   id: "",
-  Image: "",
-  Longitude: "",
-  Latitude: "",
-  Address_Translation: [],
-  AddressID: null,
+  Category_Translation: [],
+  ParentID: null,
   ActiveStatus: true,
+  SubCategory: [],
 };
-const AddressDrawer = ({
+const CategoryDrawer = ({
   drawerOpen,
   setDrawerOpen,
   drawerID,
@@ -35,10 +31,8 @@ const AddressDrawer = ({
   parentId,
 }) => {
   const [form, setForm] = useState(defaultFormState);
-  const [image, setImage] = useState();
-  const [oldImage, setOldImage] = useState();
-  const [imageURL, setImageURL] = useState();
-  const [address_Translation, setAddress_Translation] = useState([]);
+
+  const [category_Translation, setCategory_Translation] = useState([]);
   const sliderRef = useRef();
   const [currentSlide, setCurrentSlide] = useState();
   const {
@@ -50,27 +44,27 @@ const AddressDrawer = ({
     error: lngError,
   } = useGetLNGQuery();
   const [
-    getAddressById,
+    getCategoryById,
     { data, isLoading, isFetching, isError, error, isSuccess },
-  ] = useLazyGetAddressByIdQuery();
+  ] = useLazyGetCategoryByIdQuery();
   const [
-    addAddress,
+    addCategory,
     {
       isLoading: addLoading,
       isSuccess: addSuccess,
       isError: addIsError,
       error: addError,
     },
-  ] = useAddAddressMutation();
+  ] = useAddCategoryMutation();
   const [
-    updateAddress,
+    updateCategory,
     {
       isLoading: updateLoading,
       isSuccess: updateSuccess,
       isError: updateIsError,
       error: updateError,
     },
-  ] = useUpdateAddressMutation();
+  ] = useUpdateCategoryMutation();
   const dispatch = useDispatch();
   useEffect(() => {
     if (isError) {
@@ -86,15 +80,13 @@ const AddressDrawer = ({
   useEffect(() => {
     if (drawerOpen) {
       if (drawerID !== "") {
-        getAddressById({ id: drawerID });
+        getCategoryById({ id: drawerID });
         if (isSuccess) {
-          setOldImage(data.Image?.URL);
           setForm(data);
-          setAddress_Translation(data.Address_Translation);
-          console.log(data.Address_Translation);
+          setCategory_Translation(data.Category_Translation);
         }
       } else {
-        setForm({ ...defaultFormState, AddressID: parentId });
+        setForm({ ...defaultFormState, ParentID: parentId });
         if (lngisSuccess) {
           let translations = [];
           lngs.normalData.map((item) => {
@@ -105,30 +97,14 @@ const AddressDrawer = ({
                 Code: item.Code,
               },
               Name: "",
+              Description: "",
             });
           });
-          setAddress_Translation(translations);
+          setCategory_Translation(translations);
         }
       }
     }
   }, [drawerID, data, drawerOpen]);
-
-  useEffect(() => {
-    if (!image) {
-      setImageURL(undefined);
-    } else {
-      const objectUrl = URL.createObjectURL(image);
-      setImageURL(objectUrl);
-      return () => URL.revokeObjectURL(objectUrl);
-    }
-  }, [image]);
-  function onImageChange(e) {
-    if (!e.target.files || e.target.files.length === 0) {
-      setImage(undefined);
-    }
-    setImage(e.target.files[0]);
-    setForm({ ...form, Image: e.target.files[0] });
-  }
   function handleChange(e) {
     setForm({
       ...form,
@@ -137,12 +113,14 @@ const AddressDrawer = ({
     });
   }
   function handleTranslationChange(e, item, type) {
-    setAddress_Translation((current) =>
+    setCategory_Translation((current) =>
       current.map((obj) => {
         if (obj.Language.Code == item.Language.Code) {
           return {
             ...obj,
             Name: type == "Name" ? e.target.value : obj.Name,
+            Description:
+              type == "Description" ? e.target.value : obj.Description,
           };
         }
         return obj;
@@ -159,37 +137,37 @@ const AddressDrawer = ({
     setDrawerID("");
     setDrawerOpen(false);
     setForm(defaultFormState);
-    setImage(null);
-    setImageURL(null);
-    setOldImage(null);
   };
   function handleSubmit(event) {
     event.preventDefault();
 
-    const formData = new FormData();
-    formData.append("Latitude", form.Latitude);
-    formData.append("Longitude", form.Longitude);
-    form.AddressID !== "" &&
-      drawerID == "" &&
-      formData.append("AddressID", form.AddressID);
-    formData.append("ActiveStatus", form.ActiveStatus);
-    if (image) formData.append("Image", image);
-    for (let i = 0; i < address_Translation.length; i++) {
-      formData.append(
-        `Address_Translation[${i}][Name]`,
-        address_Translation[i].Name
-      );
-      formData.append(
-        `Address_Translation[${i}][languagesID]`,
-        address_Translation[i].languagesID
-      );
+    let CT = [];
+    for (let i = 0; i < category_Translation.length; i++) {
+      CT.push({
+        languagesID: category_Translation[i].languagesID,
+        Name: category_Translation[i].Name,
+        Description: category_Translation[i].Description,
+      });
     }
+    let formData =
+      drawerID == ""
+        ? {
+            ActiveStatus: `${form.ActiveStatus}`,
+            Category_Translation: CT,
+          }
+        : {
+            ParentID: drawerID,
+            ActiveStatus: `${form.ActiveStatus}`,
+            Category_Translation: CT,
+          };
     if (drawerID == "") {
       //add
-      addAddress({ formData });
+      addCategory({
+        formData,
+      });
     } else {
       //update
-      updateAddress({
+      updateCategory({
         id: drawerID,
         formData,
       });
@@ -201,72 +179,6 @@ const AddressDrawer = ({
   const formElements = () => (
     <form ref={formRef} className="flex flex-col justify-center">
       <div className="py-8 mx-12">
-        <div className="flex flex-row items-center justify-center">
-          <div className="flex flex-col m-4">
-            <Button
-              textColor={"text-white font-medium"}
-              text={"Upload Image"}
-              bgColor={"bg-primary"}
-              customStyle={"py-2 px-4"}
-              onClick={(e) => {
-                e.preventDefault();
-                hiddenFileInput.current.click();
-              }}
-            />
-            <input
-              type="file"
-              accept="images/*"
-              onChange={onImageChange}
-              style={{ display: "none" }}
-              ref={hiddenFileInput}
-            />
-          </div>
-          {imageURL && (
-            <div className="flex flex-col m-4">
-              <p className="text-smaller font-medium pb-1">New image</p>
-              <img className="h-[200px] w-[200px] " src={imageURL} alt="" />
-            </div>
-          )}
-          {oldImage && (
-            <div className="flex flex-col m-4">
-              <p className="text-smaller font-medium pb-1">Current image</p>
-
-              <img
-                className="h-[200px] w-[200px] "
-                src={`${API_BASE_URL}/${oldImage}`}
-                alt=""
-              />
-            </div>
-          )}
-        </div>
-        <div className="flex m-4">
-          <TextField
-            fullWidth
-            type="number"
-            name="Longitude"
-            label="Longitude"
-            id="Longitude"
-            onChange={handleChange}
-            value={form.Longitude}
-            variant="outlined"
-            size="small"
-            required
-          />
-        </div>
-        <div className="flex m-4">
-          <TextField
-            fullWidth
-            type="text"
-            name="Latitude"
-            label="Latitude"
-            id="Latitude"
-            onChange={handleChange}
-            value={form.Latitude}
-            variant="outlined"
-            size="small"
-            required
-          />
-        </div>
         <div className="w-full flex justify-center items-center">
           <Slider
             dots={false}
@@ -277,7 +189,7 @@ const AddressDrawer = ({
             className="overflow-hidden h-full w-full max-w-[1024px]"
             initialSlide={currentSlide}
           >
-            {address_Translation.map((item, index) => {
+            {category_Translation.map((item, index) => {
               return (
                 <div
                   key={index}
@@ -307,7 +219,7 @@ const AddressDrawer = ({
           infinite={false}
           className="overflow-hidden h-full w-full"
         >
-          {address_Translation.map((item, index) => {
+          {category_Translation.map((item, index) => {
             return (
               <div key={index} className="pb-12">
                 <div className="flex m-4">
@@ -319,6 +231,22 @@ const AddressDrawer = ({
                     id={"Name" + item.Language.Code}
                     onChange={(e) => handleTranslationChange(e, item, "Name")}
                     value={item.Name}
+                    variant="outlined"
+                    size="small"
+                    required
+                  />
+                </div>
+                <div className="flex m-4">
+                  <TextField
+                    fullWidth
+                    type="text"
+                    name={"Description" + item.Language.Code}
+                    label={`${item.Language.Name} Description`}
+                    id={"Name" + item.Language.Code}
+                    onChange={(e) =>
+                      handleTranslationChange(e, item, "Description")
+                    }
+                    value={item.Description}
                     variant="outlined"
                     size="small"
                     required
@@ -349,16 +277,13 @@ const AddressDrawer = ({
   return (
     <PageDrawer
       isOpen={drawerOpen}
-      title={drawerID == "" ? "New Address" : "Edit Address"}
+      title={drawerID == "" ? "New Category" : "Edit Category"}
       newItem={drawerID == "" && true}
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
       disabled={
-        form.Longitude == "" ||
-        form.Latitude == "" ||
-        form.Latitude == "" ||
-        form.Image == ""
+        form.Longitude == "" || form.Latitude == "" || form.Latitude == ""
       }
       children={
         isLoading ||
@@ -378,4 +303,4 @@ const AddressDrawer = ({
   );
 };
 
-export default AddressDrawer;
+export default CategoryDrawer;

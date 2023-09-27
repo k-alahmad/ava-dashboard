@@ -14,6 +14,8 @@ import ArticlePage from "./pages/ArticlesPage/ArticlesPage";
 import AddressPage from "./pages/AddressesPage/AddressPage";
 import CurrenciesPage from "./pages/CurrenciesPage/CurrenciesPage";
 import UnitsPage from "./pages/UnitsPage/UnitsPage";
+import CategoryPage from "./pages/CategoriesPage/CategoriesPage";
+import DeveloperPage from "./pages/DevelopersPage/DevelopersPage";
 const App = () => {
   return (
     <Routes>
@@ -42,8 +44,8 @@ const App = () => {
         <Route path="/articles" element={<ArticlePage />} />
         <Route path="/currency" element={<CurrenciesPage />} />
         <Route path="/unit" element={<UnitsPage />} />
-        <Route path="/developers" element={<UnitsPage />} />
-        <Route path="/category" element={<UnitsPage />} />
+        <Route path="/developers" element={<DeveloperPage />} />
+        <Route path="/category" element={<CategoryPage />} />
 
         <Route path="*" element={<DashboardPage />} />
       </Route>

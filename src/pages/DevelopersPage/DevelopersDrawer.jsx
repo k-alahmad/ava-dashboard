@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import PageDrawer from "../../components/Admin/layout/PageDrawer";
 import {
-  useAddArticleMutation,
-  useLazyGetArticleByIdQuery,
-  useUpdateArticleMutation,
-} from "../../redux/articles/articlesSlice";
+  useAddDeveloperMutation,
+  useLazyGetDeveloperByIdQuery,
+  useUpdateDeveloperMutation,
+} from "../../redux/developers/developersSlice";
 import Slider from "react-slick";
 import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
-import { useGetUsersQuery } from "../../redux/users/usersSlice";
 import {
   CircularProgress,
   TextField,
@@ -21,17 +20,14 @@ import {
 } from "@mui/material";
 import Button from "../../components/UI/Button";
 import { API_BASE_URL } from "../../constants";
-import RichTextBox from "../../components/Forms/RichTextBox";
 const defaultFormState = {
   id: "",
-  MinRead: "",
+  ViewTag: false,
   Image: "",
   ActiveStatus: true,
-  User: {},
-  usersID: "",
 };
 
-const ArticleDrawer = ({
+const DeveloperDrawer = ({
   drawerOpen,
   setDrawerOpen,
   drawerID,
@@ -41,7 +37,7 @@ const ArticleDrawer = ({
   const [image, setImage] = useState();
   const [oldImage, setOldImage] = useState();
   const [imageURL, setImageURL] = useState();
-  const [articles_Translation, setArticles_Translation] = useState([]);
+  const [developers_Translation, setDevelopers_Translation] = useState([]);
   const sliderRef = useRef();
   const [currentSlide, setCurrentSlide] = useState();
   const {
@@ -52,45 +48,38 @@ const ArticleDrawer = ({
     isError: lngIsError,
     error: lngError,
   } = useGetLNGQuery();
-  const {
-    data: users,
-    isLoading: usersIsLoading,
-    isFetching: usersIsFethcing,
-    isSuccess: usersisSuccess,
-    isError: usersIsError,
-    error: usersError,
-  } = useGetUsersQuery();
+
   const [
-    getArticleById,
+    getDeveloperById,
     { data, isLoading, isFetching, isError, error, isSuccess },
-  ] = useLazyGetArticleByIdQuery();
+  ] = useLazyGetDeveloperByIdQuery();
   const [
-    addArticle,
+    addDeveloper,
     {
       isLoading: addLoading,
       isSuccess: addSuccess,
       isError: addIsError,
       error: addError,
     },
-  ] = useAddArticleMutation();
+  ] = useAddDeveloperMutation();
   const [
-    updateArticle,
+    updateDeveloper,
     {
       isLoading: updateLoading,
       isSuccess: updateSuccess,
       isError: updateIsError,
       error: updateError,
     },
-  ] = useUpdateArticleMutation();
+  ] = useUpdateDeveloperMutation();
 
   useEffect(() => {
     if (drawerOpen) {
       if (drawerID !== "") {
-        getArticleById({ id: drawerID });
+        getDeveloperById({ id: drawerID });
         if (isSuccess) {
           setOldImage(data.Image?.URL);
           setForm(data);
-          setArticles_Translation(data.Articles_Translation);
+          setDevelopers_Translation(data.Developer_Translation);
         }
       } else {
         setForm(defaultFormState);
@@ -103,12 +92,10 @@ const ArticleDrawer = ({
                 Name: item.Name,
                 Code: item.Code,
               },
-              Title: "",
-              Description: "",
-              Caption: "",
+              Name: "",
             });
           });
-          setArticles_Translation(translations);
+          setDevelopers_Translation(translations);
         }
       }
     }
@@ -139,14 +126,12 @@ const ArticleDrawer = ({
   }
   function handleTranslationChange(e, item, type) {
     // if (drawerID !== "")
-    setArticles_Translation((current) =>
+    setDevelopers_Translation((current) =>
       current.map((obj) => {
         if (obj.Language.Code == item.Language.Code) {
           return {
             ...obj,
-            Title: type == "Title" ? e.target.value : obj.Title,
-            Caption: type == "Caption" ? e.target.value : obj.Caption,
-            Description: type == "Desc" ? e : obj.Description,
+            Name: type == "Name" ? e.target.value : obj.Name,
           };
         }
         return obj;
@@ -166,40 +151,31 @@ const ArticleDrawer = ({
     setImage(null);
     setImageURL(null);
     setOldImage(null);
-    setArticles_Translation([]);
+    setDevelopers_Translation([]);
     setCurrentSlide();
   };
   function handleSubmit(event) {
     event.preventDefault();
     const formData = new FormData();
     formData.append("ActiveStatus", form.ActiveStatus);
-    formData.append("MinRead", form.MinRead);
-    formData.append("AuthorID", form.usersID);
+    formData.append("ViewTag", form.ViewTag);
     if (image) formData.append("Image", image);
-    for (let i = 0; i < articles_Translation.length; i++) {
+    for (let i = 0; i < developers_Translation.length; i++) {
       formData.append(
-        `Articles_Translation[${i}][Title]`,
-        articles_Translation[i].Title
+        `Developer_Translation[${i}][Name]`,
+        developers_Translation[i].Name
       );
       formData.append(
-        `Articles_Translation[${i}][Description]`,
-        articles_Translation[i].Description
-      );
-      formData.append(
-        `Articles_Translation[${i}][Caption]`,
-        articles_Translation[i].Caption
-      );
-      formData.append(
-        `Articles_Translation[${i}][languagesID]`,
-        articles_Translation[i].languagesID
+        `Developer_Translation[${i}][languagesID]`,
+        developers_Translation[i].languagesID
       );
     }
     if (drawerID == "") {
       //add
-      addArticle({ formData });
+      addDeveloper({ formData });
     } else {
       //update
-      updateArticle({ id: drawerID, formData });
+      updateDeveloper({ id: drawerID, formData });
     }
   }
   const hiddenFileInput = React.useRef(null);
@@ -238,55 +214,12 @@ const ArticleDrawer = ({
             {oldImage && (
               <div className="flex flex-col m-4">
                 <p className="text-smaller font-MED pb-1">Current image</p>
-
                 <img
                   className="h-[200px] w-[200px] "
                   src={`${API_BASE_URL}/${oldImage}`}
                   alt=""
                 />
               </div>
-            )}
-          </div>
-          <div className="flex m-4">
-            <TextField
-              fullWidth
-              type="number"
-              name="MinRead"
-              label={`Minutes Of Read`}
-              id="MinRead"
-              onChange={handleChange}
-              value={form.MinRead}
-              variant="outlined"
-              size="small"
-              required
-            />
-          </div>
-          <div className="flex m-4">
-            {usersisSuccess && !usersIsLoading && (
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Author</InputLabel>
-                <Select
-                  labelId="Author"
-                  name="usersID"
-                  id="usersID"
-                  value={form.usersID === "" ? "" : form.usersID}
-                  label="Author"
-                  onChange={handleChange}
-                  MenuProps={{
-                    style: {
-                      maxHeight: "400px",
-                    },
-                  }}
-                >
-                  {users.ids?.map((item, j) => {
-                    return (
-                      <MenuItem key={j} value={item}>
-                        {users.entities[item].Name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
             )}
           </div>
           <div className="w-full flex justify-center items-center">
@@ -299,7 +232,7 @@ const ArticleDrawer = ({
               className="overflow-hidden h-full w-full max-w-[1024px]"
               initialSlide={currentSlide}
             >
-              {articles_Translation.map((item, index) => {
+              {developers_Translation.map((item, index) => {
                 return (
                   <div
                     key={index}
@@ -329,52 +262,42 @@ const ArticleDrawer = ({
             infinite={false}
             className="overflow-hidden h-full w-full"
           >
-            {articles_Translation.map((item, index) => {
+            {developers_Translation.map((item, index) => {
               return (
                 <div key={index} className="pb-12">
                   <div className="flex m-4">
                     <TextField
                       fullWidth
                       type="text"
-                      name={"Title" + item.Language.Code}
-                      label={`${item.Language.Name} Title`}
-                      id={"Title" + item.Language.Code}
-                      onChange={(e) =>
-                        handleTranslationChange(e, item, "Title")
-                      }
-                      value={item.Title}
+                      name={"Name" + item.Language.Code}
+                      label={`${item.Language.Name} Name`}
+                      id={"Name" + item.Language.Code}
+                      onChange={(e) => handleTranslationChange(e, item, "Name")}
+                      value={item.Name}
                       variant="outlined"
                       size="small"
                       required
                     />
                   </div>
-                  <div className="flex m-4">
-                    <TextField
-                      fullWidth
-                      type="text"
-                      name={"Caption" + item.Language.Code}
-                      label={`${item.Language.Name} Caption`}
-                      id={"Caption" + item.Language.Code}
-                      onChange={(e) =>
-                        handleTranslationChange(e, item, "Caption")
-                      }
-                      value={item.Caption}
-                      variant="outlined"
-                      size="small"
-                      required
-                      multiline
-                      rows={5}
-                    />
-                  </div>
-                  <RichTextBox
-                    label={`${item.Language.Name} Body`}
-                    value={item.Description}
-                    onChange={(e) => handleTranslationChange(e, item, "Desc")}
-                  />
                 </div>
               );
             })}
           </Slider>
+          <div className="flex m-4">
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch
+                    onChange={handleChange}
+                    name="ViewTag"
+                    value={form.ViewTag}
+                    checked={form.ViewTag}
+                  />
+                }
+                label={form.ViewTag ? "View In Website" : "Hide In Website"}
+              />
+            </FormGroup>
+          </div>
           <div className="flex m-4">
             <FormGroup>
               <FormControlLabel
@@ -397,7 +320,7 @@ const ArticleDrawer = ({
   return (
     <PageDrawer
       isOpen={drawerOpen}
-      title={drawerID == "" ? "New Article" : form.titleEn}
+      title={drawerID == "" ? "New Developer" : form.titleEn}
       newItem={drawerID == "" && true}
       editable={true}
       onCancelClick={closeDrawer}
@@ -429,4 +352,4 @@ const ArticleDrawer = ({
   );
 };
 
-export default ArticleDrawer;
+export default DeveloperDrawer;

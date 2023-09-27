@@ -62,6 +62,9 @@ export const apiSlice = createApi({
     "ActiveCurrency",
     "Unit",
     "ActiveUnit",
+    "Developers",
+    "Category",
+    "ActiveCategory",
   ],
   endpoints: (builder) => ({}),
 });

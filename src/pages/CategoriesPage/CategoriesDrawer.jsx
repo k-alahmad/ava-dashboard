@@ -150,13 +150,13 @@ const CategoryDrawer = ({
       });
     }
     let formData =
-      drawerID == ""
+      parentId == ""
         ? {
             ActiveStatus: `${form.ActiveStatus}`,
             Category_Translation: CT,
           }
         : {
-            ParentID: drawerID,
+            ParentID: parentId,
             ActiveStatus: `${form.ActiveStatus}`,
             Category_Translation: CT,
           };

@@ -103,7 +103,7 @@ const CategoryPage = () => {
 
   const handleChildren = (item) =>
     categoryes?.ids?.map((item1) => {
-      if (item === categoryes?.entities[item1]?.categoryID) {
+      if (item === categoryes?.entities[item1]?.ParentID) {
         return (
           <TreeItem
             nodeId={item1 + item1 + 4}
@@ -222,7 +222,7 @@ const CategoryPage = () => {
                       }}
                     >
                       {categoryes?.ids?.map((item, index) => {
-                        if (categoryes?.entities[item].categoryID == null)
+                        if (categoryes?.entities[item].ParentID == null)
                           if (
                             categoryes?.entities[
                               item

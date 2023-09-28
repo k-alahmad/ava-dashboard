@@ -9,7 +9,7 @@ export const ComposeColumns = (onDelete) => {
       id: "image",
       accessor: (d) => (
         <img
-          src={`${API_BASE_URL}/${d.Image.URL}`}
+          src={`${API_BASE_URL}/${d.Image?.URL}`}
           alt=""
           className="h-[150px] w-[150px]"
         />

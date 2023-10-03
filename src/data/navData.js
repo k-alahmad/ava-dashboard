@@ -73,4 +73,8 @@ export const data = [
       },
     ],
   },
+  {
+    name: "Forms",
+    childs: [],
+  },
 ];

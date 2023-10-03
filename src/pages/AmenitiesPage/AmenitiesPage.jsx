@@ -22,7 +22,7 @@ import {
   useGetAmenitiesQuery,
 } from "../../redux/amentities/amenitiesSlice";
 import AmenityDrawer from "./AmenitiesDrawer";
-
+import { Add } from "@mui/icons-material";
 const AmenityPage = () => {
   const {
     data: amenities,
@@ -121,7 +121,7 @@ const AmenityPage = () => {
           <PageCard
             searchText={searchText}
             handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel="New Amenity"
+            PrimaryButtonlabel={<Add fontSize="large" />}
             onClickPrimaryBtn={(ev) => {
               setDrawerID("");
               setDrawerOpen(true);

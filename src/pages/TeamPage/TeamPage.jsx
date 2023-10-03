@@ -18,6 +18,7 @@ import {
   useDeleteTeamMutation,
 } from "../../redux/teams/teamsSlice";
 import TeamDrawer from "./TeamDrawer";
+import { Add } from "@mui/icons-material";
 const TeamPage = () => {
   const {
     data: teams,
@@ -116,7 +117,7 @@ const TeamPage = () => {
           <PageCard
             searchText={searchText}
             handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel="New Team"
+            PrimaryButtonlabel={<Add fontSize="large" />}
             onClickPrimaryBtn={(ev) => {
               setDrawerID("");
               setDrawerOpen(true);

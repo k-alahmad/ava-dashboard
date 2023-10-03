@@ -22,7 +22,7 @@ import {
   useGetDevelopersQuery,
 } from "../../redux/developers/developersSlice";
 import DeveloperDrawer from "./DevelopersDrawer";
-
+import { Add } from "@mui/icons-material";
 const DeveloperPage = () => {
   const {
     data: developers,
@@ -121,7 +121,7 @@ const DeveloperPage = () => {
           <PageCard
             searchText={searchText}
             handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel="New Developer"
+            PrimaryButtonlabel={<Add fontSize="large" />}
             onClickPrimaryBtn={(ev) => {
               setDrawerID("");
               setDrawerOpen(true);

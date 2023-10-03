@@ -212,7 +212,7 @@ const ArticleDrawer = ({
           <div className="flex flex-row items-center justify-center">
             <div className="flex flex-col m-4">
               <Button
-                textColor={"text-white font-medium"}
+                textColor={"text-white font-regular"}
                 text={"Upload Image"}
                 bgColor={"bg-primary"}
                 customStyle={"py-2 px-4"}
@@ -231,13 +231,13 @@ const ArticleDrawer = ({
             </div>
             {imageURL && (
               <div className="flex flex-col m-4">
-                <p className="text-smaller font-MED pb-1">New image</p>
+                <p className="text-smaller font-regular pb-1">New image</p>
                 <img className="h-[200px] w-[200px] " src={imageURL} alt="" />
               </div>
             )}
             {oldImage && (
               <div className="flex flex-col m-4">
-                <p className="text-smaller font-MED pb-1">Current image</p>
+                <p className="text-smaller font-regular pb-1">Current image</p>
 
                 <img
                   className="h-[200px] w-[200px] "

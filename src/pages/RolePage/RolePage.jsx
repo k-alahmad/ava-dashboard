@@ -18,6 +18,7 @@ import {
   useDeleteRoleMutation,
 } from "../../redux/roles/rolesSlice";
 import RoleDrawer from "./RoleDrawer";
+import { Add } from "@mui/icons-material";
 const RolePage = () => {
   const {
     data: roles,
@@ -116,7 +117,7 @@ const RolePage = () => {
           <PageCard
             searchText={searchText}
             handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel="New Role"
+            PrimaryButtonlabel={<Add fontSize="large" />}
             onClickPrimaryBtn={(ev) => {
               setDrawerID("");
               setDrawerOpen(true);

@@ -7,7 +7,7 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 const SearchBar = (props) => {
   return (
     <Paper
-      className="flex p-4 items-center w-full max-w-[384px] px-8 py-2 rounded font-[FMed]"
+      className="flex p-4 items-center w-full max-w-[384px] px-8 py-2 rounded font-regular"
       elevation={1}
     >
       {/* <Icon className="mr-8" color="action"> */}
@@ -15,7 +15,7 @@ const SearchBar = (props) => {
       {/* </Icon> */}
       <Input
         placeholder="Search for anything"
-        className="flex flex-1 font-[FMed]"
+        className="flex flex-1 font-regular"
         disableUnderline
         fullWidth
         value={props.searchText}

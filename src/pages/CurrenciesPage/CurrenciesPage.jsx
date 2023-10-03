@@ -22,7 +22,7 @@ import {
   useGetCurrencyQuery,
 } from "../../redux/currencies/currenciesSlice";
 import CurrenciesDrawer from "./CurrenciesDrawer";
-
+import { Add } from "@mui/icons-material";
 const CurrenciesPage = () => {
   const {
     data: currencies,
@@ -121,7 +121,7 @@ const CurrenciesPage = () => {
           <PageCard
             searchText={searchText}
             handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel="New Currency"
+            PrimaryButtonlabel={<Add fontSize="large" />}
             onClickPrimaryBtn={(ev) => {
               setDrawerID("");
               setDrawerOpen(true);

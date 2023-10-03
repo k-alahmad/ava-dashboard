@@ -34,7 +34,7 @@ const PageCard = (props) => {
           </div>
         }
         action={
-          <div className="flex flex-row py-2 font-[FMed]">
+          <div className="flex flex-row py-2 font-regular">
             {props.exportMenu && <ExportMenu {...props.exportMenu} />}
 
             {props.columnsToggler && (
@@ -52,13 +52,10 @@ const PageCard = (props) => {
             {props.multiButton && props.multiButton}
             {props.PrimaryButtonlabel && (
               <Button
-                style={{
-                  backgroundColor: systemSettings.colors.secondary,
-                  color: "white",
-                }}
+                className="!bg-secondary !text-white"
                 onClick={props.onClickPrimaryBtn}
               >
-                <div className="font-medium text-2xl pb-1">
+                <div className="font-regualr text-2xl">
                   {props.PrimaryButtonlabel}
                 </div>
               </Button>

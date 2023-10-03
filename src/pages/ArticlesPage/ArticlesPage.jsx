@@ -22,7 +22,7 @@ import {
   useGetArticlesQuery,
 } from "../../redux/articles/articlesSlice";
 import ArticleDrawer from "./ArticleDrawer";
-
+import { Add } from "@mui/icons-material";
 const ArticlePage = () => {
   const {
     data: articles,
@@ -121,7 +121,7 @@ const ArticlePage = () => {
           <PageCard
             searchText={searchText}
             handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel="New Article"
+            PrimaryButtonlabel={<Add fontSize="large" />}
             onClickPrimaryBtn={(ev) => {
               setDrawerID("");
               setDrawerOpen(true);

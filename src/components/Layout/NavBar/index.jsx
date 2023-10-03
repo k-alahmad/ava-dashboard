@@ -33,34 +33,36 @@ const NavBar = () => {
     );
     let PN;
     if (location.pathname == "/profile") PN = "Profile";
-    if (foundPN.link) {
+    else if (foundPN?.link) {
       PN = foundPN.name;
     } else {
       PN =
-        foundPN.name +
+        foundPN?.name +
         " / " +
-        foundPN.childs.find((x) => x.link == location.pathname).name;
+        foundPN?.childs.find((x) => x.link == location.pathname).name;
     }
     setPathName(PN);
   }, [location.pathname]);
   return (
     <>
       <div
-        className={`flex justify-between items-center font-medium bg-primary px-4 text-third z-50 fixed w-full shadow-lg`}
+        className={`flex justify-between items-center font-regular bg-primary px-4 text-third z-50 fixed w-full shadow-lg`}
       >
         <div className="flex items-center justify-center">
-          <div className="m-1 pt-2 bg-secondary/80 backdrop-blur-[200px] rounded-md">
+          <div className="m-1 pt-2 bg-secondary/80 backdrop-blur-[200px] rounded-md shadow-xl drop-shadow-xl">
             <img
               src={Logo}
               alt="LOGO"
-              className=" w-[100px] h-[60px] scale-110"
+              className="w-[100px] h-[60px] scale-110"
             />
           </div>
           <div
             onClick={() => setMobileOpen(true)}
             className="cursor-pointer mx-8"
           >
+            {/* <div className="m-1 p-0 bg-secondary/80 backdrop-blur-[200px] rounded-md shadow-xl drop-shadow-xl flex justify-center items-center w-[100px] h-[60px] "> */}
             <MdDehaze fontSize="large" />
+            {/* </div> */}
           </div>
         </div>
         <p className="text-med font-bold">{pathName ?? "Not Found"}</p>
@@ -87,7 +89,7 @@ const NavBar = () => {
               onClick={() => setMobileOpen(false)}
             />
           ) : (
-            <div className="w-full">
+            <div className="w-full" key={i}>
               <div
                 onClick={() =>
                   setExpand({
@@ -112,6 +114,7 @@ const NavBar = () => {
                 in={expand.status && expand.key == i}
                 timeout="auto"
                 unmountOnExit
+                className="mt-4"
               >
                 {e.childs.map((item, index) => {
                   return (

@@ -90,7 +90,7 @@ const RoleResourceController = ({
           );
         })}
         <Button
-          textColor={"text-white font-medium"}
+          textColor={"text-white font-regular"}
           text={"Save"}
           bgColor={"bg-secondary"}
           customStyle={"pb-3 px-4 !h-[50px] self-end"}

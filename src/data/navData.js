@@ -62,6 +62,10 @@ export const data = [
         name: "Units",
         link: "/unit",
       },
+      {
+        name: "Meta Data",
+        link: "/meta-data",
+      },
     ],
   },
   {

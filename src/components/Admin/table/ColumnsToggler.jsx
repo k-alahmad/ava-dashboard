@@ -45,7 +45,7 @@ const ColumnsToggler = (props) => {
             }}
             style={{ padding: 0 }}
           >
-            <label className="w-full flex items-center min-w-[135px] px-2 py-5 font-[FMed] text-2xl">
+            <label className="w-full flex items-center min-w-[135px] px-2 py-5 font-regular text-2xl">
               Toggle All
             </label>
           </MenuItem>
@@ -59,7 +59,7 @@ const ColumnsToggler = (props) => {
               style={{ padding: 0 }}
             >
               <MenuItem key={column.id} style={{ padding: 0 }}>
-                <label className="w-full flex items-center min-w-[135px] px-2 py-5 font-[FMed] text-2xl">
+                <label className="w-full flex items-center min-w-[135px] px-2 py-5 font-regular text-2xl">
                   {column.name}
                   <div className="pl-0 ml-auto">
                     <Checkbox

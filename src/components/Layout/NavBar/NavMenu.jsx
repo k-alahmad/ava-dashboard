@@ -28,7 +28,7 @@ const NavMenu = ({ img, userName, isLoading }) => {
       <div className="relative">
         <div
           onClick={() => setOpen(!open)}
-          className={`flex justify-center items-center m-1 gap-x-2 bg-secondary/80 backdrop-blur-[200px] rounded-xl p-2 cursor-pointer ${
+          className={`flex justify-center items-center m-1 gap-x-2 bg-secondary/80 backdrop-blur-[200px] rounded-xl p-2 cursor-pointer shadow-xl drop-shadow-xl ${
             isLoading && "animate-pulse"
           }`}
         >
@@ -37,9 +37,9 @@ const NavMenu = ({ img, userName, isLoading }) => {
             className="p-0 m-0 relative text-black text-center font-bold text-smaller cursor-pointer"
           >
             <img
-              src={!isLoading && API_BASE_URL + "/" + img}
-              alt={!isLoading && userName}
-              className="w-10 h-10 rounded-full bg-primary "
+              src={!isLoading ? API_BASE_URL + "/" + img : ""}
+              alt={!isLoading ? userName : "User Image"}
+              className="w-10 h-10 rounded-full bg-primary"
             />
           </div>
           <p className="font-bold text-smaller">{!isLoading && userName} </p>
@@ -50,7 +50,7 @@ const NavMenu = ({ img, userName, isLoading }) => {
           onClick={() => setOpen(false)}
           className={`${
             open ? "scale-100" : "scale-0"
-          } absolute z-10 origin-top-right right-0 top-15 bg-secondary/80 backdrop-blur-[200px] rounded-lg shadow-2xl transition-all duration-300 p-4 space-y-2 text-white font-medium text-smaller min-w-40`}
+          } absolute z-10 origin-top-right right-0 top-15 bg-secondary/80 backdrop-blur-[200px] rounded-lg shadow-2xl transition-all duration-300 p-4 space-y-2 text-white font-regular text-smaller min-w-40`}
         >
           <div
             className="flex justify-start items-center cursor-pointer gap-x-2"

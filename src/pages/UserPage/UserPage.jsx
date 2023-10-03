@@ -29,6 +29,7 @@ import {
   openCustomDialog,
 } from "../../redux/customDialogAction";
 import { TextField } from "@mui/material";
+import { Add } from "@mui/icons-material";
 const UserPage = () => {
   const {
     data: users,
@@ -183,7 +184,7 @@ const UserPage = () => {
           <PageCard
             searchText={searchText}
             handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel="New User"
+            PrimaryButtonlabel={<Add fontSize="large" />}
             onClickPrimaryBtn={(ev) => {
               setDrawerID("");
               setDrawerOpen(true);

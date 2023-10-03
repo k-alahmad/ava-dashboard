@@ -22,7 +22,7 @@ import {
   useGetUnitQuery,
 } from "../../redux/units/unitsSlice";
 import UnitsDrawer from "./UnitsDrawer";
-
+import { Add } from "@mui/icons-material";
 const UnitsPage = () => {
   const {
     data: units,
@@ -121,7 +121,7 @@ const UnitsPage = () => {
           <PageCard
             searchText={searchText}
             handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel="New Unit"
+            PrimaryButtonlabel={<Add fontSize="large" />}
             onClickPrimaryBtn={(ev) => {
               setDrawerID("");
               setDrawerOpen(true);

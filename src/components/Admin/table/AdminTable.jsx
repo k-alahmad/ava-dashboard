@@ -115,7 +115,7 @@ const AdminTable = ({
           style={{
             padding: "50px",
             textAlign: "center",
-            fontFamily: "SSTMED",
+            fontFamily: "regular",
             fontSize: "44px",
           }}
         >
@@ -147,8 +147,6 @@ const AdminTable = ({
           borderColor: "white",
           overflowX: "initial",
           overflow: "auto",
-          fontFamily: "SSTBOLD",
-          // maxHeight: "400px",
         }}
       >
         <Table {...getTableProps()} stickyHeader={true}>
@@ -231,7 +229,7 @@ const AdminTable = ({
                             textOverflow: "ellipsis",
                             whiteSpace: "nowrap",
                             overflow: "hidden",
-                            fontFamily: "SSTMEDIUM",
+                            fontFamily: "regular",
                             fontSize: "18px",
                             maxWidth: "250px",
                           }}
@@ -249,7 +247,7 @@ const AdminTable = ({
                               borderRadius: "20px",
                               color: "white",
                               margin: "auto",
-                              fontFamily: "FMed",
+                              fontFamily: "regular",
                               fontSize: "20px",
                             }}
                           >

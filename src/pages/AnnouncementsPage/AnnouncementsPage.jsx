@@ -22,7 +22,7 @@ import {
   useGetAnnouncementsQuery,
 } from "../../redux/announcements/announcementsSlice";
 import AnnouncementDrawer from "./AnnouncementsDrawer";
-
+import { Add } from "@mui/icons-material";
 const AnnouncementPage = () => {
   const {
     data: announcements,
@@ -121,7 +121,7 @@ const AnnouncementPage = () => {
           <PageCard
             searchText={searchText}
             handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel="New Announcement"
+            PrimaryButtonlabel={<Add fontSize="large" />}
             onClickPrimaryBtn={(ev) => {
               setDrawerID("");
               setDrawerOpen(true);

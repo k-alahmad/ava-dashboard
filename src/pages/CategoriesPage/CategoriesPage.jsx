@@ -19,7 +19,7 @@ import {
   useDeleteCategoryMutation,
 } from "../../redux/categories/categoriesSlice";
 import CategoryDrawer from "./CategoriesDrawer";
-
+import { Add } from "@mui/icons-material";
 const CategoryPage = () => {
   const {
     data: categoryes,
@@ -133,7 +133,7 @@ const CategoryPage = () => {
                   )}
                 </div>
                 <div
-                  className="self-center font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-primary hover:text-secondary text-[#E8E8E8] mx-2 pb-2"
+                  className="self-center font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
                   style={{ transition: "0.3s" }}
                   onClick={() => {
                     setDrawerId("");
@@ -141,10 +141,10 @@ const CategoryPage = () => {
                     setParentId(item1);
                   }}
                 >
-                  New Child
+                  <Add fontSize="medium" />
                 </div>
                 <div
-                  className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-primary hover:text-secondary  text-[#E8E8E8] mx-2 pb-2"
+                  className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80  text-[#E8E8E8] mx-2 pb-2"
                   style={{ transition: "0.3s" }}
                   onClick={() => {
                     setDrawerId(item1);
@@ -156,7 +156,7 @@ const CategoryPage = () => {
                 </div>
 
                 <div
-                  className="self-center  font-bold text-xl rounded px-2 py-1  hover:bg-secondary text-red-700 mx-2 pb-2"
+                  className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
                   style={{ transition: "0.3s" }}
                   onClick={(ev) => {
                     onDelete(ev, categoryes?.entities[item1]);
@@ -195,7 +195,7 @@ const CategoryPage = () => {
             <PageCard
               searchText={searchText}
               handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-              PrimaryButtonlabel="New Main Category"
+              PrimaryButtonlabel={<Add fontSize="large" />}
               onClickPrimaryBtn={(ev) => {
                 setParentId("");
                 setDrawerId("");
@@ -288,7 +288,7 @@ const CategoryPage = () => {
                                     </div>
                                     <div className="flex items-center justify-center">
                                       <div
-                                        className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-primary text-[#E8E8E8] hover:text-secondary mx-2 pb-2"
+                                        className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
                                         style={{ transition: "0.3s" }}
                                         onClick={() => {
                                           setDrawerId("");
@@ -296,10 +296,10 @@ const CategoryPage = () => {
                                           setParentId(item);
                                         }}
                                       >
-                                        New Child
+                                        <Add fontSize="medium" />
                                       </div>
                                       <div
-                                        className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-primary hover:text-secondary text-[#E8E8E8] mx-2 pb-2"
+                                        className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
                                         style={{ transition: "0.3s" }}
                                         onClick={() => {
                                           setDrawerId(item);
@@ -310,7 +310,7 @@ const CategoryPage = () => {
                                       </div>
                                     </div>
                                     <div
-                                      className="self-center  font-bold text-xl rounded px-2 py-1 hover:bg-secondary text-red-700 mx-2 pb-2"
+                                      className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
                                       style={{ transition: "0.3s" }}
                                       onClick={(ev) => {
                                         onDelete(

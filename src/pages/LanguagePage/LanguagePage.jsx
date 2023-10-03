@@ -19,6 +19,7 @@ import {
   useDeleteLNGMutation,
 } from "../../redux/languages/languagesSlice";
 import LanguagesDrawer from "./LanguagesDrawer";
+import { Add } from "@mui/icons-material";
 const LNGPage = () => {
   const {
     data: lngs,
@@ -117,7 +118,7 @@ const LNGPage = () => {
           <PageCard
             searchText={searchText}
             handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel="New Language"
+            PrimaryButtonlabel={<Add fontSize="large" />}
             onClickPrimaryBtn={(ev) => {
               setDrawerID("");
               setDrawerOpen(true);

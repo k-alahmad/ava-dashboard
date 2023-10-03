@@ -21,9 +21,10 @@ export default {
         mobileTiny: "14px",
       },
       fontFamily: {
-        light: "SSTLight",
-        medium: "SSTMEDIUM",
-        bold: "SSTBOLD",
+        light: "300",
+        regular: "400",
+        semibold: "600",
+        bold: "700",
       },
       colors: {
         primary: colors.primary,

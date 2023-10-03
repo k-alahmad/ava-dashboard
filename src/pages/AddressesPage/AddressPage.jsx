@@ -9,6 +9,7 @@ import TreeItem from "@mui/lab/TreeItem";
 import { CircularProgress, IconButton } from "@mui/material";
 import { EditOutlined, DeleteRounded } from "@mui/icons-material";
 import DeleteDialog from "../../components/Admin/DeleteDialog";
+import { Add } from "@mui/icons-material";
 import {
   closeDeleteDialog,
   openDeleteDialog,
@@ -141,7 +142,7 @@ const AddressPage = () => {
                     setParentId(item1);
                   }}
                 >
-                  New Child
+                  <Add fontSize="large" />
                 </div>
                 <div
                   className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-primary hover:text-secondary  text-[#E8E8E8] mx-2 pb-2"
@@ -195,7 +196,7 @@ const AddressPage = () => {
             <PageCard
               searchText={searchText}
               handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-              PrimaryButtonlabel="New Main Address"
+              PrimaryButtonlabel={<Add fontSize="large" />}
               onClickPrimaryBtn={(ev) => {
                 setParentId("");
                 setDrawerId("");
@@ -275,7 +276,7 @@ const AddressPage = () => {
                                           setParentId(item);
                                         }}
                                       >
-                                        New Child
+                                        <Add fontSize="large" />
                                       </div>
                                       <div
                                         className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-primary hover:text-secondary text-[#E8E8E8] mx-2 pb-2"

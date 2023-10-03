@@ -10,16 +10,13 @@ const LinkElement = ({ name, link, styled, onClick }) => {
             ? systemSettings.colors.primary
             : systemSettings.colors.third,
           borderRadius: 2,
-          borderBottomColor: isActive
-            ? systemSettings.colors.primary
-            : systemSettings.colors.third,
-          borderBottomWidth: isActive ? 3 : 0,
-          paddingBottom: 8,
+
+          width: "100%",
         };
       }}
       to={link}
     >
-      <p className={`px-1 cursor-pointer font-medium text-smaller ${styled}`}>
+      <p className={`px-1 cursor-pointer font-medium text-small ${styled}`}>
         {name}
       </p>
     </NavLink>

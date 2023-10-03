@@ -41,8 +41,8 @@ export default function Drawer({
               }}
             />
           </header>
-          <div className="min-h-[120px] !w-full" />
-          <div className="w-full h-full flex flex-col justify-start items-center space-y-6">
+          <div className="min-h-[150px] !w-full" />
+          <div className="h-full flex flex-col justify-start items-start space-y-6 w-[80%]">
             {children}
           </div>
         </article>

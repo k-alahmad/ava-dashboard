@@ -26,35 +26,17 @@ export const ComposeColumns = (onDelete) => {
       lockToggle: false,
     },
     {
-      Header: "Title",
-      id: "Title",
+      Header: "Name",
+      id: "Name",
       accessor: (d) =>
-        d.Articles_Translation.find((x) => x.Language.Code == "En").Title,
+        d.Aminities_Translation.find((x) => x.Language.Code == "En").Name,
       className: "font-bold",
       sortable: true,
       show: false,
       checked: true,
       lockToggle: false,
     },
-    {
-      Header: "Minutes Read",
-      id: "MinRead",
-      accessor: (d) => d.MinRead,
-      className: "font-bold",
-      sortable: true,
-      show: false,
-      checked: true,
-      lockToggle: false,
-    },
-    {
-      Header: "Author",
-      id: "User",
-      accessor: (d) => d.User.Name,
-      className: "font-bold",
-      sortable: true,
-      show: false,
-      checked: true,
-    },
+
     {
       Header: "Created At",
       id: "CreatedAt",
@@ -73,21 +55,6 @@ export const ComposeColumns = (onDelete) => {
       show: false,
       checked: true,
     },
-    {
-      Header: "Active",
-      id: "ActiveStatus",
-      accessor: (d) =>
-        d.ActiveStatus === true ? (
-          <div className="text-[green]"> {"Active"} </div>
-        ) : (
-          <div className="text-[red]"> {"InActive"} </div>
-        ),
-      className: "font-bold",
-      sortable: true,
-      show: false,
-      checked: true,
-    },
-
     {
       Header: "Action",
       id: "action",

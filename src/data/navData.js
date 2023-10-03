@@ -40,4 +40,16 @@ export const data = [
     name: "Categories",
     link: "/category",
   },
+  {
+    name: "Amenities",
+    link: "/amenities",
+  },
+  {
+    name: "Announcements",
+    link: "/announcements",
+  },
+  {
+    name: "Properties",
+    link: "/property",
+  },
 ];

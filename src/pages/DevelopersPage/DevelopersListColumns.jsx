@@ -7,13 +7,18 @@ export const ComposeColumns = (onDelete) => {
     {
       Header: "Image",
       id: "image",
-      accessor: (d) => (
-        <img
-          src={`${API_BASE_URL}/${d.Image?.URL}`}
-          alt=""
-          className="h-[150px] w-[150px]"
-        />
-      ),
+      accessor: (d) =>
+        d?.Image?.URL ? (
+          <img
+            src={`${API_BASE_URL}/${d?.Image?.URL}`}
+            alt={d?.Name}
+            className="h-[150px] w-[150px]"
+          />
+        ) : (
+          <div className="h-[150px] w-[150px] border-[1px] border-black flex justify-center items-center">
+            <p>No Image</p>
+          </div>
+        ),
       className: "font-bold",
       sortable: true,
       show: false,

@@ -16,6 +16,9 @@ import CurrenciesPage from "./pages/CurrenciesPage/CurrenciesPage";
 import UnitsPage from "./pages/UnitsPage/UnitsPage";
 import CategoryPage from "./pages/CategoriesPage/CategoriesPage";
 import DeveloperPage from "./pages/DevelopersPage/DevelopersPage";
+import AmenityPage from "./pages/AmenitiesPage/AmenitiesPage";
+import AnnouncementPage from "./pages/AnnouncementsPage/AnnouncementsPage";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 const App = () => {
   return (
     <Routes>
@@ -46,7 +49,10 @@ const App = () => {
         <Route path="/unit" element={<UnitsPage />} />
         <Route path="/developers" element={<DeveloperPage />} />
         <Route path="/category" element={<CategoryPage />} />
-
+        <Route path="/amenities" element={<AmenityPage />} />
+        <Route path="/announcements" element={<AnnouncementPage />} />
+        <Route path="/property" element={<DashboardPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="*" element={<DashboardPage />} />
       </Route>
     </Routes>

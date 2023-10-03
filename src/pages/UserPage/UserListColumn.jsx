@@ -2,9 +2,31 @@ import React from "react";
 import { IconButton } from "@mui/material";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import LockResetIcon from "@mui/icons-material/LockReset";
+import { API_BASE_URL } from "../../constants";
 
 export const ComposeColumns = (onDelete, onChangePassowrd) => {
   return [
+    {
+      Header: "Image",
+      id: "Image",
+      accessor: (d) =>
+        d?.Image?.URL ? (
+          <img
+            src={`${API_BASE_URL}/${d?.Image?.URL}`}
+            alt={d?.Name}
+            className="h-[150px] w-[150px]"
+          />
+        ) : (
+          <div className="h-[150px] w-[150px] border-[1px] border-black flex justify-center items-center">
+            <p>No Image</p>
+          </div>
+        ),
+      className: "font-bold",
+      sortable: true,
+      show: false,
+      checked: true,
+      lockToggle: false,
+    },
     {
       Header: "Name",
       id: "Name",

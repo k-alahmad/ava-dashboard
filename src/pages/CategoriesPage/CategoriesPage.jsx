@@ -124,7 +124,7 @@ const CategoryPage = () => {
                   </p>
                   <p className="text-xl ">
                     {" Properties: "}
-                    {categoryes?.entities[item1]?.Latitude}
+                    {categoryes?.entities[item1]?._count.Property}
                   </p>
                   {categoryes?.entities[item1]?.ActiveStatus === true ? (
                     <div className="text-[green] mx-2">{"Active"}</div>

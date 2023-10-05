@@ -2,8 +2,13 @@ import { createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "../api/apiSlice";
 
 const developersAdapter = createEntityAdapter();
+const developersActiveAdapter = createEntityAdapter();
 
 const initialState = developersAdapter.getInitialState({
+  count: "",
+  activeCount: "",
+});
+const initialActiveState = developersAdapter.getInitialState({
   count: "",
   activeCount: "",
 });
@@ -25,6 +30,22 @@ export const developersApiSlice = apiSlice.injectEndpoints({
       providesTags: (result, error, arg) => [
         { type: "Developers", id: "LIST" },
         ...result.ids.map((id) => ({ type: "Developers", id })),
+      ],
+    }),
+    getActiveDevelopers: builder.query({
+      query: (args) => ({
+        url: `/developer-active`,
+        method: "GET",
+      }),
+      transformResponse: (responseData) => {
+        initialActiveState.count = responseData.count;
+        initialActiveState.normalData = responseData.Developer;
+        const loaded = responseData.Developer;
+        return developersActiveAdapter.setAll(initialState, loaded);
+      },
+      providesTags: (result, error, arg) => [
+        { type: "ActiveDevelopers", id: "LIST" },
+        ...result.ids.map((id) => ({ type: "ActiveDevelopers", id })),
       ],
     }),
     getDeveloperById: builder.query({
@@ -69,4 +90,6 @@ export const {
   useDeleteDeveloperMutation,
   useAddDeveloperMutation,
   useUpdateDeveloperMutation,
+  useGetActiveDevelopersQuery,
+  useLazyGetActiveDevelopersQuery,
 } = developersApiSlice;

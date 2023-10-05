@@ -38,8 +38,8 @@ export const addressApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: (responseData) => {
         initialActiveState.count = responseData?.length;
-        initialActiveState.normalData = responseData;
-        const loaded = responseData;
+        initialActiveState.normalData = responseData.Address;
+        const loaded = responseData.Address;
         return addressActiveAdapter.setAll(initialState, loaded);
       },
       providesTags: (result, error, arg) => [

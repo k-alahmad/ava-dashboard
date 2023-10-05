@@ -21,6 +21,7 @@ import AnnouncementPage from "./pages/AnnouncementsPage/AnnouncementsPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import PersonalizationPage from "./pages/PersonalizationPage/PersonalizationPage";
 import GuestsPage from "./pages/GuestInfoPage/GuestPage";
+import PropertyPage from "./pages/PropertiesPage/PropertiesPage";
 const App = () => {
   return (
     <Routes>
@@ -53,7 +54,7 @@ const App = () => {
         <Route path="/category" element={<CategoryPage />} />
         <Route path="/amenities" element={<AmenityPage />} />
         <Route path="/announcements" element={<AnnouncementPage />} />
-        <Route path="/property" element={<DashboardPage />} />
+        <Route path="/property" element={<PropertyPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/guest-info" element={<GuestsPage />} />
         <Route path="/personalization" element={<PersonalizationPage />} />

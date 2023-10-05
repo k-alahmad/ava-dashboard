@@ -37,9 +37,9 @@ export const categoryApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
       transformResponse: (responseData) => {
-        initialActiveState.count = responseData?.length;
-        initialActiveState.normalData = responseData;
-        const loaded = responseData;
+        initialActiveState.count = responseData?.count;
+        initialActiveState.normalData = responseData.Category;
+        const loaded = responseData.Category;
         return categoryActiveAdapter.setAll(initialState, loaded);
       },
       providesTags: (result, error, arg) => [

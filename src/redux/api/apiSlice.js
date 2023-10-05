@@ -63,6 +63,7 @@ export const apiSlice = createApi({
     "Unit",
     "ActiveUnit",
     "Developers",
+    "ActiveDevelopers",
     "Category",
     "ActiveCategory",
     "Amenities",

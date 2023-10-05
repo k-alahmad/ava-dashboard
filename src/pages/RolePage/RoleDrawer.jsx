@@ -171,8 +171,7 @@ const RoleDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               changeResourceSettings={changeResourceSettings}
             />
           )}
-
-          <RoleUsers id={drawerID} Name={form.Name} />
+          {drawerID !== "" && <RoleUsers id={drawerID} Name={form.Name} />}
         </div>
       </div>
     </form>

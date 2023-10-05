@@ -33,6 +33,7 @@ const NavBar = () => {
     );
     let PN;
     if (location.pathname == "/profile") PN = "Profile";
+    else if (location.pathname == "/personalization") PN = "Personalization";
     else if (foundPN?.link) {
       PN = foundPN.name;
     } else {
@@ -49,20 +50,14 @@ const NavBar = () => {
         className={`flex justify-between items-center font-regular bg-primary px-4 text-third z-50 fixed w-full shadow-lg`}
       >
         <div className="flex items-center justify-center">
-          <div className="m-1 pt-2 bg-secondary/80 backdrop-blur-[200px] rounded-md shadow-xl drop-shadow-xl">
-            <img
-              src={Logo}
-              alt="LOGO"
-              className="w-[100px] h-[60px] scale-110"
-            />
+          <div className="m-1 p-2 bg-secondary/80 backdrop-blur-[200px] rounded-xl shadow-xl drop-shadow-xl">
+            <img src={Logo} alt="LOGO" className="w-14 h-10 scale-125" />
           </div>
           <div
             onClick={() => setMobileOpen(true)}
             className="cursor-pointer mx-8"
           >
-            {/* <div className="m-1 p-0 bg-secondary/80 backdrop-blur-[200px] rounded-md shadow-xl drop-shadow-xl flex justify-center items-center w-[100px] h-[60px] "> */}
             <MdDehaze fontSize="large" />
-            {/* </div> */}
           </div>
         </div>
         <p className="text-med font-bold">{pathName ?? "Not Found"}</p>

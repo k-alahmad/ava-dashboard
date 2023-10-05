@@ -1,10 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+import {
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+} from "../../redux/auth/authApiSlice";
 import { API_BASE_URL } from "../../constants";
 import Button from "../../components/UI/Button";
 import { useGetActiveRolesQuery } from "../../redux/roles/rolesSlice";
 import { useGetActiveTeamsQuery } from "../../redux/teams/teamsSlice";
+import { useLazyGetUserByTeamIdQuery } from "../../redux/users/usersSlice";
 import { Edit, Close } from "@mui/icons-material";
+import { Gender } from "../../constants";
 import {
   TextField,
   InputLabel,
@@ -31,6 +36,8 @@ const ProfilePage = () => {
   const [image, setImage] = useState();
   const [imageURL, setImageURL] = useState();
   const [edit, setEdit] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordTwo, setPasswordTwo] = useState("");
   const {
     data: roles,
     isLoading: rolesLoading,
@@ -43,9 +50,40 @@ const ProfilePage = () => {
     isSuccess: teamsSuccess,
     isFetching: teamsIsFetching,
   } = useGetActiveTeamsQuery();
+
+  const [
+    getUserByTeamId,
+    {
+      data: teamates,
+      isLoading: teamatesLoading,
+      isSuccess: teamatesSuccess,
+      isFetching: teamatesFetching,
+      isError: teamatesIsError,
+      error: teamatesError,
+    },
+  ] = useLazyGetUserByTeamIdQuery();
+  const [
+    updateProfile,
+    {
+      isSuccess: updateIsSuccess,
+      isError: updateIsError,
+      error: updateError,
+      isLoading: updateLoading,
+    },
+  ] = useUpdateProfileMutation();
   useEffect(() => {
-    isSuccess && setForm(data);
-  }, [isSuccess]);
+    if (isSuccess) {
+      setForm(data);
+      getUserByTeamId({ id: data.teamID });
+    }
+  }, [isSuccess, data]);
+  useEffect(() => {
+    if (updateIsSuccess && password !== "") {
+      alert("Passowrd Updated");
+      setPassword("");
+      setPasswordTwo("");
+    }
+  }, [updateIsSuccess]);
   useEffect(() => {
     if (!image) {
       setImageURL(undefined);
@@ -76,17 +114,33 @@ const ProfilePage = () => {
       });
     }
   }
+  function handleSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append("Name", form.Name);
+    formData.append("Email", form.Email);
+    formData.append("DOB", form.DOB);
+    formData.append("Gender", form.Gender);
+    formData.append("PhoneNo", form.PhoneNo);
+    formData.append("roleID", form.roleID);
+    formData.append("teamID", form.teamID);
+    formData.append("ActiveStatus", form.ActiveStatus);
+    formData.append("Image", form.Image);
+
+    updateProfile({ formData });
+    setEdit(false);
+  }
   const hiddenFileInput = useRef(null);
   const formRef = useRef(null);
   return (
     isSuccess && (
-      <div className="px-[5%] grid md:grid-cols-3 mt-6">
+      <div className="px-[5%] grid md:grid-cols-3 my-6 gap-x-4 gap-y-8">
         <div className="flex flex-col justify-center items-center ">
           <div className="relative h-[350px] w-[350px]">
             <img
               src={!image ? API_BASE_URL + "/" + data?.Image?.URL : imageURL}
               alt={data?.Name}
-              className="rounded-3xl object-cover object-center w-full h-full"
+              className="rounded-md shadow-lg drop-shadow-lg object-cover object-center w-full h-full"
             />
             {imageURL && (
               <div
@@ -129,8 +183,11 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        <form ref={formRef} className="flex flex-col justify-center col-span-2">
-          <div className="py-8 mx-12">
+        <form
+          ref={formRef}
+          className="flex flex-col justify-center col-span-2 p-4 shadow-lg drop-shadow-lg bg-transparent backdrop-blur-[200px] rounded-md py-3 mx-12"
+        >
+          <div className=" ">
             <div className="flex m-4 font-bold text-med justify-between items-center">
               <p>Profile Information</p>
               <div className="cursor-pointer" onClick={() => setEdit(!edit)}>
@@ -208,6 +265,33 @@ const ProfilePage = () => {
                 disabled={!edit}
               />
             </div>
+            <div className=" flex m-4">
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                <Select
+                  labelId="Gender"
+                  name="Gender"
+                  id="Gender"
+                  value={form.Gender === "" ? "" : form.Gender}
+                  label="Gender"
+                  onChange={handleChange}
+                  MenuProps={{
+                    style: {
+                      maxHeight: "400px",
+                    },
+                  }}
+                  disabled={!edit}
+                >
+                  {Gender.map((item, index) => {
+                    return (
+                      <MenuItem key={index} value={item}>
+                        {item}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </div>
             {rolesSuccess && (
               <div className=" flex m-4">
                 <FormControl fullWidth>
@@ -274,14 +358,163 @@ const ProfilePage = () => {
                   text={"Save"}
                   bgColor={"bg-primary "}
                   customStyle={`py-2 px-4 !rounded-xl `}
-                  onClick={(e) => {
-                    setEdit(false);
-                  }}
+                  onClick={handleSubmit}
                 />
               )}
             </div>
           </div>
         </form>
+        {teamsSuccess && !teamsLoading && !teamsIsFetching && (
+          <div className="col-span-1 h-[400px] shadow-lg drop-shadow-lg py-4 px-2 rounded-md overflow-hidden">
+            <p className="text-med font-bold p-2">Teammates</p>
+            <div className="overflow-y-auto space-y-5 h-full max-h-[90%] px-2">
+              {teamates?.ids.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="bg-secondary/30 rounded-md backdrop-blur-[50px] shadow-md min-h-[55px] flex items-center justify-between"
+                  >
+                    <p className="text-smaller px-2">
+                      {teamates.entities[item].Name}
+                    </p>
+                    <p className="text-smaller px-2">
+                      {teamates.entities[item].Role.Name}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <div className="col-span-1 h-[400px] shadow-lg drop-shadow-lg py-4 px-2 rounded-md overflow-hidden">
+          <p className="text-med font-bold p-2">Articles</p>
+          <div className="overflow-y-auto space-y-5 h-full max-h-[90%] px-2">
+            {data.Articles?.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  className="bg-secondary/30 rounded-md backdrop-blur-[50px] shadow-md min-h-[55px] flex items-center justify-between"
+                >
+                  <p className="text-smaller px-2">
+                    {
+                      item?.Articles_Translation.find(
+                        (x) => x.Language.Code == "En"
+                      ).Title
+                    }
+                  </p>
+                  <p className="text-smaller px-2">
+                    {"Published: "}
+                    {item?.CreatedAt.split("T")[0]}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className="col-span-1 flex flex-col h-[400px] space-y-5 shadow-lg drop-shadow-lg p-4 rounded-md">
+          <p className="text-med font-bold p-2">Change Password</p>
+          <div className="flex-1 flex flex-col justify-evenly items-center">
+            <div className="flex m-4 w-full">
+              <TextField
+                fullWidth
+                type="password"
+                name="Password"
+                label="Password"
+                id="Password"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+                variant="outlined"
+                required
+                disabled={!edit}
+              />
+            </div>
+            <div className="flex m-4 w-full">
+              <TextField
+                fullWidth
+                type="password"
+                name="Password"
+                label="Re-Type Password"
+                id="Password"
+                onChange={(e) => setPasswordTwo(e.target.value)}
+                value={passwordTwo}
+                variant="outlined"
+                required
+                disabled={!edit}
+              />
+            </div>
+            <div className="flex justify-end m-4 w-full">
+              <Button
+                textColor={"text-white font-regular"}
+                text={updateLoading ? "Saving..." : "Save"}
+                bgColor={"bg-primary"}
+                customStyle={`py-2 px-4 !rounded-xl`}
+                disabled={
+                  password !== passwordTwo ||
+                  password.replace(/ /g, "") == "" ||
+                  passwordTwo.replace(/ /g, "") == ""
+                }
+                onClick={(e) => {
+                  updateProfile({
+                    id: data.id,
+                    formData: { Password: password },
+                  }).then(() => {
+                    setEdit(false);
+                  });
+                }}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="col-span-3 shadow-lg drop-shadow-lg py-4 px-2 rounded-md ">
+          <p className="text-med font-bold p-2">Permissions</p>
+          <div className="max-h-[600px] overflow-y-auto px-2">
+            <table className="w-full border-2 border-black/30">
+              <tbody>
+                {data.Role.Role_Resources.map((item, index) => {
+                  return (
+                    <tr
+                      key={index}
+                      className="border-black/30 border-2 text-smaller text-center"
+                    >
+                      <td className="p-2 border-black/30 border-2 font-bold text-start">
+                        {item.resource?.Name}
+                      </td>
+                      <td
+                        className={`p-2 border-black/30 border-2 ${
+                          item.Read ? "text-green-600" : "text-red-600"
+                        }`}
+                      >
+                        READ
+                      </td>
+                      <td
+                        className={`p-2 border-black/30 border-2 ${
+                          item.Create ? "text-green-600" : "text-red-600"
+                        }`}
+                      >
+                        CREATE
+                      </td>
+                      <td
+                        className={`p-2 border-black/30 border-2 ${
+                          item.Update ? "text-green-600" : "text-red-600"
+                        }`}
+                      >
+                        UPDATE
+                      </td>
+                      <td
+                        className={`p-2 border-black/30 border-2 ${
+                          item.Read ? "text-green-600" : "text-red-600"
+                        }`}
+                      >
+                        DELETE
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     )
   );

@@ -178,7 +178,6 @@ const UserPage = () => {
         drawerID={drawerID}
         setDrawerID={setDrawerID}
       />
-
       <PageSimple
         content={
           <PageCard

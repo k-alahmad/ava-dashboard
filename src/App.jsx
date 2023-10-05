@@ -19,6 +19,8 @@ import DeveloperPage from "./pages/DevelopersPage/DevelopersPage";
 import AmenityPage from "./pages/AmenitiesPage/AmenitiesPage";
 import AnnouncementPage from "./pages/AnnouncementsPage/AnnouncementsPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import PersonalizationPage from "./pages/PersonalizationPage/PersonalizationPage";
+import GuestsPage from "./pages/GuestInfoPage/GuestPage";
 const App = () => {
   return (
     <Routes>
@@ -53,6 +55,8 @@ const App = () => {
         <Route path="/announcements" element={<AnnouncementPage />} />
         <Route path="/property" element={<DashboardPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/guest-info" element={<GuestsPage />} />
+        <Route path="/personalization" element={<PersonalizationPage />} />
         <Route path="*" element={<DashboardPage />} />
       </Route>
     </Routes>

@@ -20,7 +20,7 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-
+import { Gender } from "../../constants/index";
 import { API_BASE_URL } from "../../constants";
 const defaultFormState = {
   id: "",
@@ -258,6 +258,32 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             variant="outlined"
             size="small"
           />
+        </div>
+        <div className=" flex m-4">
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+            <Select
+              labelId="Gender"
+              name="Gender"
+              id="Gender"
+              value={form.Gender === "" ? "" : form.Gender}
+              label="Gender"
+              onChange={handleChange}
+              MenuProps={{
+                style: {
+                  maxHeight: "400px",
+                },
+              }}
+            >
+              {Gender.map((item, index) => {
+                return (
+                  <MenuItem key={index} value={item}>
+                    {item}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
         </div>
         {rolesSuccess && (
           <div className=" flex m-4">

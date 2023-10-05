@@ -42,12 +42,12 @@
 ::-moz-selection {
   /* Code for Firefox */
   color: var(--impact-white);
-  background: rgba(203, 37, 200, 0.8);
+  background: rgba(221, 178, 110, 1);
 }
 
 ::selection {
   color: var(--impact-white);
-  background: rgba(203, 37, 200, 0.8);
+  background: rgba(221, 178, 110, 1);
 }
 
 /*!

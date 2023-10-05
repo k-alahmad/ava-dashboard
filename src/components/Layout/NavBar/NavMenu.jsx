@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { logOut } from "../../../redux/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { Logout, Person } from "@mui/icons-material";
 import { API_BASE_URL } from "../../../constants";
+import { Style } from "@mui/icons-material";
 const NavMenu = ({ img, userName, isLoading }) => {
-  const { i18n } = useTranslation();
+  // const { i18n } = useTranslation();
   const [open, setOpen] = useState(false);
 
   const ref = useRef(null);
@@ -61,7 +62,15 @@ const NavMenu = ({ img, userName, isLoading }) => {
             <Person />
             <p>View Profile</p>
           </div>
-
+          <div
+            className="flex justify-start items-center cursor-pointer gap-x-2"
+            onClick={() => {
+              navigate("/personalization");
+            }}
+          >
+            <Style />
+            <p>Personalization</p>
+          </div>
           <div
             className="flex justify-start items-center cursor-pointer gap-x-2"
             onClick={() => {

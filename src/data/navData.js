@@ -24,14 +24,13 @@ export const data = [
         name: "Addresses",
         link: "/address",
       },
-
-      {
-        name: "Developers",
-        link: "/developers",
-      },
       {
         name: "Categories",
         link: "/category",
+      },
+      {
+        name: "Developers",
+        link: "/developers",
       },
       {
         name: "Amenities",
@@ -79,6 +78,11 @@ export const data = [
   },
   {
     name: "Forms",
-    childs: [],
+    childs: [
+      {
+        name: "Guest Information",
+        link: "/guest-info",
+      },
+    ],
   },
 ];

@@ -29,6 +29,13 @@ import {
   RentFrequency,
 } from "../../constants";
 import RichTextBox from "../../components/Forms/RichTextBox";
+import {
+  useDeleteAllPropertyImagesMutation,
+  useDeleteImageMutation,
+} from "../../redux/images/imagesSlice";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
+
 const defaultFormState = {
   id: "",
   Price: "",
@@ -55,9 +62,9 @@ const defaultFormState = {
   Images: "",
   MetaData: "",
   Aminities: "",
-  developerId: "",
-  categoryId: "",
-  addressId: "",
+  DeveloperID: "",
+  CategoryID: "",
+  AddressID: "",
   Area: "",
   ActiveStatus: true,
 };
@@ -129,13 +136,33 @@ const PropertyDrawer = ({
       error: updateError,
     },
   ] = useUpdatePropertyMutation();
+  const [
+    deleteallPropertyImages,
+    {
+      isLoading: deleteAllImagesIsLoading,
+      isSuccess: deleteAllImagesIsSuccess,
+    },
+  ] = useDeleteAllPropertyImagesMutation();
+  const [
+    deleteImage,
+    {
+      isLoading: deleteSingleImageIsLoading,
+      isSuccess: deleteSingleImageIsSuccess,
+    },
+  ] = useDeleteImageMutation();
 
   useEffect(() => {
     if (drawerOpen) {
       if (drawerID !== "") {
         getPropertyById({ id: drawerID });
         if (isSuccess) {
-          setForm(data);
+          setForm({
+            ...data,
+            Bacloney: data.Bacloney,
+            DeveloperID: data.developerId,
+            AddressID: data.addressId,
+            CategoryID: data.categoryId,
+          });
           setProperties_Translation(data.Property_Translation);
         }
       } else {
@@ -196,6 +223,11 @@ const PropertyDrawer = ({
       closeDrawer();
     }
   }, [addSuccess, updateSuccess, addIsError, updateIsError]);
+
+  useEffect(() => {
+    if (deleteAllImagesIsSuccess || deleteSingleImageIsSuccess)
+      getPropertyById({ id: drawerID });
+  }, [deleteAllImagesIsSuccess, deleteSingleImageIsSuccess]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
@@ -216,6 +248,8 @@ const PropertyDrawer = ({
     formData.append("RentMin", form.RentMin);
     formData.append("RentMax", form.RentMax);
     formData.append("Handover", form.Handover);
+    formData.append("RentFrequency", form.RentFrequency);
+    formData.append("CompletionStatus", form.CompletionStatus);
     formData.append("FurnishingStatus", form.FurnishingStatus);
     formData.append("VacantStatus", form.VacantStatus);
     formData.append("Longitude", form.Longitude);
@@ -225,21 +259,12 @@ const PropertyDrawer = ({
     formData.append("DEDNo", form.DEDNo);
     formData.append("ReraNo", form.ReraNo);
     formData.append("BRNNo", form.BRNNo);
-    formData.append("developerId", form.developerId);
-    formData.append("categoryId", form.categoryId);
-    formData.append("addressId", form.addressId);
+    formData.append("DeveloperID", form.DeveloperID);
+    formData.append("CategoryID", form.CategoryID);
+    formData.append("AddressID", form.AddressID);
     formData.append("Area", form.Area);
     formData.append("ActiveStatus", form.ActiveStatus);
-    if (form.Aminities) {
-      for (let i = 0; i < form.Aminities.length; i++) {
-        formData.append("Aminities", Aminities[i]);
-      }
-    }
-    if (form.MetaData) {
-      for (let i = 0; i < form.MetaData.length; i++) {
-        formData.append("MetaData", MetaData[i]);
-      }
-    }
+
     if (image) {
       for (let i = 0; i < image.length; i++) {
         formData.append("Images", image[i]);
@@ -247,15 +272,15 @@ const PropertyDrawer = ({
     }
     for (let i = 0; i < properties_Translation.length; i++) {
       formData.append(
-        `Properties_Translation[${i}][Name]`,
+        `Property_Translation[${i}][Name]`,
         properties_Translation[i].Name
       );
       formData.append(
-        `Properties_Translation[${i}][Description]`,
+        `Property_Translation[${i}][Description]`,
         properties_Translation[i].Description
       );
       formData.append(
-        `Properties_Translation[${i}][languagesID]`,
+        `Property_Translation[${i}][languagesID]`,
         properties_Translation[i].languagesID
       );
     }
@@ -273,7 +298,7 @@ const PropertyDrawer = ({
   const formElements = () => {
     return (
       <form ref={formRef} className="flex flex-col justify-center">
-        <div className="py-1 mx-8 grid grid-cols-2">
+        <div className="py-1 mx-8 grid md:grid-cols-2">
           <div className="flex flex-col items-center justify-center col-span-full">
             <div className="flex flex-col m-4">
               <Button
@@ -348,7 +373,7 @@ const PropertyDrawer = ({
                 <p className="text-2xl font-bold">Current Images</p>
                 <div
                   onClick={() => {
-                    deleteallProductImages({ id: drawerID });
+                    deleteallPropertyImages({ id: drawerID });
                   }}
                   className="text-center cursor-pointer"
                 >
@@ -361,7 +386,7 @@ const PropertyDrawer = ({
                       <img
                         key={index}
                         className="col-span-1 h-[200px] w-[200px]"
-                        src={API_BASE_URL + item.URL}
+                        src={API_BASE_URL + "/" + item.URL}
                       />
                       <div
                         onClick={() => {
@@ -378,34 +403,6 @@ const PropertyDrawer = ({
             )}
           </div>
 
-          {/* <div className="flex m-4">
-            {usersisSuccess && !usersIsLoading && (
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Author</InputLabel>
-                <Select
-                  labelId="Author"
-                  name="usersID"
-                  id="usersID"
-                  value={form.usersID === "" ? "" : form.usersID}
-                  label="Author"
-                  onChange={handleChange}
-                  MenuProps={{
-                    style: {
-                      maxHeight: "400px",
-                    },
-                  }}
-                >
-                  {users.ids?.map((item, j) => {
-                    return (
-                      <MenuItem key={j} value={item}>
-                        {users.entities[item].Name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-            )}
-          </div> */}
           <div className="w-full flex justify-center items-center col-span-full">
             <Slider
               dots={false}
@@ -528,7 +525,7 @@ const PropertyDrawer = ({
                     checked={form.Bacloney}
                   />
                 }
-                label={form.Bacloney ? "Yes" : "No"}
+                label={form.Bacloney ? "Balcony" : "No Balcony"}
               />
             </FormGroup>
           </div>
@@ -791,11 +788,11 @@ const PropertyDrawer = ({
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Category</InputLabel>
                 <Select
-                  labelId="categoryId"
-                  name="categoryId"
-                  id="categoryId"
-                  value={form.categoryId}
-                  label="categoryId"
+                  labelId="CategoryID"
+                  name="CategoryID"
+                  id="CategoryID"
+                  value={form.CategoryID}
+                  label="Category"
                   onChange={handleChange}
                   MenuProps={{
                     style: {
@@ -826,11 +823,11 @@ const PropertyDrawer = ({
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Developer</InputLabel>
                 <Select
-                  labelId="developerId"
-                  name="developerId"
-                  id="developerId"
-                  value={form.developerId}
-                  label="developerId"
+                  labelId="DeveloperID"
+                  name="DeveloperID"
+                  id="DeveloperID"
+                  value={form.DeveloperID}
+                  label="Developer"
                   onChange={handleChange}
                   MenuProps={{
                     style: {
@@ -860,11 +857,11 @@ const PropertyDrawer = ({
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Address</InputLabel>
                 <Select
-                  labelId="addressId"
-                  name="addressId"
-                  id="addressId"
-                  value={form.addressId}
-                  label="addressId"
+                  labelId="AddressID"
+                  name="AddressID"
+                  id="AddressID"
+                  value={form.AddressID}
+                  label="address"
                   onChange={handleChange}
                   MenuProps={{
                     style: {
@@ -935,9 +932,11 @@ const PropertyDrawer = ({
         categoriesIsFethcing ||
         developersIsLoading ||
         developersIsFethcing ||
+        deleteSingleImageIsLoading ||
+        deleteAllImagesIsLoading ||
         lngIsLoading ||
         lngIsFethcing ? (
-          <div className="flex flex-row justify-center items-center h-full w-full">
+          <div className="flex flex-row justify-center items-center h-screen w-full">
             <CircularProgress color="primary" />
           </div>
         ) : (

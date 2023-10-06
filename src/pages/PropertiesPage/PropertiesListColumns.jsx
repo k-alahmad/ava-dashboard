@@ -1,30 +1,8 @@
 import React from "react";
 import { IconButton } from "@mui/material";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import { API_BASE_URL } from "../../constants";
 export const ComposeColumns = (onDelete) => {
   return [
-    {
-      Header: "Image",
-      id: "image",
-      accessor: (d) =>
-        d?.Image?.URL ? (
-          <img
-            src={`${API_BASE_URL}/${d?.Image?.URL}`}
-            alt={d?.Name}
-            className="h-[150px] w-[150px]"
-          />
-        ) : (
-          <div className="h-[150px] w-[150px] border-[1px] border-black flex justify-center items-center">
-            <p>No Image</p>
-          </div>
-        ),
-      className: "font-bold",
-      sortable: true,
-      show: false,
-      checked: true,
-      lockToggle: false,
-    },
     {
       Header: "Name",
       id: "Name",
@@ -55,10 +33,12 @@ export const ComposeColumns = (onDelete) => {
       show: false,
       checked: true,
     },
+
     {
       Header: "Bacloney",
       id: "Bacloney",
-      accessor: (d) => d.Bacloney,
+      accessor: (d) =>
+        d.Bacloney === true ? <p> {"Yes"} </p> : <p> {"No"} </p>,
       className: "font-bold",
       sortable: true,
       show: false,
@@ -140,6 +120,39 @@ export const ComposeColumns = (onDelete) => {
       Header: "Purpose",
       id: "Purpose",
       accessor: (d) => d.Purpose,
+      className: "font-bold",
+      sortable: true,
+      show: false,
+      checked: true,
+    },
+    {
+      Header: "Category",
+      id: "categoryId",
+      accessor: (d) =>
+        d.Category?.Category_Translation?.find((x) => x.Language.Code == "En")
+          .Name,
+      className: "font-bold",
+      sortable: true,
+      show: false,
+      checked: true,
+    },
+    {
+      Header: "Developer",
+      id: "developerId",
+      accessor: (d) =>
+        d.Developer?.Developer_Translation?.find((x) => x.Language.Code == "En")
+          .Name,
+      className: "font-bold",
+      sortable: true,
+      show: false,
+      checked: true,
+    },
+    {
+      Header: "Address",
+      id: "addressId",
+      accessor: (d) =>
+        d.Address?.Address_Translation?.find((x) => x.Language.Code == "En")
+          .Name,
       className: "font-bold",
       sortable: true,
       show: false,

@@ -70,6 +70,7 @@ export const apiSlice = createApi({
     "Announcements",
     "Property",
     "Guests",
+    "Image",
   ],
   endpoints: (builder) => ({}),
 });

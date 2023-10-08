@@ -25,6 +25,8 @@ import PropertyPage from "./pages/PropertiesPage/PropertiesPage";
 import FeedbackPage from "./pages/FeedbackPage/FeedbackPage";
 import EnquiryPage from "./pages/EnquiryPage/EnquiryPage";
 import MetaDataPage from "./pages/MetaDataPage/MetaDataPage";
+import JobsPage from "./pages/JobsPage/JobsPage";
+import ApplicationPage from "./pages/ApplicationsPage/ApplicationPage";
 const App = () => {
   return (
     <Routes>
@@ -64,9 +66,9 @@ const App = () => {
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/enquiry" element={<EnquiryPage />} />
         <Route path="/meta-data" element={<MetaDataPage />} />
+        <Route path="/jobs" element={<JobsPage />} />
+        <Route path="/applicants" element={<ApplicationPage />} />
         <Route path="/list-with-us" element={<DashboardPage />} />
-        <Route path="/jobs" element={<DashboardPage />} />
-        <Route path="/applicants" element={<DashboardPage />} />
         <Route path="*" element={<DashboardPage />} />
       </Route>
     </Routes>

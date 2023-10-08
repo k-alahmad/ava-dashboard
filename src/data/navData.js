@@ -77,7 +77,7 @@ export const data = [
     name: "Jobs & Applications",
     childs: [
       { icon: jobs, name: "Jobs", link: "/jobs" },
-      { icon: application, name: "Applications", link: "/applicant" },
+      { icon: application, name: "Applications", link: "/applicants" },
     ],
   },
   {

@@ -8,7 +8,7 @@ const initialState = developersAdapter.getInitialState({
   count: "",
   activeCount: "",
 });
-const initialActiveState = developersAdapter.getInitialState({
+const initialActiveState = developersActiveAdapter.getInitialState({
   count: "",
   activeCount: "",
 });

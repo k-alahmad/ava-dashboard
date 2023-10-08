@@ -131,8 +131,8 @@ const RoleDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
   const formRef = useRef(null);
 
   const formElements = () => (
-    <form ref={formRef} className="flex flex-col justify-center">
-      <div className="py-8 mx-12">
+    <form ref={formRef} className="flex flex-col justify-cente">
+      <div className="py-8 md:mx-12 ">
         <div className="flex m-4">
           <TextField
             fullWidth

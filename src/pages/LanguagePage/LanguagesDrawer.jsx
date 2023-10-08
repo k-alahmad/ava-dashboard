@@ -18,11 +18,12 @@ import {
   MenuItem,
   FormLabel,
 } from "@mui/material";
-
+import { Directions } from "../../constants";
 const defaultFormState = {
   id: "",
   Name: "",
   Code: "",
+  Direction: "",
 };
 const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
   const [form, setForm] = useState(defaultFormState);
@@ -76,6 +77,7 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
         form: {
           Name: form.Name,
           Code: form.Code,
+          Direction: form.Direction,
         },
       });
     } else {
@@ -85,6 +87,7 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
         form: {
           Name: form.Name,
           Code: form.Code,
+          Direction: form.Direction,
         },
       });
     }
@@ -93,7 +96,7 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
 
   const formElements = () => (
     <form ref={formRef} className="flex flex-col justify-center">
-      <div className="py-8 mx-12">
+      <div className="py-8 md:mx-12">
         <div className="flex m-4">
           <TextField
             fullWidth
@@ -121,6 +124,35 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             size="small"
             required
           />
+        </div>
+        <div className="flex m-4">
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">
+              Completion Status
+            </InputLabel>
+            <Select
+              labelId="Direction"
+              name="Direction"
+              id="Direction"
+              value={form.Direction}
+              label="Completion Status"
+              onChange={handleChange}
+              MenuProps={{
+                style: {
+                  maxHeight: "400px",
+                },
+              }}
+            >
+              {Directions?.map((item, j) => {
+                return (
+                  <MenuItem key={j} value={item} className="!uppercase">
+                    {item}
+                    {`: ${item == "rtl" ? "RIGHT TO LEFT" : "LEFT TO RIGHT"}`}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
         </div>
       </div>
     </form>

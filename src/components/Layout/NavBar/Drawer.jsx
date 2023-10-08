@@ -20,7 +20,7 @@ export default function Drawer({
     >
       <section
         className={
-          "backdrop-blur-[10px] bg-secondary/30 w-screen max-w-[20%] left-0 absolute h-full shadow-2xl duration-500 transition-all transform" +
+          "backdrop-blur-[10px] bg-secondary/30 w-screen max-w-full sm:max-w-[60%] lg:max-w-[35%] xl:max-w-[28%] 2xl:max-w-[25%] left-0 absolute h-full shadow-2xl duration-500 transition-all transform" +
           (isOpen ? " -translate-x-0" : " -translate-x-full")
         }
       >
@@ -29,9 +29,9 @@ export default function Drawer({
             <img
               src={!isLoading ? API_BASE_URL + "/" + img : ""}
               alt={!isLoading ? userName : "Profile"}
-              className="!w-28 !h-28 rounded-xl bg-primary"
+              className="!w-20 !h-20  md:!w-28 md:!h-28 rounded-xl bg-primary"
             />
-            <p className="font-bold text-smaller text-white text-center px-1">
+            <p className="font-bold text-tiny md:text-smaller text-white text-center px-1">
               {!isLoading && userName}
             </p>
             <MdClose
@@ -41,7 +41,7 @@ export default function Drawer({
               }}
             />
           </header>
-          <div className="min-h-[180px] !w-full" />
+          <div className="h-[180px] md:min-h-[160px] !w-full" />
           <div className="h-full flex flex-col justify-start items-start space-y-6 w-[80%]">
             {children}
           </div>

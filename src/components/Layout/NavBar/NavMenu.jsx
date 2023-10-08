@@ -43,7 +43,9 @@ const NavMenu = ({ img, userName, isLoading }) => {
               className="w-10 h-10 rounded-full bg-primary"
             />
           </div>
-          <p className="font-bold text-smaller">{!isLoading && userName} </p>
+          <p className="max-md:hidden font-bold text-tiny  md:text-smaller">
+            {!isLoading && userName}
+          </p>
         </div>
 
         <div
@@ -51,8 +53,16 @@ const NavMenu = ({ img, userName, isLoading }) => {
           onClick={() => setOpen(false)}
           className={`${
             open ? "scale-100" : "scale-0"
-          } absolute z-10 origin-top-right right-0 top-15 bg-secondary/80 backdrop-blur-[200px] rounded-lg shadow-2xl transition-all duration-300 p-4 space-y-2 text-white font-regular text-smaller min-w-40`}
+          } absolute z-10 origin-top-right right-0 top-15 bg-secondary/80 backdrop-blur-[200px] rounded-lg shadow-2xl transition-all duration-300 p-4 space-y-2 text-white font-regular text-tiny md:text-smaller min-w-40`}
         >
+          <div
+            className="md:hidden flex justify-start items-center cursor-pointer gap-x-2"
+            onClick={() => {
+              navigate("/profile");
+            }}
+          >
+            <p className="font-bold text-tiny">{!isLoading && userName}</p>
+          </div>
           <div
             className="flex justify-start items-center cursor-pointer gap-x-2"
             onClick={() => {

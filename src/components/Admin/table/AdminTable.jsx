@@ -130,17 +130,7 @@ const AdminTable = ({
   };
 
   return (
-    // <div>
     <Paper>
-      {/* <div
-        style={{
-          borderColor: "black",
-          overflowX: "initial",
-          overflow: "auto",
-          fontFamily: "FBold",
-        }}
-        className="max-h-[300px] shadow"
-      > */}
       <TableContainer
         className="2xl:max-h-[550px]"
         style={{
@@ -156,7 +146,7 @@ const AdminTable = ({
                 {headerGroup.headers.map((column, i) => (
                   <TableCell
                     key={i}
-                    className="whitespace-no-wrap p-12 sticky"
+                    className="whitespace-no-wrap !p-6 !sticky"
                     {...(!column.sortable
                       ? column.getHeaderProps()
                       : column.getHeaderProps(column.getSortByToggleProps()))}
@@ -181,7 +171,7 @@ const AdminTable = ({
                 <TableRow
                   key={i}
                   {...row.getRowProps()}
-                  className="truncate cursor-pointer "
+                  className="!truncate !cursor-pointer "
                 >
                   {row.cells.map((cell, i) => {
                     return (
@@ -208,7 +198,7 @@ const AdminTable = ({
                       <TableCell
                         key={c}
                         {...cell.getCellProps()}
-                        className={clsx("p-12 ", cell.column.className)}
+                        className={clsx("!p-6 ", cell.column.className)}
                         onMouseEnter={() => {
                           setCellName(cell.column.id);
                           if (cell.column.hover) {
@@ -272,13 +262,8 @@ const AdminTable = ({
           </TableBody>
         </Table>
       </TableContainer>
-
       <div className="flex flex-col justify-center items-center w-full">
         <TablePagination
-          // classes={{
-          //   root: "w-full",
-          //   spacer: "w-0 max-w-0",
-          // }}
           style={{ border: "none" }}
           rowsPerPageOptions={[
             5,

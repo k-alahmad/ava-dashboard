@@ -4,6 +4,8 @@
     <style>
       .cls-1, .cls-2 {
         stroke-width: 0px;
+                fill:white
+
       }
 
       .cls-2 {

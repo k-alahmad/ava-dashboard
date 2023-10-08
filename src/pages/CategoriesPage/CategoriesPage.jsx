@@ -109,60 +109,62 @@ const CategoryPage = () => {
             nodeId={item1 + item1 + 4}
             key={item1}
             label={
-              <div className="flex justify-center items-center">
-                <div className="grid grid-cols-7 flex-1">
-                  <p className="text-xl font-bold">
+              <div className="flex items-center">
+                <div className="flex max-md:flex-col max-md:gap-y-2 justify-between items-start flex-1 gap-0">
+                  <p className="text-xl font-bold flex-1">
                     {
                       categoryes?.entities[item1]?.Category_Translation.find(
                         (x) => x.Language.Code == "En"
                       ).Name
                     }
                   </p>
-                  <p className="text-xl ">
+                  <p className="text-xl flex-1">
                     {"Children: "}
                     {categoryes?.entities[item1]?._count.SubCategory}
                   </p>
-                  <p className="text-xl ">
+                  <p className="text-xl flex-1">
                     {" Properties: "}
                     {categoryes?.entities[item1]?._count.Property}
                   </p>
                   {categoryes?.entities[item1]?.ActiveStatus === true ? (
-                    <div className="text-[green] mx-2">{"Active"}</div>
+                    <div className="text-[green] mx-2 flex-1">{"Active"}</div>
                   ) : (
-                    <div className="text-[red] mx-2">{"Inactive"}</div>
+                    <div className="text-[red] mx-2 flex-1">{"Inactive"}</div>
                   )}
                 </div>
-                <div
-                  className="self-center font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
-                  style={{ transition: "0.3s" }}
-                  onClick={() => {
-                    setDrawerId("");
-                    setDrawerOpen(true);
-                    setParentId(item1);
-                  }}
-                >
-                  <Add fontSize="medium" />
-                </div>
-                <div
-                  className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80  text-[#E8E8E8] mx-2 pb-2"
-                  style={{ transition: "0.3s" }}
-                  onClick={() => {
-                    setDrawerId(item1);
-                    setDrawerOpen(true);
-                    setParentId(item);
-                  }}
-                >
-                  <EditOutlined />
-                </div>
+                <div className="flex max-sm:flex-col max-sm:gap-y-2 items-center justify-center">
+                  <div
+                    className="self-center font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
+                    style={{ transition: "0.3s" }}
+                    onClick={() => {
+                      setDrawerId("");
+                      setDrawerOpen(true);
+                      setParentId(item1);
+                    }}
+                  >
+                    <Add fontSize="medium" />
+                  </div>
+                  <div
+                    className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80  text-[#E8E8E8] mx-2 pb-2"
+                    style={{ transition: "0.3s" }}
+                    onClick={() => {
+                      setDrawerId(item1);
+                      setDrawerOpen(true);
+                      setParentId(item);
+                    }}
+                  >
+                    <EditOutlined />
+                  </div>
 
-                <div
-                  className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
-                  style={{ transition: "0.3s" }}
-                  onClick={(ev) => {
-                    onDelete(ev, categoryes?.entities[item1]);
-                  }}
-                >
-                  <DeleteRounded />
+                  <div
+                    className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
+                    style={{ transition: "0.3s" }}
+                    onClick={(ev) => {
+                      onDelete(ev, categoryes?.entities[item1]);
+                    }}
+                  >
+                    <DeleteRounded />
+                  </div>
                 </div>
               </div>
             }
@@ -226,33 +228,41 @@ const CategoryPage = () => {
                           if (
                             categoryes?.entities[
                               item
-                            ]?.Category_Translation[0]?.Name.toLowerCase().includes(
-                              searchText.toLowerCase()
-                            ) ||
-                            categoryes?.entities[
-                              item
-                            ]?.Category_Translation[1]?.Name.toLowerCase().includes(
-                              searchText.toLowerCase()
-                            ) ||
-                            categoryes?.entities[
-                              item
-                            ]?.Category_Translation[2]?.Name.toLowerCase().includes(
-                              searchText.toLowerCase()
-                            ) ||
-                            categoryes?.entities[
-                              item
-                            ]?.Category_Translation[3]?.Name.toLowerCase().includes(
-                              searchText.toLowerCase()
+                            ]?.Category_Translation.find(
+                              (x) => x.Language.Code == "En"
                             )
+                              ?.Name.toLowerCase()
+                              .includes(searchText.toLowerCase()) ||
+                            categoryes?.entities[
+                              item
+                            ]?.Category_Translation.find(
+                              (x) => x.Language.Code == "Ar"
+                            )
+                              ?.Name.toLowerCase()
+                              .includes(searchText.toLowerCase()) ||
+                            categoryes?.entities[
+                              item
+                            ]?.Category_Translation.find(
+                              (x) => x.Language.Code == "Fa"
+                            )
+                              ?.Name.toLowerCase()
+                              .includes(searchText.toLowerCase()) ||
+                            categoryes?.entities[
+                              item
+                            ]?.Category_Translation.find(
+                              (x) => x.Language.Code == "Ru"
+                            )
+                              ?.Name.toLowerCase()
+                              .includes(searchText.toLowerCase())
                           )
                             return (
                               <TreeItem
                                 nodeId={item}
                                 key={index}
                                 label={
-                                  <div className="flex justify-center items-center">
-                                    <div className="grid grid-cols-7 flex-1 gap-0">
-                                      <p className="text-xl font-bold">
+                                  <div className="flex items-center">
+                                    <div className="flex max-md:flex-col max-md:gap-y-2 justify-between items-start flex-1 gap-0">
+                                      <p className="text-xl font-bold flex-1">
                                         {
                                           categoryes?.entities[
                                             item
@@ -261,14 +271,14 @@ const CategoryPage = () => {
                                           ).Name
                                         }
                                       </p>
-                                      <p className="text-xl">
+                                      <p className="text-xl flex-1">
                                         {" Children: "}
                                         {
                                           categoryes?.entities[item]._count
                                             .SubCategory
                                         }
                                       </p>
-                                      <p className="text-xl">
+                                      <p className="text-xl flex-1">
                                         {" Properties: "}
                                         {
                                           categoryes?.entities[item]._count
@@ -277,16 +287,16 @@ const CategoryPage = () => {
                                       </p>
                                       {categoryes?.entities[item]
                                         .ActiveStatus === true ? (
-                                        <div className="text-[green] mx-2">
+                                        <div className="text-[green] mx-2 flex-1">
                                           {"Active"}
                                         </div>
                                       ) : (
-                                        <div className="text-[red] mx-2">
+                                        <div className="text-[red] mx-2 flex-1">
                                           {"Inactive"}
                                         </div>
                                       )}
                                     </div>
-                                    <div className="flex items-center justify-center">
+                                    <div className="flex max-sm:flex-col max-sm:gap-y-2 items-center justify-center">
                                       <div
                                         className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
                                         style={{ transition: "0.3s" }}
@@ -308,18 +318,18 @@ const CategoryPage = () => {
                                       >
                                         <EditOutlined />
                                       </div>
-                                    </div>
-                                    <div
-                                      className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
-                                      style={{ transition: "0.3s" }}
-                                      onClick={(ev) => {
-                                        onDelete(
-                                          ev,
-                                          categoryes?.entities[item]
-                                        );
-                                      }}
-                                    >
-                                      <DeleteRounded />
+                                      <div
+                                        className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
+                                        style={{ transition: "0.3s" }}
+                                        onClick={(ev) => {
+                                          onDelete(
+                                            ev,
+                                            categoryes?.entities[item]
+                                          );
+                                        }}
+                                      >
+                                        <DeleteRounded />
+                                      </div>
                                     </div>
                                   </div>
                                 }

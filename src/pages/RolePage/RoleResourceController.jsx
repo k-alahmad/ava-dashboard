@@ -34,13 +34,18 @@ const RoleResourceController = ({
         className={`${
           open
             ? "scale-y-100 translate-y-0 h-full"
-            : "scale-y-0 -translate-y-[7%] h-0"
-        } origin-top transition-all duration-500 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-x-1 gap-y-5`}
+            : "scale-y-0 -translate-y-[2%] md:-translate-y-[7%] h-0"
+        } origin-top transition-all duration-500 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-x-1 gap-y-5`}
       >
         {RoleResources?.map((item, index) => {
           return (
-            <FormGroup key={index} className="space-y-2">
-              <p className="text-2xl font-semibold">{item.resource.Name}</p>
+            <FormGroup
+              key={index}
+              className="space-y-2 max-sm:!grid max-sm:!grid-cols-2"
+            >
+              <p className="text-2xl font-semibold max-sm:col-span-full">
+                {item.resource.Name}
+              </p>
               <FormControlLabel
                 control={
                   <Switch

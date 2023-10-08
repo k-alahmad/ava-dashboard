@@ -2,8 +2,13 @@ import { createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "../api/apiSlice";
 
 const propertiesAdapter = createEntityAdapter();
+const propertiesActiveAdapter = createEntityAdapter();
 
 const initialState = propertiesAdapter.getInitialState({
+  count: "",
+  activeCount: "",
+});
+const initialActiveState = propertiesActiveAdapter.getInitialState({
   count: "",
   activeCount: "",
 });
@@ -27,6 +32,24 @@ export const propertiesApiSlice = apiSlice.injectEndpoints({
         ...result.ids.map((id) => ({ type: "Properties", id })),
       ],
     }),
+    getActiveProperties: builder.query({
+      query: (args) => ({
+        url: `/property-active`,
+        method: "GET",
+      }),
+      transformResponse: (responseData) => {
+        initialActiveState.count = responseData.count;
+        const loadedProperties = responseData.Properties;
+        return propertiesActiveAdapter.setAll(
+          initialActiveState,
+          loadedProperties
+        );
+      },
+      providesTags: (result, error, arg) => [
+        { type: "ActiveProperties", id: "LIST" },
+        ...result.ids.map((id) => ({ type: "ActiveProperties", id })),
+      ],
+    }),
     getPropertyById: builder.query({
       query: (args) => `/property/${args.id}`,
       providesTags: (result, error, args) => [
@@ -39,7 +62,10 @@ export const propertiesApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: args.formData,
       }),
-      invalidatesTags: [{ type: "Properties", id: "LIST" }],
+      invalidatesTags: [
+        { type: "Properties", id: "LIST" },
+        { type: "ActiveProperties", id: "LIST" },
+      ],
     }),
     updateProperty: builder.mutation({
       query: (args) => ({
@@ -49,6 +75,7 @@ export const propertiesApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) => [
         { type: "Properties", id: arg.id },
+        { type: "ActiveProperties", id: arg.id },
       ],
     }),
     deleteProperty: builder.mutation({
@@ -57,7 +84,7 @@ export const propertiesApiSlice = apiSlice.injectEndpoints({
         method: "DELETE",
         credentials: "include",
       }),
-      invalidatesTags: ["Properties"],
+      invalidatesTags: ["Properties", "ActiveProperties"],
     }),
   }),
 });
@@ -69,4 +96,6 @@ export const {
   useDeletePropertyMutation,
   useAddPropertyMutation,
   useUpdatePropertyMutation,
+  useGetActivePropertiesQuery,
+  useLazyGetActivePropertiesQuery,
 } = propertiesApiSlice;

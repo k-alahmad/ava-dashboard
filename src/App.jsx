@@ -22,6 +22,9 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import PersonalizationPage from "./pages/PersonalizationPage/PersonalizationPage";
 import GuestsPage from "./pages/GuestInfoPage/GuestPage";
 import PropertyPage from "./pages/PropertiesPage/PropertiesPage";
+import FeedbackPage from "./pages/FeedbackPage/FeedbackPage";
+import EnquiryPage from "./pages/EnquiryPage/EnquiryPage";
+import MetaDataPage from "./pages/MetaDataPage/MetaDataPage";
 const App = () => {
   return (
     <Routes>
@@ -58,6 +61,12 @@ const App = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/guest-info" element={<GuestsPage />} />
         <Route path="/personalization" element={<PersonalizationPage />} />
+        <Route path="/feedback" element={<FeedbackPage />} />
+        <Route path="/enquiry" element={<EnquiryPage />} />
+        <Route path="/meta-data" element={<MetaDataPage />} />
+        <Route path="/list-with-us" element={<DashboardPage />} />
+        <Route path="/jobs" element={<DashboardPage />} />
+        <Route path="/applicants" element={<DashboardPage />} />
         <Route path="*" element={<DashboardPage />} />
       </Route>
     </Routes>

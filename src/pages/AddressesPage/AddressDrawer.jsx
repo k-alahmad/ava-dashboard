@@ -200,7 +200,7 @@ const AddressDrawer = ({
 
   const formElements = () => (
     <form ref={formRef} className="flex flex-col justify-center">
-      <div className="py-8 mx-12">
+      <div className="py-8 md:mx-12">
         <div className="flex flex-row items-center justify-center">
           <div className="flex flex-col m-4">
             <Button

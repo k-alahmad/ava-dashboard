@@ -178,7 +178,7 @@ const CategoryDrawer = ({
 
   const formElements = () => (
     <form ref={formRef} className="flex flex-col justify-center">
-      <div className="py-8 mx-12">
+      <div className="py-8 md:mx-12">
         <div className="w-full flex justify-center items-center">
           <Slider
             dots={false}

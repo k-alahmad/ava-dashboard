@@ -9,6 +9,7 @@ import {
 } from "../../redux/users/usersSlice";
 import { useGetActiveRolesQuery } from "../../redux/roles/rolesSlice";
 import { useGetActiveTeamsQuery } from "../../redux/teams/teamsSlice";
+import { useGetActiveAddressQuery } from "../../redux/addresses/addressesSlice";
 import {
   CircularProgress,
   TextField,
@@ -32,6 +33,7 @@ const defaultFormState = {
   Gender: "",
   roleID: "",
   teamID: "",
+  addressId: "",
   ActiveStatus: true,
   Image: "",
 };
@@ -50,13 +52,25 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     isLoading: rolesLoading,
     isSuccess: rolesSuccess,
     isFetching: rolesIsFetching,
+    isError: rolesIsError,
+    error: roleError,
   } = useGetActiveRolesQuery();
   const {
     data: teams,
     isLoading: teamsLoading,
     isSuccess: teamsSuccess,
     isFetching: teamsIsFetching,
+    isError: teamsIsError,
+    error: teamsError,
   } = useGetActiveTeamsQuery();
+  const {
+    data: addresses,
+    isLoading: addressesLoading,
+    isSuccess: addressesSuccess,
+    isFetching: addressesIsFetching,
+    isError: addressesIsError,
+    error: addressesError,
+  } = useGetActiveAddressQuery();
   const [addUser, { isLoading: addLoading, isSuccess: addSuccess }] =
     useAddUserMutation();
   const [updateUser, { isLoading: updateLoading, isSuccess: updateSuccess }] =
@@ -128,9 +142,10 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     formData.append("Gender", form.Gender);
     formData.append("PhoneNo", form.PhoneNo);
     formData.append("roleID", form.roleID);
+    formData.append("addressId", form.addressId);
     formData.append("teamID", form.teamID);
     formData.append("ActiveStatus", form.ActiveStatus);
-    formData.append("Image", form.Image);
+    image && formData.append("Image", image);
     if (drawerID == "") {
       formData.append("Password", form.Password);
 
@@ -146,7 +161,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
 
   const formElements = () => (
     <form ref={formRef} className="flex flex-col justify-center">
-      <div className="py-8 mx-12">
+      <div className="py-8 md:mx-12">
         <div className="flex flex-row items-center justify-center">
           <div className="flex flex-col m-4">
             <Button
@@ -341,7 +356,38 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             </FormControl>
           </div>
         )}
-
+        {addressesSuccess && (
+          <div className=" flex m-4">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Address</InputLabel>
+              <Select
+                labelId="Address"
+                name="addressId"
+                id="addressId"
+                value={form.addressId === "" ? "" : form.addressId}
+                label="Address"
+                onChange={handleChange}
+                MenuProps={{
+                  style: {
+                    maxHeight: "400px",
+                  },
+                }}
+              >
+                {addresses?.ids.map((item) => {
+                  return (
+                    <MenuItem key={item} value={item}>
+                      {
+                        addresses.entities[item]?.Address_Translation?.find(
+                          (x) => x.Language.Code == "En"
+                        ).Name
+                      }
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </div>
+        )}
         <div className="flex m-4">
           <FormGroup>
             <FormControlLabel
@@ -384,7 +430,9 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
         rolesLoading ||
         rolesIsFetching ||
         teamsLoading ||
-        teamsIsFetching ? (
+        teamsIsFetching ||
+        addressesIsFetching ||
+        addressesLoading ? (
           <div className="flex flex-row justify-center items-center h-full w-full">
             <CircularProgress color="primary" />
           </div>

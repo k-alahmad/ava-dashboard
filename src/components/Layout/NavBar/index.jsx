@@ -50,17 +50,19 @@ const NavBar = () => {
         className={`flex justify-between items-center font-regular bg-primary px-4 text-third z-50 fixed w-full shadow-lg`}
       >
         <div className="flex items-center justify-center">
-          <div className="m-1 p-2 bg-secondary/80 backdrop-blur-[200px] rounded-xl shadow-xl drop-shadow-xl">
+          <div className="m-1 p-2 bg-secondary/80 backdrop-blur-[200px] rounded-xl shadow-xl drop-shadow-xl max-md:hidden">
             <img src={Logo} alt="LOGO" className="w-14 h-10 scale-125" />
           </div>
           <div
             onClick={() => setMobileOpen(true)}
-            className="cursor-pointer mx-8"
+            className="cursor-pointer md:mx-8"
           >
             <MdDehaze fontSize="large" />
           </div>
         </div>
-        <p className="text-med font-bold">{pathName ?? "Not Found"}</p>
+        <p className="text-smaller sm:text-small lg:text-med text-center font-bold">
+          {pathName ?? "Not Found"}
+        </p>
         <NavMenu
           img={User?.Image?.URL}
           userName={User?.Name}
@@ -78,6 +80,7 @@ const NavBar = () => {
         {data.map((e, i) =>
           e.link ? (
             <LinkElement
+              icon={e.icon}
               key={e.link}
               name={e.name}
               link={e.link}
@@ -96,9 +99,18 @@ const NavBar = () => {
                   expand.key == i && expand.status
                     ? "text-primary"
                     : "text-white"
-                } font-semibold text-small flex justify-between items-center`}
+                } font-semibold text-tiny md:text-smaller 2xl:text-small flex justify-between items-center`}
               >
-                <p className="px-1 cursor-pointer">{e.name}</p>
+                <div className="flex items-center">
+                  {e.icon && (
+                    <img
+                      className="object-contain w-10 h-10"
+                      src={e.icon}
+                      alt={e.name}
+                    />
+                  )}
+                  <p className="px-1 cursor-pointer">{e.name}</p>
+                </div>
                 {expand.status && expand.key == i ? (
                   <ExpandLess fontSize="large" />
                 ) : (
@@ -114,6 +126,7 @@ const NavBar = () => {
                 {e.childs.map((item, index) => {
                   return (
                     <LinkElement
+                      icon={item.icon}
                       key={index}
                       name={item.name}
                       link={item.link}

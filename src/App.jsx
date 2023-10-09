@@ -27,6 +27,7 @@ import EnquiryPage from "./pages/EnquiryPage/EnquiryPage";
 import MetaDataPage from "./pages/MetaDataPage/MetaDataPage";
 import JobsPage from "./pages/JobsPage/JobsPage";
 import ApplicationPage from "./pages/ApplicationsPage/ApplicationPage";
+import ListingPage from "./pages/ListingsPage/ListingsPage";
 const App = () => {
   return (
     <Routes>
@@ -68,7 +69,7 @@ const App = () => {
         <Route path="/meta-data" element={<MetaDataPage />} />
         <Route path="/jobs" element={<JobsPage />} />
         <Route path="/applicants" element={<ApplicationPage />} />
-        <Route path="/list-with-us" element={<DashboardPage />} />
+        <Route path="/list-with-us" element={<ListingPage />} />
         <Route path="*" element={<DashboardPage />} />
       </Route>
     </Routes>

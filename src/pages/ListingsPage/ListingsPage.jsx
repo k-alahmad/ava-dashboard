@@ -115,17 +115,16 @@ const ListingPage = () => {
         drawerID={drawerID}
         setDrawerID={setDrawerID}
       />
-
       <PageSimple
         content={
           <PageCard
             searchText={searchText}
             handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel={<Add fontSize="large" />}
-            onClickPrimaryBtn={(ev) => {
-              setDrawerID("");
-              setDrawerOpen(true);
-            }}
+            // PrimaryButtonlabel={<Add fontSize="large" />}
+            // onClickPrimaryBtn={(ev) => {
+            //   setDrawerID("");
+            //   setDrawerOpen(true);
+            // }}
             table={
               isLoading || isFetching ? (
                 <div className="flex flex-row justify-center items-center p-44">

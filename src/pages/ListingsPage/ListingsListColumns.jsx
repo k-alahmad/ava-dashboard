@@ -3,17 +3,24 @@ import { IconButton } from "@mui/material";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 export const ComposeColumns = (onDelete) => {
   return [
-    // {
-    //   Header: "Name",
-    //   id: "Name",
-    //   accessor: (d) =>
-    //     d.Property_Translation.find((x) => x.Language.Code == "En").Name,
-    //   className: "font-bold",
-    //   sortable: true,
-    //   show: false,
-    //   checked: true,
-    //   lockToggle: false,
-    // },
+    {
+      Header: "Owner Name",
+      id: "OwnerName",
+      accessor: (d) => d.Owner.FullName,
+      className: "font-bold",
+      sortable: true,
+      show: false,
+      checked: true,
+    },
+    {
+      Header: "Guest Email",
+      id: "GuestEmail ",
+      accessor: (d) => d.Owner.Email,
+      className: "font-bold",
+      sortable: true,
+      show: false,
+      checked: true,
+    },
     {
       Header: "Price",
       id: "Price",
@@ -54,9 +61,9 @@ export const ComposeColumns = (onDelete) => {
       checked: true,
     },
     {
-      Header: "Furnishing Status",
-      id: "FurnishingStatus",
-      accessor: (d) => d.FurnishingStatus,
+      Header: "Area",
+      id: "Area",
+      accessor: (d) => d.Area,
       className: "font-bold",
       sortable: true,
       show: false,
@@ -72,7 +79,7 @@ export const ComposeColumns = (onDelete) => {
       checked: true,
     },
     {
-      Header: "Created At",
+      Header: "Sent At",
       id: "CreatedAt",
       accessor: (d) => d.CreatedAt.split("T")[0],
       className: "font-bold",
@@ -80,30 +87,6 @@ export const ComposeColumns = (onDelete) => {
       show: false,
       checked: true,
     },
-    {
-      Header: "Updated At",
-      id: "UpdatedAt",
-      accessor: (d) => d.UpdatedAt.split("T")[0],
-      className: "font-bold",
-      sortable: true,
-      show: false,
-      checked: true,
-    },
-    {
-      Header: "Active",
-      id: "ActiveStatus",
-      accessor: (d) =>
-        d.ActiveStatus === true ? (
-          <div className="text-[green]"> {"Active"} </div>
-        ) : (
-          <div className="text-[red]"> {"InActive"} </div>
-        ),
-      className: "font-bold",
-      sortable: true,
-      show: false,
-      checked: true,
-    },
-
     {
       Header: "Action",
       id: "action",

@@ -184,7 +184,7 @@ const ProfilePage = () => {
         </div>
         <form
           ref={formRef}
-          className="flex flex-col justify-center col-span-2 p-4 shadow-lg drop-shadow-lg bg-white rounded-md py-3 bg-black/20"
+          className="flex flex-col justify-center col-span-2 p-4 shadow-lg drop-shadow-lg rounded-md py-3 bg-black/20"
         >
           <div className="flex m-4 font-bold text-med justify-between items-center">
             <p>Profile Information</p>

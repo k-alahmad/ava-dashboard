@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import PageDrawer from "../../components/Admin/layout/PageDrawer";
 import {
-  useAddListingMutation,
   useLazyGetListingByIdQuery,
   useUpdateListingMutation,
 } from "../../redux/listings/listingsSlice";
+import { useAddPropertyMutation } from "../../redux/properties/propertiesSlice";
 import { useGetActiveCategoryQuery } from "../../redux/categories/categoriesSlice";
 import { useGetActiveDevelopersQuery } from "../../redux/developers/developersSlice";
 import { useGetActiveAddressQuery } from "../../redux/addresses/addressesSlice";
@@ -30,7 +30,7 @@ import {
 } from "../../constants";
 import RichTextBox from "../../components/Forms/RichTextBox";
 import {
-  useDeleteAllListingImagesMutation,
+  // useDeleteAllListingImagesMutation,
   useDeleteImageMutation,
 } from "../../redux/images/imagesSlice";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
@@ -118,15 +118,15 @@ const ListingDrawer = ({
     getListingById,
     { data, isLoading, isFetching, isError, error, isSuccess },
   ] = useLazyGetListingByIdQuery();
-  const [
-    addListing,
-    {
-      isLoading: addLoading,
-      isSuccess: addSuccess,
-      isError: addIsError,
-      error: addError,
-    },
-  ] = useAddListingMutation();
+  // const [
+  //   addListing,
+  //   {
+  //     isLoading: addLoading,
+  //     isSuccess: addSuccess,
+  //     isError: addIsError,
+  //     error: addError,
+  //   },
+  // ] = useAddListingMutation();
   const [
     updateListing,
     {
@@ -136,13 +136,13 @@ const ListingDrawer = ({
       error: updateError,
     },
   ] = useUpdateListingMutation();
-  const [
-    deleteallListingImages,
-    {
-      isLoading: deleteAllImagesIsLoading,
-      isSuccess: deleteAllImagesIsSuccess,
-    },
-  ] = useDeleteAllListingImagesMutation();
+  // const [
+  //   deleteallListingImages,
+  //   {
+  //     isLoading: deleteAllImagesIsLoading,
+  //     isSuccess: deleteAllImagesIsSuccess,
+  //   },
+  // ] = useDeleteAllListingImagesMutation();
   const [
     deleteImage,
     {
@@ -163,7 +163,7 @@ const ListingDrawer = ({
             AddressID: data.addressId,
             CategoryID: data.categoryId,
           });
-          setListings_Translation(data.Listing_Translation);
+          setListings_Translation(data.ListWithUs_Translation);
         }
       } else {
         setForm(defaultFormState);
@@ -218,16 +218,15 @@ const ListingDrawer = ({
     );
   }
   useEffect(() => {
-    if (addSuccess || updateSuccess || addIsError || updateIsError) {
+    if (updateSuccess || updateIsError) {
       setForm(defaultFormState);
       closeDrawer();
     }
-  }, [addSuccess, updateSuccess, addIsError, updateIsError]);
+  }, [updateSuccess, updateIsError]);
 
   useEffect(() => {
-    if (deleteAllImagesIsSuccess || deleteSingleImageIsSuccess)
-      getListingById({ id: drawerID });
-  }, [deleteAllImagesIsSuccess, deleteSingleImageIsSuccess]);
+    if (deleteSingleImageIsSuccess) getListingById({ id: drawerID });
+  }, [deleteSingleImageIsSuccess]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
@@ -272,21 +271,21 @@ const ListingDrawer = ({
     }
     for (let i = 0; i < listings_Translation.length; i++) {
       formData.append(
-        `Listing_Translation[${i}][Name]`,
+        `ListWithUs_Translation[${i}][Name]`,
         listings_Translation[i].Name
       );
       formData.append(
-        `Listing_Translation[${i}][Description]`,
+        `ListWithUs_Translation[${i}][Description]`,
         listings_Translation[i].Description
       );
       formData.append(
-        `Listing_Translation[${i}][languagesID]`,
+        `ListWithUs_Translation[${i}][languagesID]`,
         listings_Translation[i].languagesID
       );
     }
     if (drawerID == "") {
       //add
-      addListing({ formData });
+      // addListing({ formData });
     } else {
       //update
       updateListing({ id: drawerID, formData });
@@ -371,7 +370,7 @@ const ListingDrawer = ({
             {form.Images?.length !== 0 && !isLoading && (
               <div className="flex flex-col justify-center items-center">
                 <p className="text-2xl font-bold">Current Images</p>
-                <div
+                {/* <div
                   onClick={() => {
                     deleteallListingImages({ id: drawerID });
                   }}
@@ -379,7 +378,7 @@ const ListingDrawer = ({
                 >
                   <DeleteSweepOutlinedIcon sx={{ fontSize: "50px" }} /> Delete
                   All Images
-                </div>
+                </div> */}
                 <div className="grid grid-cols-4 gap-2 m-4">
                   {data.Images?.map((item, index) => (
                     <div className="" key={index}>
@@ -454,7 +453,7 @@ const ListingDrawer = ({
                       label={`${item.Language.Name} Name`}
                       id={"Name" + item.Language.Code}
                       onChange={(e) => handleTranslationChange(e, item, "Name")}
-                      value={item.Title}
+                      value={item.Name}
                       variant="outlined"
                       size="small"
                       required
@@ -923,7 +922,7 @@ const ListingDrawer = ({
       // }
       children={
         isLoading ||
-        addLoading ||
+        // addLoading ||
         updateLoading ||
         isFetching ||
         addressesIsLoading ||
@@ -933,7 +932,7 @@ const ListingDrawer = ({
         developersIsLoading ||
         developersIsFethcing ||
         deleteSingleImageIsLoading ||
-        deleteAllImagesIsLoading ||
+        // deleteAllImagesIsLoading ||
         lngIsLoading ||
         lngIsFethcing ? (
           <div className="flex flex-row justify-center items-center h-screen w-full">

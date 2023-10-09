@@ -406,7 +406,7 @@ const PropertyDrawer = ({
           <div className="w-full flex justify-center items-center col-span-full">
             <Slider
               dots={false}
-              arrows={false}
+              arrows={true}
               infinite={false}
               slidesToShow={lngs.normalData.length ?? 4}
               slidesToScroll={1}
@@ -454,7 +454,7 @@ const PropertyDrawer = ({
                       label={`${item.Language.Name} Name`}
                       id={"Name" + item.Language.Code}
                       onChange={(e) => handleTranslationChange(e, item, "Name")}
-                      value={item.Title}
+                      value={item.Name}
                       variant="outlined"
                       size="small"
                       required

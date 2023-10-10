@@ -29,13 +29,13 @@ const NavMenu = ({ img, userName, isLoading }) => {
       <div className="relative">
         <div
           onClick={() => setOpen(!open)}
-          className={`flex justify-center items-center m-1 gap-x-2 bg-secondary/80 backdrop-blur-[200px] rounded-xl p-2 cursor-pointer shadow-xl drop-shadow-xl ${
+          className={`flex justify-center items-center m-1 gap-x-2 p-2 cursor-pointer ${
             isLoading && "animate-pulse"
           }`}
         >
           <div
             style={{ WebkitTapHighlightColor: "transparent" }}
-            className="p-0 m-0 relative text-black text-center font-bold text-smaller cursor-pointer"
+            className="p-0 m-0 relative text-center font-bold text-smaller cursor-pointer"
           >
             <img
               src={!isLoading ? API_BASE_URL + "/" + img : ""}
@@ -43,7 +43,7 @@ const NavMenu = ({ img, userName, isLoading }) => {
               className="w-10 h-10 rounded-full bg-primary"
             />
           </div>
-          <p className="max-md:hidden font-bold text-tiny  md:text-smaller">
+          <p className="max-md:hidden font-bold text-tiny md:text-small text-third">
             {!isLoading && userName}
           </p>
         </div>
@@ -53,7 +53,7 @@ const NavMenu = ({ img, userName, isLoading }) => {
           onClick={() => setOpen(false)}
           className={`${
             open ? "scale-100" : "scale-0"
-          } absolute z-10 origin-top-right right-0 top-15 bg-secondary/80 backdrop-blur-[200px] rounded-lg shadow-2xl transition-all duration-300 p-4 space-y-2 text-white font-regular text-tiny md:text-smaller min-w-40`}
+          } absolute z-10 origin-top-right right-0 top-15 bg-secondary/80 backdrop-blur-[200px] rounded-lg shadow-2xl transition-all duration-300 p-4 space-y-2 text-third font-regular text-tiny md:text-smaller min-w-40`}
         >
           <div
             className="md:hidden flex justify-start items-center cursor-pointer gap-x-2"
@@ -69,7 +69,7 @@ const NavMenu = ({ img, userName, isLoading }) => {
               navigate("/profile");
             }}
           >
-            <Person />
+            <Person className="text-primary" />
             <p>View Profile</p>
           </div>
           <div
@@ -78,7 +78,7 @@ const NavMenu = ({ img, userName, isLoading }) => {
               navigate("/personalization");
             }}
           >
-            <Style />
+            <Style className="text-primary" />
             <p>Personalization</p>
           </div>
           <div
@@ -87,7 +87,7 @@ const NavMenu = ({ img, userName, isLoading }) => {
               dispatch(logOut());
             }}
           >
-            <Logout />
+            <Logout className="text-primary" />
             <p>Logout</p>
           </div>
         </div>

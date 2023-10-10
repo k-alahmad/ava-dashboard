@@ -6,7 +6,7 @@ import TreeView from "@mui/lab/TreeView";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import TreeItem from "@mui/lab/TreeItem";
-import { CircularProgress, IconButton } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { EditOutlined, DeleteRounded } from "@mui/icons-material";
 import DeleteDialog from "../../components/Admin/DeleteDialog";
 import {
@@ -134,7 +134,7 @@ const CategoryPage = () => {
                 </div>
                 <div className="flex max-sm:flex-col max-sm:gap-y-2 items-center justify-center">
                   <div
-                    className="self-center font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
+                    className="self-center font-bold text-xl rounded px-2 py-1 bg-primary hover:bg-primary/80 text-secondary mx-2 pb-2"
                     style={{ transition: "0.3s" }}
                     onClick={() => {
                       setDrawerId("");
@@ -145,7 +145,7 @@ const CategoryPage = () => {
                     <Add fontSize="medium" />
                   </div>
                   <div
-                    className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80  text-[#E8E8E8] mx-2 pb-2"
+                    className="self-center  font-bold text-xl rounded px-2 py-1 bg-primary hover:bg-primary/80  text-secondary mx-2 pb-2"
                     style={{ transition: "0.3s" }}
                     onClick={() => {
                       setDrawerId(item1);
@@ -157,7 +157,7 @@ const CategoryPage = () => {
                   </div>
 
                   <div
-                    className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
+                    className="self-center  font-bold text-xl rounded px-2 py-1 bg-primary hover:bg-primary/80 text-secondary mx-2 pb-2"
                     style={{ transition: "0.3s" }}
                     onClick={(ev) => {
                       onDelete(ev, categoryes?.entities[item1]);
@@ -298,7 +298,7 @@ const CategoryPage = () => {
                                     </div>
                                     <div className="flex max-sm:flex-col max-sm:gap-y-2 items-center justify-center">
                                       <div
-                                        className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
+                                        className="self-center  font-bold text-xl rounded px-2 py-1 bg-primary hover:bg-primary/80 text-secondary mx-2 pb-2"
                                         style={{ transition: "0.3s" }}
                                         onClick={() => {
                                           setDrawerId("");
@@ -309,7 +309,7 @@ const CategoryPage = () => {
                                         <Add fontSize="medium" />
                                       </div>
                                       <div
-                                        className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
+                                        className="self-center  font-bold text-xl rounded px-2 py-1 bg-primary hover:bg-primary/80 text-secondary mx-2 pb-2"
                                         style={{ transition: "0.3s" }}
                                         onClick={() => {
                                           setDrawerId(item);
@@ -319,7 +319,7 @@ const CategoryPage = () => {
                                         <EditOutlined />
                                       </div>
                                       <div
-                                        className="self-center  font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
+                                        className="self-center  font-bold text-xl rounded px-2 py-1 bg-primary hover:bg-primary/80 text-secondary mx-2 pb-2"
                                         style={{ transition: "0.3s" }}
                                         onClick={(ev) => {
                                           onDelete(

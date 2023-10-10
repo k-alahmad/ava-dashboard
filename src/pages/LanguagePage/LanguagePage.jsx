@@ -3,7 +3,11 @@ import PageCard from "../../components/Admin/PageCard";
 import { useDispatch } from "react-redux";
 import AdminTable from "../../components/Admin/table/AdminTable";
 import { ComposeColumns } from "./LanguageListColumns";
-import { toggleAllColumns, exportToCSV } from "../../utils/table-helper";
+import {
+  toggleAllColumns,
+  exportToCSV,
+  toggleColumn,
+} from "../../utils/table-helper";
 import PageSimple from "../../components/Admin/layout/PageSimple";
 
 import { CircularProgress } from "@mui/material";

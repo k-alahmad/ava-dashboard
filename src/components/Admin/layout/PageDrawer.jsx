@@ -26,14 +26,17 @@ export default function PageDrawer({
         }
       >
         <article className="relative w-screen max-w-full pb-10 flex flex-col justify-start items-center space-y-6 overflow-y-scroll h-full">
-          <header className="w-full shadow-xl px-[3%] pt-4 fixed z-20 bg-primary">
-            <div className=" font-bold w-full flex justify-between items-center place-self-center">
-              <p className="font-regular text-med">{title}</p>
-              <MdClose
-                size={30}
-                className="cursor-pointer"
-                onClick={onCancelClick}
-              />
+          <header className="w-full shadow-xl px-[3%] pt-4 fixed z-20 bg-secondary overflow-hidden">
+            <div className="relative">
+              <div className="h-[500px] w-1/2 rounded-full bg-primary/50 blur-[120px]  absolute top-0 -right-[10%]" />
+              <div className=" font-bold w-full flex justify-between items-center place-self-center">
+                <p className="font-regular text-med text-primary">{title}</p>
+                <MdClose
+                  size={30}
+                  className="cursor-pointer text-primary z-20"
+                  onClick={onCancelClick}
+                />
+              </div>
             </div>
             <div className="h-[2px] w-full mt-4" />
           </header>

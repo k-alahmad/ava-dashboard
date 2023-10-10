@@ -135,7 +135,7 @@ const AddressPage = () => {
                 </div>
                 <div className="flex max-sm:flex-col max-sm:gap-y-2 items-center justify-center">
                   <div
-                    className="self-center font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
+                    className="self-center font-bold text-xl rounded px-2 py-1 bg-primary hover:bg-primary/80 text-secondary mx-2 pb-2"
                     style={{ transition: "0.3s" }}
                     onClick={() => {
                       setDrawerId("");
@@ -146,7 +146,7 @@ const AddressPage = () => {
                     <Add fontSize="medium" />
                   </div>
                   <div
-                    className="self-center font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
+                    className="self-center font-bold text-xl rounded px-2 py-1 bg-primary hover:bg-primary/80 text-secondary mx-2 pb-2"
                     style={{ transition: "0.3s" }}
                     onClick={() => {
                       setDrawerId(item1);
@@ -158,7 +158,7 @@ const AddressPage = () => {
                   </div>
 
                   <div
-                    className="self-center font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
+                    className="self-center font-bold text-xl rounded px-2 py-1 bg-primary hover:bg-primary/80 text-secondary mx-2 pb-2"
                     style={{ transition: "0.3s" }}
                     onClick={(ev) => {
                       onDelete(ev, addresses?.entities[item1]);
@@ -285,7 +285,7 @@ const AddressPage = () => {
                                     </div>
                                     <div className="flex max-sm:flex-col max-sm:gap-y-2 items-center justify-center">
                                       <div
-                                        className="self-center font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
+                                        className="self-center font-bold text-xl rounded px-2 py-1 bg-primary hover:bg-primary/80 text-secondary mx-2 pb-2"
                                         style={{ transition: "0.3s" }}
                                         onClick={() => {
                                           setDrawerId("");
@@ -296,7 +296,7 @@ const AddressPage = () => {
                                         <Add fontSize="medium" />
                                       </div>
                                       <div
-                                        className="self-center font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
+                                        className="self-center font-bold text-xl rounded px-2 py-1 bg-primary hover:bg-primary/80 text-secondary mx-2 pb-2"
                                         style={{ transition: "0.3s" }}
                                         onClick={() => {
                                           setDrawerId(item);
@@ -306,7 +306,7 @@ const AddressPage = () => {
                                         <EditOutlined />
                                       </div>
                                       <div
-                                        className="self-center font-bold text-xl rounded px-2 py-1 bg-secondary hover:bg-secondary/80 text-[#E8E8E8] mx-2 pb-2"
+                                        className="self-center font-bold text-xl rounded px-2 py-1 bg-primary hover:bg-primary/80 text-secondary mx-2 pb-2"
                                         style={{ transition: "0.3s" }}
                                         onClick={(ev) => {
                                           onDelete(

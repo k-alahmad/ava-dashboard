@@ -135,12 +135,15 @@ const ProfilePage = () => {
   return (
     isSuccess && (
       <div className="px-[5%] lg:grid lg:grid-cols-3 my-6 gap-4 max-lg:space-y-12 lg:gap-y-8">
-        <div className="flex flex-col justify-center items-center ">
-          <div className="relative h-[250px] w-[250px] sm:h-[350px] sm:w-[350px] bg-black/20">
+        <div className="flex flex-col justify-start items-center">
+          <p className="text-secondary text-[35px] text-center my-6 md:my-12 font-bold">
+            {data?.Name}'s Profile
+          </p>
+          <div className="relative h-[250px] w-[250px] sm:h-[350px] sm:w-[350px] bg-secondary/50 rounded-3xl">
             <img
               src={!image ? API_BASE_URL + "/" + data?.Image?.URL : imageURL}
               alt={data?.Name}
-              className="rounded-md shadow-lg drop-shadow-lg object-cover object-center w-full h-full"
+              className="rounded-3xl shadow-lg drop-shadow-lg object-cover object-center w-full h-full"
             />
             {imageURL && (
               <div
@@ -184,7 +187,7 @@ const ProfilePage = () => {
         </div>
         <form
           ref={formRef}
-          className="flex flex-col justify-center col-span-2 p-4 shadow-lg drop-shadow-lg rounded-md py-3 bg-black/20"
+          className="flex flex-col justify-center col-span-2 p-4  rounded-md py-3"
         >
           <div className="flex m-4 font-bold text-med justify-between items-center">
             <p>Profile Information</p>
@@ -360,7 +363,7 @@ const ProfilePage = () => {
           </div>
         </form>
         {teamsSuccess && !teamsLoading && !teamsIsFetching && (
-          <div className="col-span-1 h-[400px] shadow-lg drop-shadow-lg py-4 px-2 rounded-md overflow-hidden bg-black/20">
+          <div className="col-span-1 h-[400px] py-4 px-2 rounded-md overflow-hidden">
             <p className="text-med font-bold p-2">Teammates</p>
             <div className="overflow-y-auto space-y-5 h-full max-h-[90%] px-2">
               {teamates?.ids.map((item, index) => {
@@ -368,7 +371,7 @@ const ProfilePage = () => {
                   return (
                     <div
                       key={index}
-                      className="bg-primary text-black rounded-md backdrop-blur-[50px] shadow-md min-h-[55px] flex items-center justify-between"
+                      className="bg-secondary text-primary rounded-lg backdrop-blur-[50px] shadow-lg drop-shadow-lg min-h-[75px] flex items-center justify-between"
                     >
                       <img
                         src={
@@ -389,14 +392,14 @@ const ProfilePage = () => {
             </div>
           </div>
         )}
-        <div className="col-span-1 h-[400px] shadow-lg drop-shadow-lg py-4 px-2 rounded-md overflow-hidden bg-black/20">
+        <div className="col-span-1 h-[400px] py-4 px-2 rounded-md overflow-hidden">
           <p className="text-med font-bold p-2">Articles</p>
           <div className="overflow-y-auto space-y-5 h-full max-h-[90%] px-2">
             {data.Articles?.map((item, index) => {
               return (
                 <div
                   key={index}
-                  className="bg-primary text-black rounded-md backdrop-blur-[50px] shadow-md min-h-[55px] flex items-center justify-between"
+                  className="bg-secondary text-primary rounded-lg backdrop-blur-[50px] shadow-lg drop-shadow-lg min-h-[75px] flex items-center justify-between"
                 >
                   <img
                     src={API_BASE_URL + "/" + item?.Image?.URL}
@@ -419,7 +422,7 @@ const ProfilePage = () => {
             })}
           </div>
         </div>
-        <div className="col-span-1 flex flex-col h-[400px] space-y-5 shadow-lg drop-shadow-lg p-4 rounded-md bg-black/20">
+        <div className="col-span-1 flex flex-col h-[400px] space-y-5 p-4 rounded-md">
           <p className="text-med font-bold p-2">Change Password</p>
           <div className="flex-1 flex flex-col justify-evenly items-center">
             <div className="flex m-4 w-full">
@@ -473,61 +476,59 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
-        <div className="col-span-full shadow-lg drop-shadow-lg py-4 px-2 rounded-md bg-black/20">
+        <div className="col-span-full py-4 px-2 rounded-md">
           <p className="text-med font-bold p-2">Permissions</p>
-          <div className="max-h-[600px] overflow-y-auto px-2">
-            <table className="w-full border-2 border-black/30">
-              <tbody>
-                <tr className="border-black/30 border-2 text-tiny md:text-smaller text-center">
-                  <th className="p-2 border-black/30 border-2">Name</th>
-                  <th className="p-2 border-black/30 border-2">READ</th>
-                  <th className="p-2 border-black/30 border-2">CREATE</th>
-                  <th className="p-2 border-black/30 border-2">UPDATE</th>
-                  <th className="p-2 border-black/30 border-2">DELETE</th>
-                </tr>
-                {data.Role.Role_Resources.map((item, index) => {
-                  return (
-                    <tr
-                      key={index}
-                      className="border-black/30 border-2 text-tiny md:text-smaller text-center"
+          <table className="w-full border-2 border-black/30">
+            <tbody>
+              <tr className="border-black/30 border-2 text-tiny md:text-smaller text-center">
+                <th className="p-2 border-black/30 border-2">Name</th>
+                <th className="p-2 border-black/30 border-2">READ</th>
+                <th className="p-2 border-black/30 border-2">CREATE</th>
+                <th className="p-2 border-black/30 border-2">UPDATE</th>
+                <th className="p-2 border-black/30 border-2">DELETE</th>
+              </tr>
+              {data.Role.Role_Resources.map((item, index) => {
+                return (
+                  <tr
+                    key={index}
+                    className="border-black/30 border-2 text-tiny md:text-smaller text-center"
+                  >
+                    <td className="p-2 border-black/30 border-2 font-bold text-start">
+                      {item.resource?.Name}
+                    </td>
+                    <td
+                      className={`p-2 border-black/30 border-2 ${
+                        item.Read ? "text-green-600" : "text-red-600"
+                      }`}
                     >
-                      <td className="p-2 border-black/30 border-2 font-bold text-start">
-                        {item.resource?.Name}
-                      </td>
-                      <td
-                        className={`p-2 border-black/30 border-2 ${
-                          item.Read ? "text-green-600" : "text-red-600"
-                        }`}
-                      >
-                        {item.Read ? "YES" : "NO"}
-                      </td>
-                      <td
-                        className={`p-2 border-black/30 border-2 ${
-                          item.Create ? "text-green-600" : "text-red-600"
-                        }`}
-                      >
-                        {item.Read ? "YES" : "NO"}
-                      </td>
-                      <td
-                        className={`p-2 border-black/30 border-2 ${
-                          item.Update ? "text-green-600" : "text-red-600"
-                        }`}
-                      >
-                        {item.Read ? "YES" : "NO"}
-                      </td>
-                      <td
-                        className={`p-2 border-black/30 border-2 ${
-                          item.Read ? "text-green-600" : "text-red-600"
-                        }`}
-                      >
-                        {item.Read ? "YES" : "NO"}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                      {item.Read ? "YES" : "NO"}
+                    </td>
+                    <td
+                      className={`p-2 border-black/30 border-2 ${
+                        item.Create ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      {item.Read ? "YES" : "NO"}
+                    </td>
+                    <td
+                      className={`p-2 border-black/30 border-2 ${
+                        item.Update ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      {item.Read ? "YES" : "NO"}
+                    </td>
+                    <td
+                      className={`p-2 border-black/30 border-2 ${
+                        item.Read ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      {item.Read ? "YES" : "NO"}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
     )

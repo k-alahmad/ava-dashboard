@@ -47,27 +47,37 @@ const NavBar = () => {
   return (
     <>
       <div
-        className={`flex justify-between items-center font-regular bg-primary px-4 text-third z-50 fixed w-full shadow-lg`}
+        className={`font-regular bg-secondary text-third z-50 fixed w-full shadow-lg`}
       >
-        <div className="flex items-center justify-center">
-          <div className="m-1 p-2 bg-secondary/80 backdrop-blur-[200px] rounded-xl shadow-xl drop-shadow-xl max-md:hidden">
-            <img src={Logo} alt="LOGO" className="w-14 h-10 scale-125" />
+        <div
+          className={`flex justify-between items-center relative overflow-hidden`}
+        >
+          <div className="h-[500px] w-1/2 rounded-full bg-primary/50 blur-[120px]  absolute top-0 -right-0" />
+
+          <div className="flex items-center justify-center">
+            <div className="m-1 p-2 max-md:hidden">
+              <img
+                src={Logo}
+                alt="LOGO"
+                className="w-14 h-10 scale-150 translate-y-1"
+              />
+            </div>
+            <div
+              onClick={() => setMobileOpen(true)}
+              className="cursor-pointer md:mx-8"
+            >
+              <MdDehaze fontSize="large" className="text-primary" />
+            </div>
           </div>
-          <div
-            onClick={() => setMobileOpen(true)}
-            className="cursor-pointer md:mx-8"
-          >
-            <MdDehaze fontSize="large" />
-          </div>
+          <p className="text-smaller sm:text-small lg:text-med drop-shadow-2xl text-center font-bold">
+            {pathName ?? "Not Found"}
+          </p>
+          <NavMenu
+            img={User?.Image?.URL}
+            userName={User?.Name}
+            isLoading={isLoading || isFetching}
+          />
         </div>
-        <p className="text-smaller sm:text-small lg:text-med text-center font-bold">
-          {pathName ?? "Not Found"}
-        </p>
-        <NavMenu
-          img={User?.Image?.URL}
-          userName={User?.Name}
-          isLoading={isLoading || isFetching || !isSuccess}
-        />
       </div>
       <div className="h-24" />
       <Drawer

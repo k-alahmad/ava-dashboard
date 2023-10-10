@@ -32,7 +32,6 @@ const App = () => {
   return (
     <Routes>
       <Route path="/login" element={<AdminLogin />} />
-
       {/* Protected Routes */}
       <Route
         path="/"

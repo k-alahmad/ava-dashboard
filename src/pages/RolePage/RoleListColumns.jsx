@@ -11,7 +11,7 @@ export const ComposeColumns = (onDelete) => {
       sortable: true,
       show: false,
       checked: true,
-      lockToggle: true,
+      lockToggle: false,
     },
     {
       Header: "Users Count",

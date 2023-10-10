@@ -99,9 +99,13 @@ const DashboardPage = () => {
         onClick={() => navigate(navigateLink)}
         className={`${
           loading && "animate-pulse"
-        }  flex flex-col justify-between items-start rounded-2xl bg-secondary text-third hover:text-brwon shadow-2xl p-8 w-[350px] h-[300px] cursor-pointer transition-all duration-500 group hover:shadow-secondary hover:bg-gradiant`}
+        }  flex flex-col justify-between items-start rounded-2xl bg-secondary text-third  shadow-2xl p-8 w-[350px] h-[300px] cursor-pointer transition-all duration-500 group hover:shadow-secondary relative overflow-hidden`}
       >
-        <p className="text-4xl font-bold uppercase">{title}</p>
+        <div className="h-full w-full rounded-full group-hover:bg-primary blur-[120px] absolute -top-[40%] -left-[40%] transition-all duration-700" />
+
+        <p className="text-4xl font-bold uppercase group-hover:text-secondary z-20 transition-all duration-700">
+          {title}
+        </p>
         {!loading && (
           <div
             className={`flex ${
@@ -109,12 +113,12 @@ const DashboardPage = () => {
             }  items-end w-full `}
           >
             {aCount >= 0 && (
-              <div className="text-7xl font-bold self-end space-y-2 text-third drop-shadow-2xl">
+              <div className="text-7xl font-bold self-end space-y-2 drop-shadow-2xl">
                 <p className="text-center ">{aCount}</p>
                 <p className="text-small"> Active </p>
               </div>
             )}
-            <p className="text-9xl font-bold self-end text-third drop-shadow-2xl group-hover:scale-110 transition-all duration-300">
+            <p className="text-9xl font-bold self-end drop-shadow-2xl group-hover:scale-110 transition-all duration-300">
               <span className="text-med">Total </span>
               {count}
             </p>
@@ -125,7 +129,7 @@ const DashboardPage = () => {
   };
   return (
     <div className="w-full grid lg:grid-cols-2 xl:grid-cols-4 2xl:gap-x-16 gap-x-12 gap-y-8 px-[5%] place-items-center my-8">
-      {/* <Card
+      <Card
         title={"Roles"}
         count={roles?.count}
         aCount={roles?.activeCount}
@@ -194,7 +198,7 @@ const DashboardPage = () => {
         aCount={categories?.activeCount}
         navigateLink={"/category"}
         loading={categoriesIsLoading}
-      /> */}
+      />
     </div>
   );
 };

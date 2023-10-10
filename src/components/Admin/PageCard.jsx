@@ -52,7 +52,7 @@ const PageCard = (props) => {
             {props.multiButton && props.multiButton}
             {props.PrimaryButtonlabel && (
               <Button
-                className="!bg-secondary !text-white"
+                className="!bg-primary !text-secondary"
                 onClick={props.onClickPrimaryBtn}
               >
                 <div className="font-regualr text-2xl">

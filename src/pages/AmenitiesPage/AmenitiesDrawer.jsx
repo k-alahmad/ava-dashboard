@@ -238,7 +238,7 @@ const AmenityDrawer = ({
                 return (
                   <div
                     key={index}
-                    className={`max-w-[95%] py-1 px-2 text-center ${
+                    className={`max-w-[95%] py-1 px-2 text-center font-semibold ${
                       currentSlide == item.Language.Code
                         ? "bg-primary text-secondary"
                         : "bg-secondary text-white"

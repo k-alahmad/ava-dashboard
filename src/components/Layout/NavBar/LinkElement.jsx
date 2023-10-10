@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { systemSettings } from "../../../settings";
-const LinkElement = ({ name, link, styled, onClick, icon }) => {
+const LinkElement = ({ name, link, styled, onClick, icon, drawerOpen }) => {
   return (
     <NavLink
       onClick={onClick}
@@ -17,13 +17,19 @@ const LinkElement = ({ name, link, styled, onClick, icon }) => {
     >
       <div className={`flex justify-start items-center gap-x-1  ${styled}`}>
         {icon && (
-          <img className="object-contain w-10 h-10" src={icon} alt={name} />
+          <img
+            className="object-contain w-10 h-10 min-w-10 min-h-10"
+            src={icon}
+            alt={name}
+          />
         )}
-        <p
-          className={`cursor-pointer font-regular text-tiny md:text-smaller 2xl:text-small`}
-        >
-          {name}
-        </p>
+        {drawerOpen && (
+          <p
+            className={`cursor-pointer font-regular text-tiny md:text-smaller 2xl:text-small whitespace-nowrap`}
+          >
+            {name}
+          </p>
+        )}
       </div>
     </NavLink>
   );

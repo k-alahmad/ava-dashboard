@@ -4,20 +4,21 @@ import Drawer from "./Drawer";
 import LinkElement from "./LinkElement";
 import {
   Dehaze as MdDehaze,
-  ExpandMore,
-  ExpandLess,
+  Close as MdClose,
+  // ExpandMore,
+  // ExpandLess,
 } from "@mui/icons-material";
 import { useLocation } from "react-router-dom";
 import { data } from "../../../data/navData";
 import NavMenu from "./NavMenu";
 import { useGetProfileQuery } from "../../../redux/auth/authApiSlice";
-import { Collapse } from "@mui/material";
+// import { Collapse } from "@mui/material";
 
-const NavBar = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
+const NavBar = ({ isOpen, setIsOpen, expand, setExpand }) => {
+  // const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const [pathName, setPathName] = useState("");
-  const [expand, setExpand] = useState({ status: false, key: 0 });
+  // const [expand, setExpand] = useState({ status: false, key: 0 });
   const {
     data: User,
     isLoading,
@@ -47,7 +48,7 @@ const NavBar = () => {
   return (
     <>
       <div
-        className={`font-regular bg-secondary text-third z-50 fixed w-full shadow-lg`}
+        className={`font-regular bg-secondary text-third z-50  fixed w-full shadow-lg`}
       >
         <div
           className={`flex justify-between items-center relative overflow-hidden`}
@@ -63,10 +64,20 @@ const NavBar = () => {
               />
             </div>
             <div
-              onClick={() => setMobileOpen(true)}
+              onClick={() => setIsOpen(!isOpen)}
               className="cursor-pointer md:mx-8"
             >
-              <MdDehaze fontSize="large" className="text-primary" />
+              {isOpen ? (
+                <MdClose
+                  className="text-primary !text-[30px] mx-2"
+                  onClick={() => {
+                    setIsOpen(false);
+                    setExpand({ ...expand, status: false });
+                  }}
+                />
+              ) : (
+                <MdDehaze fontSize="large" className="text-primary" />
+              )}
             </div>
           </div>
           <p className="text-smaller sm:text-small lg:text-med drop-shadow-2xl text-center font-bold">
@@ -80,7 +91,7 @@ const NavBar = () => {
         </div>
       </div>
       <div className="h-24" />
-      <Drawer
+      {/* <Drawer
         isOpen={mobileOpen}
         setIsOpen={setMobileOpen}
         userName={User?.Name}
@@ -149,7 +160,7 @@ const NavBar = () => {
             </div>
           )
         )}
-      </Drawer>
+      </Drawer> */}
     </>
   );
 };

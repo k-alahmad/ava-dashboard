@@ -101,7 +101,7 @@ const DashboardPage = () => {
           loading && "animate-pulse"
         }  flex flex-col justify-between items-start rounded-2xl bg-secondary text-third  shadow-2xl p-8 w-[350px] h-[300px] cursor-pointer transition-all duration-500 group hover:shadow-secondary relative overflow-hidden`}
       >
-        <div className="h-full w-full rounded-full group-hover:bg-primary blur-[120px] absolute -top-[40%] -left-[40%] transition-all duration-700" />
+        <div className="h-full w-full rounded-full group-hover:bg-primary blur-[120px] absolute -top-[50%] -left-[50%] transition-all duration-700" />
 
         <p className="text-4xl font-bold uppercase group-hover:text-secondary z-20 transition-all duration-700">
           {title}

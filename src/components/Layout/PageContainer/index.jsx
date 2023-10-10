@@ -27,7 +27,7 @@ const PageLayout = ({ children }) => {
       <aside
         className={
           "sticky bg-secondary h-screen overflow-y-scroll shadow-2xl duration-500 transition-all transform" +
-          (isOpen ? "w-[60%] lg:w-[35%] xl:w-[28%] 2xl:w-[25%]" : " w-[50px]")
+          (isOpen ? "w-[60%] lg:w-[35%] xl:w-[28%] 2xl:w-[25%]" : " w-[60px]")
         }
       >
         <article className="relative w-full pb-10 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden h-full ">

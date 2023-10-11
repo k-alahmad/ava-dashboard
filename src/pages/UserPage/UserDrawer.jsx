@@ -307,7 +307,6 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               fullWidth
               disablePortal
               id="roleID"
-              freeSolo
               value={form.Role}
               onChange={(e, newValue) => {
                 setForm({ ...form, roleID: newValue.id });
@@ -337,7 +336,6 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               fullWidth
               disablePortal
               id="teamID"
-              freeSolo
               value={form.Team}
               onChange={(e, newValue) => {
                 setForm({ ...form, teamID: newValue.id });
@@ -367,7 +365,6 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               fullWidth
               disablePortal
               id="addressId"
-              freeSolo
               value={form.Address}
               onChange={(e, newValue) => {
                 setForm({ ...form, addressId: newValue.id });

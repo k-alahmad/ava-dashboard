@@ -51,9 +51,9 @@ const NavBar = ({ isOpen, setIsOpen, expand, setExpand }) => {
         className={`font-regular bg-secondary text-third z-50  fixed w-full shadow-lg`}
       >
         <div
-          className={`flex justify-between items-center relative overflow-hidden`}
+          className={`flex justify-between items-center relative  overflow-hidden`}
         >
-          <div className="h-[500px] w-1/2 rounded-full bg-primary/50 blur-[120px]  absolute top-0 -right-0" />
+          <div className="h-[500px] w-1/2 rounded-full bg-primary/50 blur-[120px]  absolute -top-[250px] -right-0" />
 
           <div className="flex items-center justify-center">
             <div className="m-1 p-2 max-md:hidden">
@@ -65,7 +65,9 @@ const NavBar = ({ isOpen, setIsOpen, expand, setExpand }) => {
             </div>
             <div
               onClick={() => setIsOpen(!isOpen)}
-              className="cursor-pointer md:mx-8"
+              className={`"ursor-pointer md:ml-4 ${
+                isOpen && "md:translate-x-60"
+              } transition-all duration-500`}
             >
               {isOpen ? (
                 <MdClose
@@ -76,7 +78,10 @@ const NavBar = ({ isOpen, setIsOpen, expand, setExpand }) => {
                   }}
                 />
               ) : (
-                <MdDehaze fontSize="large" className="text-primary" />
+                <MdDehaze
+                  fontSize="large"
+                  className="text-primary !text-[30px] mx-2"
+                />
               )}
             </div>
           </div>

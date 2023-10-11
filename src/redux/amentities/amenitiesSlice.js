@@ -5,7 +5,7 @@ const amenitiesAdapter = createEntityAdapter();
 
 const initialState = amenitiesAdapter.getInitialState({
   count: "",
-  activeCount: "",
+  normalData: [],
 });
 
 export const amenitiesApiSlice = apiSlice.injectEndpoints({
@@ -17,9 +17,8 @@ export const amenitiesApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: (responseData) => {
         initialState.count = responseData.count;
+        initialState.normalData = responseData.Aminities;
         const loadedAmenities = responseData.Aminities;
-        let aCount = loadedAmenities?.filter((n) => n.ActiveStatus == true);
-        initialState.activeCount = aCount?.length;
         return amenitiesAdapter.setAll(initialState, loadedAmenities);
       },
       providesTags: (result, error, arg) => [

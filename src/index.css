@@ -18,7 +18,7 @@
 
 :root {
   --primary: transparent;
-  --secondary: rgba(221, 178, 110, 1);
+  --secondary: #cfa56c;
 }
 * {
   scrollbar-width: thin;

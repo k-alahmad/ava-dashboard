@@ -177,7 +177,6 @@ const MetaDataDrawer = ({
                 fullWidth
                 disablePortal
                 id="ArticleID"
-                freeSolo
                 value={form.Article}
                 onChange={(e, newValue) => {
                   setForm({ ...form, ArticleID: newValue.id });
@@ -214,7 +213,6 @@ const MetaDataDrawer = ({
                 fullWidth
                 disablePortal
                 id="PropertyID"
-                freeSolo
                 value={form.Property}
                 onChange={(e, newValue) => {
                   setForm({ ...form, PropertyID: newValue.id });

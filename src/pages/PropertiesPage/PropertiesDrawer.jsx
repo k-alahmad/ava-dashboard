@@ -8,6 +8,7 @@ import {
 import { useGetActiveCategoryQuery } from "../../redux/categories/categoriesSlice";
 import { useGetActiveDevelopersQuery } from "../../redux/developers/developersSlice";
 import { useGetActiveAddressQuery } from "../../redux/addresses/addressesSlice";
+import { useGetAmenitiesQuery } from "../../redux/amentities/amenitiesSlice";
 import Slider from "react-slick";
 import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
 import {
@@ -77,6 +78,7 @@ const defaultFormState = {
     id: "",
     Developer_Translation: [{ Language: { Code: "En" }, Name: "" }],
   },
+  Aminities: [],
 };
 
 const PropertyDrawer = ({
@@ -124,6 +126,14 @@ const PropertyDrawer = ({
     isError: developersIsError,
     error: developersError,
   } = useGetActiveDevelopersQuery();
+  const {
+    data: amenities,
+    isLoading: amenitiesIsLoading,
+    isFetching: amenitiesIsFethcing,
+    isSuccess: amenitiesisSuccess,
+    isError: amenitiesIsError,
+    error: amenitiesError,
+  } = useGetAmenitiesQuery();
   const [
     getPropertyById,
     { data, isLoading, isFetching, isError, error, isSuccess },
@@ -783,7 +793,6 @@ const PropertyDrawer = ({
                 fullWidth
                 disablePortal
                 id="CategoryID"
-                freeSolo
                 value={form.Category}
                 onChange={(e, newValue) => {
                   setForm({ ...form, CategoryID: newValue.id });
@@ -820,7 +829,6 @@ const PropertyDrawer = ({
                 fullWidth
                 disablePortal
                 id="addressId"
-                freeSolo
                 value={form.Address}
                 onChange={(e, newValue) => {
                   setForm({ ...form, addressId: newValue.id });
@@ -857,7 +865,6 @@ const PropertyDrawer = ({
                 fullWidth
                 disablePortal
                 id="DeveloperID"
-                freeSolo
                 value={form.Developer}
                 onChange={(e, newValue) => {
                   setForm({ ...form, DeveloperID: newValue.id });

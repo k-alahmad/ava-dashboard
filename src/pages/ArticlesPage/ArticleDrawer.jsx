@@ -268,7 +268,6 @@ const ArticleDrawer = ({
                 fullWidth
                 disablePortal
                 id="usersID"
-                freeSolo
                 value={form.User}
                 onChange={(e, newValue) => {
                   setForm({ ...form, usersID: newValue.id });

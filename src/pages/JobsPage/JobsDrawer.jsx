@@ -321,7 +321,6 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                 fullWidth
                 disablePortal
                 id="usersID"
-                freeSolo
                 value={form.Author}
                 onChange={(e, newValue) => {
                   setForm({ ...form, usersID: newValue.id });

@@ -26,13 +26,13 @@ const PageLayout = ({ children }) => {
       />
       <aside
         className={
-          "sticky bg-secondary h-screen overflow-y-scroll shadow-2xl duration-500 transition-all transform" +
-          (isOpen ? "w-[60%] lg:w-[35%] xl:w-[28%] 2xl:w-[25%]" : " w-[60px]")
+          "sticky bg-secondary h-screen overflow-y-hidden shadow-2xl duration-500 transition-all transform" +
+          (isOpen ? "w-[60%] lg:w-[35%] xl:w-[28%] 2xl:w-[25%]" : " w-[95px]")
         }
       >
         <article className="relative w-full pb-10 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden h-full ">
           <header
-            className={`w-[90%] p-1 rounded-xl font-bold flex items-center justify-between absolute top-[10%] left-[5%] shadow-xl drop-shadow-xl z-10 transition-all duration-500 ${
+            className={`absolute w-[90%] p-1 rounded-xl font-bold flex items-center justify-between top-[10%] left-[5%] shadow-xl drop-shadow-xl z-10 transition-all duration-500 ${
               isOpen ? "scale-100" : "scale-0"
             }`}
           >
@@ -59,7 +59,7 @@ const PageLayout = ({ children }) => {
           <div className="h-[500px] w-[500px] rounded-full bg-primary/50 blur-[120px] absolute -top-[25%] -left-[50%]" />
           <div className="h-[180px] md:min-h-[250px] !w-full" />
           <div
-            className={`h-full flex flex-col justify-start items-start space-y-6 w-full px-1 `}
+            className={`h-full flex flex-col justify-start items-start space-y-6 w-full px-1`}
           >
             {data.map((e, i) =>
               e.link ? (
@@ -75,7 +75,7 @@ const PageLayout = ({ children }) => {
                 <div className="w-full" key={i}>
                   <div
                     onClick={() => {
-                      setIsOpen(true);
+                      // setIsOpen(true);
                       setExpand({
                         status: expand.key == i ? !expand.status : true,
                         key: i,
@@ -102,9 +102,11 @@ const PageLayout = ({ children }) => {
                       )}
                     </div>
 
-                    {expand.status && expand.key == i
-                      ? isOpen && <ExpandLess fontSize="large" />
-                      : isOpen && <ExpandMore fontSize="large" />}
+                    {expand.status && expand.key == i ? (
+                      <ExpandLess fontSize="large" />
+                    ) : (
+                      <ExpandMore fontSize="large" />
+                    )}
                   </div>
                   <Collapse
                     in={expand.status && expand.key == i}
@@ -124,7 +126,7 @@ const PageLayout = ({ children }) => {
                             // setIsOpen(false);
                             // setExpand({ ...expand, status: false });
                           }}
-                          styled={"px-5 py-2"}
+                          styled={"pl-5 py-2"}
                         />
                       );
                     })}

@@ -53,9 +53,9 @@ const defaultFormState = {
   VacantStatus: "",
   Longitude: "",
   Latitude: "",
-  Purpose: "",
-  RentFrequency: "",
-  CompletionStatus: "",
+  Purpose: "Rent",
+  RentFrequency: "Yearly",
+  CompletionStatus: "Ready",
   PermitNumber: "",
   DEDNo: "",
   ReraNo: "",
@@ -678,7 +678,7 @@ const PropertyDrawer = ({
                 labelId="Purpose"
                 name="Purpose"
                 id="Purpose"
-                value={form.GenPurposeder}
+                value={form.Purpose}
                 label="Purpose"
                 onChange={handleChange}
                 MenuProps={{

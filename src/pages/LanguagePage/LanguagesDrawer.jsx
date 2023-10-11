@@ -23,7 +23,7 @@ const defaultFormState = {
   id: "",
   Name: "",
   Code: "",
-  Direction: "",
+  Direction: "ltr",
 };
 const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
   const [form, setForm] = useState(defaultFormState);
@@ -128,14 +128,14 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
         <div className="flex m-4">
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">
-              Completion Status
+              Content Direction
             </InputLabel>
             <Select
               labelId="Direction"
               name="Direction"
               id="Direction"
               value={form.Direction}
-              label="Completion Status"
+              label="Content Direction"
               onChange={handleChange}
               MenuProps={{
                 style: {

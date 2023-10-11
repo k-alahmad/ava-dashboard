@@ -60,7 +60,7 @@ const NavBar = ({ isOpen, setIsOpen, expand, setExpand }) => {
             <div
               onClick={() => {
                 setIsOpen(!isOpen);
-                setExpand({ ...expand, status: false });
+                // setExpand({ ...expand, status: false });
               }}
               className={`cursor-pointer md:ml-4 space-y-1 ${
                 isOpen && "md:translate-x-60"

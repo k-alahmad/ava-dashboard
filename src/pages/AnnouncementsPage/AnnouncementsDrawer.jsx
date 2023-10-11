@@ -25,7 +25,7 @@ const defaultFormState = {
   StartDate: "",
   EndDate: "",
   Rank: "",
-  Type: "",
+  Type: "Normal",
   Link: "",
   Image: "",
   ActiveStatus: true,

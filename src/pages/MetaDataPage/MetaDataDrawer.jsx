@@ -10,9 +10,6 @@ import { useGetActiveArticlesQuery } from "../../redux/articles/articlesSlice";
 import {
   CircularProgress,
   TextField,
-  FormGroup,
-  FormControlLabel,
-  Switch,
   InputLabel,
   FormControl,
   Select,

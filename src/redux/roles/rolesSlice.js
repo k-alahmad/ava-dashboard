@@ -6,9 +6,11 @@ const rolesActiveAdapter = createEntityAdapter();
 
 const initialState = rolesAdapter.getInitialState({
   count: "",
+  normalData: "",
 });
 const initialActiveState = rolesActiveAdapter.getInitialState({
   count: "",
+  normalData: "",
 });
 
 export const rolesApiSlice = apiSlice.injectEndpoints({
@@ -20,6 +22,7 @@ export const rolesApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: (responseData) => {
         initialState.count = responseData?.length;
+        initialState.normalData = responseData;
         const loaded = responseData;
         return rolesAdapter.setAll(initialState, loaded);
       },
@@ -35,8 +38,10 @@ export const rolesApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: (responseData) => {
         initialActiveState.count = responseData?.length;
+        initialActiveState.normalData = responseData;
+
         const loaded = responseData;
-        return rolesActiveAdapter.setAll(initialState, loaded);
+        return rolesActiveAdapter.setAll(initialActiveState, loaded);
       },
       providesTags: (result, error, arg) => [
         { type: "ActiveRoles", id: "LIST" },

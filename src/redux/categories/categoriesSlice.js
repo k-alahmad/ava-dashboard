@@ -40,7 +40,7 @@ export const categoryApiSlice = apiSlice.injectEndpoints({
         initialActiveState.count = responseData?.count;
         initialActiveState.normalData = responseData.Category;
         const loaded = responseData.Category;
-        return categoryActiveAdapter.setAll(initialState, loaded);
+        return categoryActiveAdapter.setAll(initialActiveState, loaded);
       },
       providesTags: (result, error, arg) => [
         { type: "ActiveCategory", id: "LIST" },

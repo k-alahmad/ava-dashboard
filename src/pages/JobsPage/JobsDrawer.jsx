@@ -8,17 +8,15 @@ import {
 // import {useget}
 import Slider from "react-slick";
 import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
-import { useGetUsersQuery } from "../../redux/users/usersSlice";
+import { useGetActiveUsersQuery } from "../../redux/users/usersSlice";
 import {
   CircularProgress,
   TextField,
   FormGroup,
   FormControlLabel,
   Switch,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
+  Autocomplete,
+  createFilterOptions,
 } from "@mui/material";
 import RichTextBox from "../../components/Forms/RichTextBox";
 const defaultFormState = {
@@ -27,7 +25,10 @@ const defaultFormState = {
   Type: "",
   WeekHours: "",
   Expired: false,
-  Author: "",
+  Author: {
+    id: "",
+    Name: "",
+  },
   usersId: "",
   ActiveStatus: true,
 };
@@ -52,7 +53,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     isSuccess: usersisSuccess,
     isError: usersIsError,
     error: usersError,
-  } = useGetUsersQuery();
+  } = useGetActiveUsersQuery();
   const [
     getJobById,
     { data, isLoading, isFetching, isError, error, isSuccess },
@@ -314,36 +315,37 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               />
             </FormGroup>
           </div>
-          <div className="flex m-4">
-            {usersisSuccess && !usersIsLoading && (
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  Job Creator
-                </InputLabel>
-                <Select
-                  labelId="Author"
-                  name="usersId"
-                  id="usersId"
-                  value={form.usersId === "" ? "" : form.usersId}
-                  label="Author"
-                  onChange={handleChange}
-                  MenuProps={{
-                    style: {
-                      maxHeight: "400px",
-                    },
-                  }}
-                >
-                  {users.ids?.map((item, j) => {
-                    return (
-                      <MenuItem key={j} value={item}>
-                        {users.entities[item].Name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-            )}
-          </div>
+          {usersisSuccess && (
+            <div className=" flex m-4">
+              <Autocomplete
+                fullWidth
+                disablePortal
+                id="usersID"
+                freeSolo
+                value={form.Author}
+                onChange={(e, newValue) => {
+                  setForm({ ...form, usersID: newValue.id });
+                }}
+                options={users.normalData}
+                getOptionLabel={(option) => option.Name}
+                filterOptions={createFilterOptions({
+                  matchFrom: "start",
+                  stringify: (option) => option.Name,
+                })}
+                renderInput={(params) => (
+                  <TextField
+                    // fullWidth
+                    {...params}
+                    type="text"
+                    name="usersID"
+                    label="Job Creator"
+                    id="usersID"
+                  />
+                )}
+              />
+            </div>
+          )}
+
           <div className="flex m-4">
             <FormGroup>
               <FormControlLabel

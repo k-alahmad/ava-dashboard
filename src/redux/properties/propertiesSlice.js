@@ -6,11 +6,11 @@ const propertiesActiveAdapter = createEntityAdapter();
 
 const initialState = propertiesAdapter.getInitialState({
   count: "",
-  activeCount: "",
+  normalData: [],
 });
 const initialActiveState = propertiesActiveAdapter.getInitialState({
   count: "",
-  activeCount: "",
+  normalData: [],
 });
 
 export const propertiesApiSlice = apiSlice.injectEndpoints({
@@ -22,9 +22,9 @@ export const propertiesApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: (responseData) => {
         initialState.count = responseData.count;
+        initialState.normalData = responseData.Properties;
         const loadedProperties = responseData.Properties;
-        let aCount = loadedProperties?.filter((n) => n.ActiveStatus == true);
-        initialState.activeCount = aCount?.length;
+
         return propertiesAdapter.setAll(initialState, loadedProperties);
       },
       providesTags: (result, error, arg) => [
@@ -39,6 +39,7 @@ export const propertiesApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: (responseData) => {
         initialActiveState.count = responseData.count;
+        initialActiveState.normalData = responseData.Properties;
         const loadedProperties = responseData.Properties;
         return propertiesActiveAdapter.setAll(
           initialActiveState,

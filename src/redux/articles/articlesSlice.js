@@ -6,10 +6,11 @@ const articlesActiveAdapter = createEntityAdapter();
 
 const initialState = articlesAdapter.getInitialState({
   count: "",
-  activeCount: "",
+  normalData: [],
 });
 const initialActiveState = articlesActiveAdapter.getInitialState({
   count: "",
+  normalData: [],
 });
 
 export const articlesApiSlice = apiSlice.injectEndpoints({
@@ -21,9 +22,9 @@ export const articlesApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: (responseData) => {
         initialState.count = responseData.count;
+        initialState.normalData = responseData.Articles;
         const loadedArticles = responseData.Articles;
-        let aCount = loadedArticles?.filter((n) => n.ActiveStatus == true);
-        initialState.activeCount = aCount?.length;
+
         return articlesAdapter.setAll(initialState, loadedArticles);
       },
       providesTags: (result, error, arg) => [
@@ -38,8 +39,9 @@ export const articlesApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: (responseData) => {
         initialActiveState.count = responseData.count;
+        initialActiveState.normalData = responseData.Articles;
         const loadedArticles = responseData.Articles;
-        return articlesActiveAdapter.setAll(initialState, loadedArticles);
+        return articlesActiveAdapter.setAll(initialActiveState, loadedArticles);
       },
       providesTags: (result, error, arg) => [
         { type: "ActiveArticles", id: "LIST" },

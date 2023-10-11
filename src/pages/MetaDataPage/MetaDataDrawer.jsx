@@ -10,10 +10,8 @@ import { useGetActiveArticlesQuery } from "../../redux/articles/articlesSlice";
 import {
   CircularProgress,
   TextField,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
+  Autocomplete,
+  createFilterOptions,
 } from "@mui/material";
 const defaultFormState = {
   id: "",
@@ -21,6 +19,14 @@ const defaultFormState = {
   Content: "",
   PropertyID: "",
   ArticleID: "",
+  Property: {
+    id: "",
+    Property_Translation: [{ Language: { Code: "En" }, Name: "" }],
+  },
+  Article: {
+    id: "",
+    Articles_Translation: [{ Language: { Code: "En" }, Title: "" }],
+  },
 };
 
 const MetaDataDrawer = ({
@@ -166,69 +172,77 @@ const MetaDataDrawer = ({
             />
           </div>
           {articlesIsSuccess && (
-            <div className="flex m-4">
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Article</InputLabel>
-                <Select
-                  labelId="ArticleID"
-                  name="ArticleID"
-                  id="ArticleID"
-                  value={form.ArticleID}
-                  label="Article"
-                  onChange={handleChange}
-                  MenuProps={{
-                    style: {
-                      maxHeight: "400px",
-                    },
-                  }}
-                  disabled={form.PropertyID !== ""}
-                >
-                  {articles?.ids?.map((item, j) => {
-                    return (
-                      <MenuItem key={j} value={item}>
-                        {
-                          articles.entities[item].Articles_Translation.find(
-                            (x) => x.Language.Code == "En"
-                          ).Title
-                        }
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
+            <div className=" flex m-4">
+              <Autocomplete
+                fullWidth
+                disablePortal
+                id="ArticleID"
+                freeSolo
+                value={form.Article}
+                onChange={(e, newValue) => {
+                  setForm({ ...form, ArticleID: newValue.id });
+                }}
+                options={articles.normalData}
+                getOptionLabel={(option) =>
+                  option.Articles_Translation?.find(
+                    (x) => x.Language.Code == "En"
+                  )?.Title
+                }
+                filterOptions={createFilterOptions({
+                  matchFrom: "start",
+                  stringify: (option) =>
+                    option.Articles_Translation?.find(
+                      (x) => x.Language.Code == "En"
+                    )?.Title,
+                })}
+                renderInput={(params) => (
+                  <TextField
+                    // fullWidth
+                    {...params}
+                    type="text"
+                    name="ArticleID"
+                    label="Article"
+                    id="ArticleID"
+                  />
+                )}
+              />
             </div>
           )}
           {propertiesIsSuccess && (
-            <div className="flex m-4">
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Property</InputLabel>
-                <Select
-                  labelId="PropertyID"
-                  name="PropertyID"
-                  id="PropertyID"
-                  value={form.PropertyID}
-                  label="Property"
-                  onChange={handleChange}
-                  MenuProps={{
-                    style: {
-                      maxHeight: "400px",
-                    },
-                  }}
-                  disabled={form.ArticleID !== ""}
-                >
-                  {properties?.ids?.map((item, j) => {
-                    return (
-                      <MenuItem key={j} value={item}>
-                        {
-                          properties.entities[item].Property_Translation.find(
-                            (x) => x.Language.Code == "En"
-                          ).Name
-                        }
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
+            <div className=" flex m-4">
+              <Autocomplete
+                fullWidth
+                disablePortal
+                id="PropertyID"
+                freeSolo
+                value={form.Property}
+                onChange={(e, newValue) => {
+                  setForm({ ...form, PropertyID: newValue.id });
+                }}
+                options={properties.normalData}
+                getOptionLabel={(option) =>
+                  option.Property_Translation?.find(
+                    (x) => x.Language.Code == "En"
+                  )?.Name
+                }
+                filterOptions={createFilterOptions({
+                  matchFrom: "start",
+                  stringify: (option) =>
+                    option.Property_Translation?.find(
+                      (x) => x.Language.Code == "En"
+                    )?.Name,
+                })}
+                renderInput={(params) => (
+                  <TextField
+                    // fullWidth
+                    {...params}
+                    type="text"
+                    name="PropertyID"
+                    label="Property"
+                    id="PropertyID"
+                  />
+                )}
+              />
             </div>
           )}
         </div>

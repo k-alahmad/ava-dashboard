@@ -37,10 +37,10 @@ export const addressApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
       transformResponse: (responseData) => {
-        initialActiveState.count = responseData?.length;
+        initialActiveState.count = responseData?.count;
         initialActiveState.normalData = responseData.Address;
         const loaded = responseData.Address;
-        return addressActiveAdapter.setAll(initialState, loaded);
+        return addressActiveAdapter.setAll(initialActiveState, loaded);
       },
       providesTags: (result, error, arg) => [
         { type: "ActiveAddress", id: "LIST" },

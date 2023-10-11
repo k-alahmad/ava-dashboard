@@ -6,9 +6,11 @@ const teamsActiveAdapter = createEntityAdapter();
 
 const initialState = teamsAdapter.getInitialState({
   count: "",
+  normalData: "",
 });
 const initialActiveState = teamsActiveAdapter.getInitialState({
   count: "",
+  normalData: "",
 });
 
 export const teamsApiSlice = apiSlice.injectEndpoints({
@@ -20,6 +22,7 @@ export const teamsApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: (responseData) => {
         initialState.count = responseData?.count;
+        initialState.normalData = responseData?.Teams;
         const loaded = responseData.Teams;
         return teamsAdapter.setAll(initialState, loaded);
       },
@@ -35,8 +38,9 @@ export const teamsApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: (responseData) => {
         initialActiveState.count = responseData?.count;
+        initialActiveState.normalData = responseData?.Teams;
         const loaded = responseData.Teams;
-        return teamsActiveAdapter.setAll(initialState, loaded);
+        return teamsActiveAdapter.setAll(initialActiveState, loaded);
       },
       providesTags: (result, error, arg) => [
         { type: "ActiveTeams", id: "LIST" },

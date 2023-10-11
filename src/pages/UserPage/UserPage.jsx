@@ -270,9 +270,9 @@ const UserPage = () => {
               <TextField
                 fullWidth
                 type="password"
-                name="Password"
+                name="Re-Password"
                 label="Re-Type Password"
-                id="Password"
+                id="Re-Password"
                 onChange={(e) => setPasswordTwo(e.target.value)}
                 value={passwordTwo}
                 variant="outlined"

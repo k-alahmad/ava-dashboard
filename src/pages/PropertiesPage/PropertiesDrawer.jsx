@@ -16,10 +16,8 @@ import {
   FormGroup,
   FormControlLabel,
   Switch,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
+  Autocomplete,
+  createFilterOptions,
 } from "@mui/material";
 import Button from "../../components/UI/Button";
 import {
@@ -67,6 +65,18 @@ const defaultFormState = {
   AddressID: "",
   Area: "",
   ActiveStatus: true,
+  Category: {
+    id: "",
+    Category_Translation: [{ Language: { Code: "En" }, Name: "" }],
+  },
+  Address: {
+    id: "",
+    Address_Translation: [{ Language: { Code: "En" }, Name: "" }],
+  },
+  Developer: {
+    id: "",
+    Developer_Translation: [{ Language: { Code: "En" }, Name: "" }],
+  },
 };
 
 const PropertyDrawer = ({
@@ -644,89 +654,73 @@ const PropertyDrawer = ({
               required
             />
           </div>
+          <div className=" flex m-4">
+            <Autocomplete
+              fullWidth
+              disablePortal
+              id="Purpose"
+              value={form.Purpose}
+              onChange={(e, newValue) =>
+                setForm({ ...form, Purpose: newValue })
+              }
+              options={Purpose}
+              renderInput={(params) => (
+                <TextField
+                  // fullWidth
+                  {...params}
+                  type="text"
+                  name="Purpose"
+                  label="Purpose"
+                  id="Purpose"
+                />
+              )}
+            />
+          </div>
+          <div className=" flex m-4">
+            <Autocomplete
+              fullWidth
+              disablePortal
+              id="RentFrequency"
+              value={form.RentFrequency}
+              onChange={(e, newValue) =>
+                setForm({ ...form, RentFrequency: newValue })
+              }
+              options={RentFrequency}
+              renderInput={(params) => (
+                <TextField
+                  // fullWidth
+                  {...params}
+                  type="text"
+                  name="RentFrequency"
+                  label="RentFrequency"
+                  id="RentFrequency"
+                />
+              )}
+            />
+          </div>
+          <div className=" flex m-4">
+            <Autocomplete
+              fullWidth
+              disablePortal
+              id="CompletionStatus"
+              value={form.CompletionStatus}
+              onChange={(e, newValue) =>
+                setForm({ ...form, CompletionStatus: newValue })
+              }
+              options={CompletionStatus}
+              renderInput={(params) => (
+                <TextField
+                  // fullWidth
+                  {...params}
+                  type="text"
+                  name="CompletionStatus"
+                  label="CompletionStatus"
+                  id="CompletionStatus"
+                />
+              )}
+            />
+          </div>
 
-          <div className="flex m-4">
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Purpose</InputLabel>
-              <Select
-                labelId="Purpose"
-                name="Purpose"
-                id="Purpose"
-                value={form.Purpose}
-                label="Purpose"
-                onChange={handleChange}
-                MenuProps={{
-                  style: {
-                    maxHeight: "400px",
-                  },
-                }}
-              >
-                {Purpose?.map((item, j) => {
-                  return (
-                    <MenuItem key={j} value={item}>
-                      {item}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-          </div>
-          <div className="flex m-4">
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Rent Frequency
-              </InputLabel>
-              <Select
-                labelId="RentFrequency"
-                name="RentFrequency"
-                id="RentFrequency"
-                value={form.RentFrequency}
-                label="Rent Frequency"
-                onChange={handleChange}
-                MenuProps={{
-                  style: {
-                    maxHeight: "400px",
-                  },
-                }}
-              >
-                {RentFrequency?.map((item, j) => {
-                  return (
-                    <MenuItem key={j} value={item}>
-                      {item}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-          </div>
-          <div className="flex m-4">
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Completion Status
-              </InputLabel>
-              <Select
-                labelId="CompletionStatus"
-                name="CompletionStatus"
-                id="CompletionStatus"
-                value={form.CompletionStatus}
-                label="Completion Status"
-                onChange={handleChange}
-                MenuProps={{
-                  style: {
-                    maxHeight: "400px",
-                  },
-                }}
-              >
-                {CompletionStatus?.map((item, j) => {
-                  return (
-                    <MenuItem key={j} value={item}>
-                      {item}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-          </div>
           <div className="flex m-4">
             <TextField
               fullWidth
@@ -783,108 +777,118 @@ const PropertyDrawer = ({
               required
             />
           </div>
-          <div className="flex m-4">
-            {categoriesisSuccess && !categoriesIsLoading && (
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                <Select
-                  labelId="CategoryID"
-                  name="CategoryID"
-                  id="CategoryID"
-                  value={form.CategoryID}
-                  label="Category"
-                  onChange={handleChange}
-                  MenuProps={{
-                    style: {
-                      maxHeight: "400px",
-                    },
-                  }}
-                >
-                  {categories.ids?.map((item, j) => {
-                    if (categories.entities[item]?.SubCategory.length == 0)
-                      return (
-                        <MenuItem key={j} value={item}>
-                          {
-                            categories.entities[
-                              item
-                            ]?.Category_Translation?.find(
-                              (x) => x.Language.Code == "En"
-                            ).Name
-                          }
-                        </MenuItem>
-                      );
-                  })}
-                </Select>
-              </FormControl>
-            )}
-          </div>
-          <div className="flex m-4">
-            {developersisSuccess && !developersIsLoading && (
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Developer</InputLabel>
-                <Select
-                  labelId="DeveloperID"
-                  name="DeveloperID"
-                  id="DeveloperID"
-                  value={form.DeveloperID}
-                  label="Developer"
-                  onChange={handleChange}
-                  MenuProps={{
-                    style: {
-                      maxHeight: "400px",
-                    },
-                  }}
-                >
-                  {developers.ids?.map((item, j) => {
-                    return (
-                      <MenuItem key={j} value={item}>
-                        {
-                          developers.entities[
-                            item
-                          ]?.Developer_Translation?.find(
-                            (x) => x.Language.Code == "En"
-                          ).Name
-                        }
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-            )}
-          </div>
-          <div className="flex m-4">
-            {developersisSuccess && !developersIsLoading && (
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Address</InputLabel>
-                <Select
-                  labelId="AddressID"
-                  name="AddressID"
-                  id="AddressID"
-                  value={form.AddressID}
-                  label="address"
-                  onChange={handleChange}
-                  MenuProps={{
-                    style: {
-                      maxHeight: "400px",
-                    },
-                  }}
-                >
-                  {addresses.ids?.map((item, j) => {
-                    if (addresses.entities[item]?.Addresses.length == 0)
-                      return (
-                        <MenuItem key={j} value={item}>
-                          {
-                            addresses.entities[item]?.Address_Translation?.find(
-                              (x) => x.Language.Code == "En"
-                            ).Name
-                          }
-                        </MenuItem>
-                      );
-                  })}
-                </Select>
-              </FormControl>
-            )}
-          </div>
+          {categoriesisSuccess && (
+            <div className=" flex m-4">
+              <Autocomplete
+                fullWidth
+                disablePortal
+                id="CategoryID"
+                freeSolo
+                value={form.Category}
+                onChange={(e, newValue) => {
+                  setForm({ ...form, CategoryID: newValue.id });
+                }}
+                options={categories.normalData}
+                getOptionLabel={(option) =>
+                  option.Category_Translation?.find(
+                    (x) => x.Language.Code == "En"
+                  )?.Name
+                }
+                filterOptions={createFilterOptions({
+                  matchFrom: "start",
+                  stringify: (option) =>
+                    option.Category_Translation?.find(
+                      (x) => x.Language.Code == "En"
+                    )?.Name,
+                })}
+                renderInput={(params) => (
+                  <TextField
+                    // fullWidth
+                    {...params}
+                    type="text"
+                    name="CategoryID"
+                    label="Category"
+                    id="CategoryID"
+                  />
+                )}
+              />
+            </div>
+          )}
+          {addressesisSuccess && (
+            <div className=" flex m-4">
+              <Autocomplete
+                fullWidth
+                disablePortal
+                id="addressId"
+                freeSolo
+                value={form.Address}
+                onChange={(e, newValue) => {
+                  setForm({ ...form, addressId: newValue.id });
+                }}
+                options={addresses.normalData}
+                getOptionLabel={(option) =>
+                  option.Address_Translation?.find(
+                    (x) => x.Language.Code == "En"
+                  )?.Name
+                }
+                filterOptions={createFilterOptions({
+                  matchFrom: "start",
+                  stringify: (option) =>
+                    option.Address_Translation?.find(
+                      (x) => x.Language.Code == "En"
+                    )?.Name,
+                })}
+                renderInput={(params) => (
+                  <TextField
+                    // fullWidth
+                    {...params}
+                    type="text"
+                    name="addressId"
+                    label="Address"
+                    id="addressId"
+                  />
+                )}
+              />
+            </div>
+          )}
+          {developersisSuccess && (
+            <div className=" flex m-4">
+              <Autocomplete
+                fullWidth
+                disablePortal
+                id="DeveloperID"
+                freeSolo
+                value={form.Developer}
+                onChange={(e, newValue) => {
+                  setForm({ ...form, DeveloperID: newValue.id });
+                }}
+                options={developers.normalData}
+                getOptionLabel={(option) =>
+                  option.Developer_Translation?.find(
+                    (x) => x.Language.Code == "En"
+                  )?.Name
+                }
+                filterOptions={createFilterOptions({
+                  matchFrom: "start",
+                  stringify: (option) =>
+                    option.Developer_Translation?.find(
+                      (x) => x.Language.Code == "En"
+                    )?.Name,
+                })}
+                renderInput={(params) => (
+                  <TextField
+                    // fullWidth
+                    {...params}
+                    type="text"
+                    name="DeveloperID"
+                    label="Developer"
+                    id="DeveloperID"
+                  />
+                )}
+              />
+            </div>
+          )}
+
           <div className="flex m-4">
             <FormGroup>
               <FormControlLabel

@@ -6,11 +6,11 @@ const developersActiveAdapter = createEntityAdapter();
 
 const initialState = developersAdapter.getInitialState({
   count: "",
-  activeCount: "",
+  normalData: [],
 });
 const initialActiveState = developersActiveAdapter.getInitialState({
   count: "",
-  activeCount: "",
+  normalData: [],
 });
 
 export const developersApiSlice = apiSlice.injectEndpoints({
@@ -23,8 +23,6 @@ export const developersApiSlice = apiSlice.injectEndpoints({
       transformResponse: (responseData) => {
         initialState.count = responseData.count;
         const loadedDevelopers = responseData.Developer;
-        let aCount = loadedDevelopers?.filter((n) => n.ActiveStatus == true);
-        initialState.activeCount = aCount?.length;
         return developersAdapter.setAll(initialState, loadedDevelopers);
       },
       providesTags: (result, error, arg) => [
@@ -41,7 +39,7 @@ export const developersApiSlice = apiSlice.injectEndpoints({
         initialActiveState.count = responseData.count;
         initialActiveState.normalData = responseData.Developer;
         const loaded = responseData.Developer;
-        return developersActiveAdapter.setAll(initialState, loaded);
+        return developersActiveAdapter.setAll(initialActiveState, loaded);
       },
       providesTags: (result, error, arg) => [
         { type: "ActiveDevelopers", id: "LIST" },

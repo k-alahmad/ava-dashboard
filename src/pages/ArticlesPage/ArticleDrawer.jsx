@@ -7,17 +7,15 @@ import {
 } from "../../redux/articles/articlesSlice";
 import Slider from "react-slick";
 import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
-import { useGetUsersQuery } from "../../redux/users/usersSlice";
+import { useGetActiveUsersQuery } from "../../redux/users/usersSlice";
 import {
   CircularProgress,
   TextField,
   FormGroup,
   FormControlLabel,
   Switch,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
+  Autocomplete,
+  createFilterOptions,
 } from "@mui/material";
 import Button from "../../components/UI/Button";
 import { API_BASE_URL } from "../../constants";
@@ -27,7 +25,10 @@ const defaultFormState = {
   MinRead: "",
   Image: "",
   ActiveStatus: true,
-  User: {},
+  User: {
+    id: "",
+    Name: "",
+  },
   usersID: "",
 };
 
@@ -59,7 +60,7 @@ const ArticleDrawer = ({
     isSuccess: usersisSuccess,
     isError: usersIsError,
     error: usersError,
-  } = useGetUsersQuery();
+  } = useGetActiveUsersQuery();
   const [
     getArticleById,
     { data, isLoading, isFetching, isError, error, isSuccess },
@@ -261,34 +262,37 @@ const ArticleDrawer = ({
               required
             />
           </div>
-          <div className="flex m-4">
-            {usersisSuccess && !usersIsLoading && (
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Author</InputLabel>
-                <Select
-                  labelId="Author"
-                  name="usersID"
-                  id="usersID"
-                  value={form.usersID === "" ? "" : form.usersID}
-                  label="Author"
-                  onChange={handleChange}
-                  MenuProps={{
-                    style: {
-                      maxHeight: "400px",
-                    },
-                  }}
-                >
-                  {users.ids?.map((item, j) => {
-                    return (
-                      <MenuItem key={j} value={item}>
-                        {users.entities[item].Name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-            )}
-          </div>
+          {usersisSuccess && (
+            <div className=" flex m-4">
+              <Autocomplete
+                fullWidth
+                disablePortal
+                id="usersID"
+                freeSolo
+                value={form.User}
+                onChange={(e, newValue) => {
+                  setForm({ ...form, usersID: newValue.id });
+                }}
+                options={users.normalData}
+                getOptionLabel={(option) => option.Name}
+                filterOptions={createFilterOptions({
+                  matchFrom: "start",
+                  stringify: (option) => option.Name,
+                })}
+                renderInput={(params) => (
+                  <TextField
+                    // fullWidth
+                    {...params}
+                    type="text"
+                    name="usersID"
+                    label="Author"
+                    id="usersID"
+                  />
+                )}
+              />
+            </div>
+          )}
+
           <div className="w-full flex justify-center items-center">
             <Slider
               dots={false}

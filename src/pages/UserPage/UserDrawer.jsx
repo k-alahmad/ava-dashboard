@@ -3,7 +3,6 @@ import PageDrawer from "../../components/Admin/layout/PageDrawer";
 import Button from "../../components/UI/Button";
 import {
   useAddUserMutation,
-  useGetUserByIdQuery,
   useLazyGetUserByIdQuery,
   useUpdateUserMutation,
 } from "../../redux/users/usersSlice";
@@ -13,14 +12,13 @@ import { useGetActiveAddressQuery } from "../../redux/addresses/addressesSlice";
 import {
   CircularProgress,
   TextField,
+  Autocomplete,
   FormGroup,
   FormControlLabel,
   Switch,
   InputLabel,
-  FormControl,
-  Select,
-  MenuItem,
 } from "@mui/material";
+import { createFilterOptions } from "@mui/material";
 import { Gender } from "../../constants/index";
 import { API_BASE_URL } from "../../constants";
 const defaultFormState = {
@@ -30,12 +28,18 @@ const defaultFormState = {
   DOB: "",
   Password: "",
   PhoneNo: "",
-  Gender: "",
+  Gender: "Male",
   roleID: "",
   teamID: "",
   addressId: "",
   ActiveStatus: true,
   Image: "",
+  Role: { id: "", Name: "" },
+  Address: {
+    id: "",
+    Address_Translation: [{ Language: { Code: "En" }, Name: "" }],
+  },
+  Team: { id: "", Title: "" },
 };
 const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
   const [form, setForm] = useState(defaultFormState);
@@ -89,6 +93,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       }
     }
   }, [drawerID, data, drawerOpen]);
+
   useEffect(() => {
     if (!image) {
       setImageURL(undefined);
@@ -274,118 +279,122 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             size="small"
           />
         </div>
+
         <div className=" flex m-4">
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Gender</InputLabel>
-            <Select
-              labelId="Gender"
-              name="Gender"
-              id="Gender"
-              value={form.Gender === "" ? "" : form.Gender}
-              label="Gender"
-              onChange={handleChange}
-              MenuProps={{
-                style: {
-                  maxHeight: "400px",
-                },
-              }}
-            >
-              {Gender.map((item, index) => {
-                return (
-                  <MenuItem key={index} value={item}>
-                    {item}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
+          <Autocomplete
+            fullWidth
+            disablePortal
+            id="Gender"
+            value={form.Gender}
+            onChange={(e, newValue) => setForm({ ...form, Gender: newValue })}
+            options={Gender}
+            // onChange={handleChange}
+            renderInput={(params) => (
+              <TextField
+                // fullWidth
+                {...params}
+                type="Gender"
+                name="Gender"
+                label="Gender"
+                id="Gender"
+              />
+            )}
+          />
         </div>
         {rolesSuccess && (
           <div className=" flex m-4">
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Role</InputLabel>
-              <Select
-                labelId="Role"
-                name="roleID"
-                id="roleID"
-                value={form.roleID === "" ? "" : form.roleID}
-                label="Role"
-                onChange={handleChange}
-                MenuProps={{
-                  style: {
-                    maxHeight: "400px",
-                  },
-                }}
-              >
-                {roles?.ids.map((item) => {
-                  return (
-                    <MenuItem key={item} value={item}>
-                      {roles.entities[item].Name}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+            <Autocomplete
+              fullWidth
+              disablePortal
+              id="roleID"
+              freeSolo
+              value={form.Role}
+              onChange={(e, newValue) => {
+                setForm({ ...form, roleID: newValue.id });
+              }}
+              options={roles.normalData}
+              getOptionLabel={(option) => option.Name}
+              filterOptions={createFilterOptions({
+                matchFrom: "start",
+                stringify: (option) => option.Name,
+              })}
+              renderInput={(params) => (
+                <TextField
+                  // fullWidth
+                  {...params}
+                  type="text"
+                  name="roleID"
+                  label="Role"
+                  id="roleID"
+                />
+              )}
+            />
           </div>
         )}
         {teamsSuccess && (
           <div className=" flex m-4">
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Team</InputLabel>
-              <Select
-                labelId="Team"
-                name="teamID"
-                id="teamID"
-                value={form.teamID === "" ? "" : form.teamID}
-                label="Team"
-                onChange={handleChange}
-                MenuProps={{
-                  style: {
-                    maxHeight: "400px",
-                  },
-                }}
-              >
-                {teams?.ids.map((item) => {
-                  return (
-                    <MenuItem key={item} value={item}>
-                      {teams.entities[item].Title}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+            <Autocomplete
+              fullWidth
+              disablePortal
+              id="teamID"
+              freeSolo
+              value={form.Team}
+              onChange={(e, newValue) => {
+                setForm({ ...form, teamID: newValue.id });
+              }}
+              options={teams.normalData}
+              getOptionLabel={(option) => option.Title}
+              filterOptions={createFilterOptions({
+                matchFrom: "start",
+                stringify: (option) => option.Title,
+              })}
+              renderInput={(params) => (
+                <TextField
+                  // fullWidth
+                  {...params}
+                  type="text"
+                  name="teamID"
+                  label="Team"
+                  id="teamID"
+                />
+              )}
+            />
           </div>
         )}
         {addressesSuccess && (
           <div className=" flex m-4">
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Address</InputLabel>
-              <Select
-                labelId="Address"
-                name="addressId"
-                id="addressId"
-                value={form.addressId === "" ? "" : form.addressId}
-                label="Address"
-                onChange={handleChange}
-                MenuProps={{
-                  style: {
-                    maxHeight: "400px",
-                  },
-                }}
-              >
-                {addresses?.ids.map((item) => {
-                  return (
-                    <MenuItem key={item} value={item}>
-                      {
-                        addresses.entities[item]?.Address_Translation?.find(
-                          (x) => x.Language.Code == "En"
-                        ).Name
-                      }
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+            <Autocomplete
+              fullWidth
+              disablePortal
+              id="addressId"
+              freeSolo
+              value={form.Address}
+              onChange={(e, newValue) => {
+                setForm({ ...form, addressId: newValue.id });
+              }}
+              options={addresses.normalData}
+              getOptionLabel={(option) =>
+                option.Address_Translation?.find((x) => x.Language.Code == "En")
+                  ?.Name
+              }
+              filterOptions={createFilterOptions({
+                matchFrom: "start",
+                stringify: (option) =>
+                  option.Address_Translation?.find(
+                    (x) => x.Language.Code == "En"
+                  )?.Name,
+              })}
+              renderInput={(params) => (
+                <TextField
+                  // fullWidth
+                  {...params}
+                  type="text"
+                  name="addressId"
+                  label="Address"
+                  id="addressId"
+                />
+              )}
+            />
           </div>
         )}
         <div className="flex m-4">

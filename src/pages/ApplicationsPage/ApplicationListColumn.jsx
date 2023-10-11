@@ -99,7 +99,7 @@ export const ComposeColumns = (onDelete) => {
       Header: "Job Title",
       id: "JobTitle",
       accessor: (d) =>
-        d.Job?.Jobs_Translation?.find((x = x.Language.Code == "En")).Title,
+        d.Job?.Jobs_Translation?.find((x) => x.Language.Code == "En").Title,
       className: "font-bold",
       sortable: true,
       show: false,

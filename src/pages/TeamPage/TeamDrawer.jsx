@@ -94,7 +94,7 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
   function handleSubmit(event) {
     event.preventDefault();
     const formData = new FormData();
-    formData.append("Name", form.Name);
+    formData.append("Title", form.Title);
     formData.append("Description", form.Description);
     formData.append("ActiveStatus", form.ActiveStatus);
     formData.append("Image", form.Image);

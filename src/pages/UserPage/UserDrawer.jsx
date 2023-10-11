@@ -12,13 +12,18 @@ import { useGetActiveAddressQuery } from "../../redux/addresses/addressesSlice";
 import {
   CircularProgress,
   TextField,
-  Autocomplete,
   FormGroup,
   FormControlLabel,
   Switch,
   InputLabel,
+  FormControl,
+  Select,
+  ListSubheader,
+  InputAdornment,
+  MenuItem,
 } from "@mui/material";
-import { createFilterOptions } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+
 import { Gender } from "../../constants/index";
 import { API_BASE_URL } from "../../constants";
 const defaultFormState = {
@@ -46,6 +51,8 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
   const [image, setImage] = useState();
   const [oldImage, setOldImage] = useState();
   const [imageURL, setImageURL] = useState();
+  const [selectSearchTerm, setSelectSearchTerm] = useState("");
+  var selectSearchInput = useRef(undefined);
 
   const [
     getUserById,
@@ -279,121 +286,233 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             size="small"
           />
         </div>
-
-        <div className=" flex m-4">
-          <Autocomplete
-            fullWidth
-            disablePortal
-            id="Gender"
-            value={form.Gender}
-            onChange={(e, newValue) => setForm({ ...form, Gender: newValue })}
-            options={Gender}
-            // onChange={handleChange}
-            renderInput={(params) => (
-              <TextField
-                // fullWidth
-                {...params}
-                type="Gender"
-                name="Gender"
-                label="Gender"
-                id="Gender"
-              />
-            )}
-          />
+        <div className="flex m-4">
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+            <Select
+              labelId="Gender"
+              name="Gender"
+              id="Gender"
+              value={form.Gender}
+              label="Gender"
+              onChange={handleChange}
+              MenuProps={{
+                style: {
+                  maxHeight: "400px",
+                },
+              }}
+            >
+              {Gender?.map((item, j) => {
+                return (
+                  <MenuItem key={j} value={item}>
+                    {item}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
         </div>
         {rolesSuccess && (
-          <div className=" flex m-4">
-            <Autocomplete
-              fullWidth
-              disablePortal
-              id="roleID"
-              value={form.Role}
-              onChange={(e, newValue) => {
-                setForm({ ...form, roleID: newValue.id });
-              }}
-              options={roles.normalData}
-              getOptionLabel={(option) => option.Name}
-              filterOptions={createFilterOptions({
-                matchFrom: "start",
-                stringify: (option) => option.Name,
-              })}
-              renderInput={(params) => (
-                <TextField
-                  // fullWidth
-                  {...params}
-                  type="text"
-                  name="roleID"
-                  label="Role"
-                  id="roleID"
-                />
-              )}
-            />
+          <div className="flex m-4">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Role</InputLabel>
+              <Select
+                labelId="roleID"
+                name="roleID"
+                id="roleID"
+                value={form.roleID}
+                label="Role"
+                onChange={handleChange}
+                MenuProps={{
+                  autoFocus: false,
+                  style: {
+                    maxHeight: "400px",
+                  },
+                }}
+                onClose={() => setSelectSearchTerm("")}
+                // renderValue={() => form.roleID}
+                onAnimationEnd={() => selectSearchInput.current.focus()}
+              >
+                <ListSubheader>
+                  <TextField
+                    ref={selectSearchInput}
+                    fullWidth
+                    type="text"
+                    name="SelectSearchTerm"
+                    placeholder="Search for Role"
+                    id="SelectSearchTerm"
+                    onChange={(e) => setSelectSearchTerm(e.target.value)}
+                    value={selectSearchTerm}
+                    variant="outlined"
+                    size="small"
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key !== "Escape") {
+                        // Prevents autoselecting item while typing (default Select behaviour)
+                        e.stopPropagation();
+                      }
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </ListSubheader>
+
+                {roles.ids?.map((item, j) => {
+                  if (
+                    roles?.entities[item]?.Name.toLowerCase().includes(
+                      selectSearchTerm.toLowerCase()
+                    )
+                  )
+                    return (
+                      <MenuItem key={j} value={item}>
+                        {roles.entities[item].Name}
+                      </MenuItem>
+                    );
+                })}
+              </Select>
+            </FormControl>
           </div>
         )}
         {teamsSuccess && (
-          <div className=" flex m-4">
-            <Autocomplete
-              fullWidth
-              disablePortal
-              id="teamID"
-              value={form.Team}
-              onChange={(e, newValue) => {
-                setForm({ ...form, teamID: newValue.id });
-              }}
-              options={teams.normalData}
-              getOptionLabel={(option) => option.Title}
-              filterOptions={createFilterOptions({
-                matchFrom: "start",
-                stringify: (option) => option.Title,
-              })}
-              renderInput={(params) => (
-                <TextField
-                  // fullWidth
-                  {...params}
-                  type="text"
-                  name="teamID"
-                  label="Team"
-                  id="teamID"
-                />
-              )}
-            />
+          <div className="flex m-4">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Team</InputLabel>
+              <Select
+                labelId="teamID"
+                name="teamID"
+                id="teamID"
+                value={form.teamID}
+                label="Team"
+                onChange={handleChange}
+                MenuProps={{
+                  autoFocus: false,
+                  style: {
+                    maxHeight: "400px",
+                  },
+                }}
+                onClose={() => setSelectSearchTerm("")}
+                onAnimationEnd={() => selectSearchInput.current.focus()}
+              >
+                <ListSubheader>
+                  <TextField
+                    ref={selectSearchInput}
+                    fullWidth
+                    type="text"
+                    name="SelectSearchTerm"
+                    placeholder="Search for Team"
+                    id="SelectSearchTerm"
+                    onChange={(e) => setSelectSearchTerm(e.target.value)}
+                    value={selectSearchTerm}
+                    variant="outlined"
+                    size="small"
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key !== "Escape") {
+                        e.stopPropagation();
+                      }
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </ListSubheader>
+
+                {teams.ids?.map((item, j) => {
+                  if (
+                    teams?.entities[item]?.Title.toLowerCase().includes(
+                      selectSearchTerm.toLowerCase()
+                    )
+                  )
+                    return (
+                      <MenuItem key={j} value={item}>
+                        {teams.entities[item].Title}
+                      </MenuItem>
+                    );
+                })}
+              </Select>
+            </FormControl>
           </div>
         )}
         {addressesSuccess && (
-          <div className=" flex m-4">
-            <Autocomplete
-              fullWidth
-              disablePortal
-              id="addressId"
-              value={form.Address}
-              onChange={(e, newValue) => {
-                setForm({ ...form, addressId: newValue.id });
-              }}
-              options={addresses.normalData}
-              getOptionLabel={(option) =>
-                option.Address_Translation?.find((x) => x.Language.Code == "En")
-                  ?.Name
-              }
-              filterOptions={createFilterOptions({
-                matchFrom: "start",
-                stringify: (option) =>
-                  option.Address_Translation?.find(
-                    (x) => x.Language.Code == "En"
-                  )?.Name,
-              })}
-              renderInput={(params) => (
-                <TextField
-                  // fullWidth
-                  {...params}
-                  type="text"
-                  name="addressId"
-                  label="Address"
-                  id="addressId"
-                />
-              )}
-            />
+          <div className="flex m-4">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Address</InputLabel>
+              <Select
+                labelId="addressId"
+                name="addressId"
+                id="addressId"
+                value={form.addressId}
+                label="Address"
+                onChange={handleChange}
+                MenuProps={{
+                  autoFocus: false,
+                  style: {
+                    maxHeight: "400px",
+                  },
+                }}
+                onClose={() => setSelectSearchTerm("")}
+                onAnimationEnd={() => selectSearchInput.current.focus()}
+              >
+                <ListSubheader>
+                  <TextField
+                    ref={selectSearchInput}
+                    fullWidth
+                    type="text"
+                    name="SelectSearchTerm"
+                    placeholder="Search for Address"
+                    id="SelectSearchTerm"
+                    onChange={(e) => setSelectSearchTerm(e.target.value)}
+                    value={selectSearchTerm}
+                    variant="outlined"
+                    size="small"
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key !== "Escape") {
+                        e.stopPropagation();
+                      }
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </ListSubheader>
+
+                {addresses.ids?.map((item, j) => {
+                  if (
+                    addresses?.entities[item]?.Address_Translation.find(
+                      (x) => x.Language.Code == "En"
+                    )
+                      ?.Name.toLowerCase()
+                      .includes(selectSearchTerm.toLowerCase())
+                  )
+                    return (
+                      <MenuItem key={j} value={item}>
+                        {
+                          addresses.entities[item]?.Address_Translation.find(
+                            (x) => x.Language.Code == "En"
+                          )?.Name
+                        }
+                      </MenuItem>
+                    );
+                })}
+              </Select>
+            </FormControl>
           </div>
         )}
+
         <div className="flex m-4">
           <FormGroup>
             <FormControlLabel
@@ -420,14 +539,14 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={
-        form.Name == "" ||
-        form.DOB == "" ||
-        form.Email == "" ||
-        form.Password == "" ||
-        form.PhoneNo == "" ||
-        form.roleID == ""
-      }
+      // disabled={
+      //   form.Name == "" ||
+      //   form.DOB == "" ||
+      //   form.Email == "" ||
+      //   form.Password == "" ||
+      //   form.PhoneNo == "" ||
+      //   form.roleID == ""
+      // }
       children={
         isLoading ||
         addLoading ||

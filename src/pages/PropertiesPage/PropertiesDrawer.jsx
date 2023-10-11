@@ -17,9 +17,14 @@ import {
   FormGroup,
   FormControlLabel,
   Switch,
-  Autocomplete,
-  createFilterOptions,
+  InputLabel,
+  FormControl,
+  Select,
+  ListSubheader,
+  InputAdornment,
+  MenuItem,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import Button from "../../components/UI/Button";
 import {
   API_BASE_URL,
@@ -94,6 +99,8 @@ const PropertyDrawer = ({
   const [properties_Translation, setProperties_Translation] = useState([]);
   const sliderRef = useRef();
   const [currentSlide, setCurrentSlide] = useState();
+  const [selectSearchTerm, setSelectSearchTerm] = useState("");
+  var selectSearchInput = useRef(undefined);
   const {
     data: lngs,
     isLoading: lngIsLoading,
@@ -664,73 +671,88 @@ const PropertyDrawer = ({
               required
             />
           </div>
-          <div className=" flex m-4">
-            <Autocomplete
-              fullWidth
-              disablePortal
-              id="Purpose"
-              value={form.Purpose}
-              onChange={(e, newValue) =>
-                setForm({ ...form, Purpose: newValue })
-              }
-              options={Purpose}
-              renderInput={(params) => (
-                <TextField
-                  // fullWidth
-                  {...params}
-                  type="text"
-                  name="Purpose"
-                  label="Purpose"
-                  id="Purpose"
-                />
-              )}
-            />
+          <div className="flex m-4">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Purpose</InputLabel>
+              <Select
+                labelId="Purpose"
+                name="Purpose"
+                id="Purpose"
+                value={form.GenPurposeder}
+                label="Purpose"
+                onChange={handleChange}
+                MenuProps={{
+                  style: {
+                    maxHeight: "400px",
+                  },
+                }}
+              >
+                {Purpose?.map((item, j) => {
+                  return (
+                    <MenuItem key={j} value={item}>
+                      {item}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
           </div>
-          <div className=" flex m-4">
-            <Autocomplete
-              fullWidth
-              disablePortal
-              id="RentFrequency"
-              value={form.RentFrequency}
-              onChange={(e, newValue) =>
-                setForm({ ...form, RentFrequency: newValue })
-              }
-              options={RentFrequency}
-              renderInput={(params) => (
-                <TextField
-                  // fullWidth
-                  {...params}
-                  type="text"
-                  name="RentFrequency"
-                  label="RentFrequency"
-                  id="RentFrequency"
-                />
-              )}
-            />
+          <div className="flex m-4">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                Rent Frequency
+              </InputLabel>
+              <Select
+                labelId="Rent Frequency"
+                name="RentFrequency"
+                id="RentFrequency"
+                value={form.RentFrequency}
+                label="Rent Frequency"
+                onChange={handleChange}
+                MenuProps={{
+                  style: {
+                    maxHeight: "400px",
+                  },
+                }}
+              >
+                {RentFrequency?.map((item, j) => {
+                  return (
+                    <MenuItem key={j} value={item}>
+                      {item}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
           </div>
-          <div className=" flex m-4">
-            <Autocomplete
-              fullWidth
-              disablePortal
-              id="CompletionStatus"
-              value={form.CompletionStatus}
-              onChange={(e, newValue) =>
-                setForm({ ...form, CompletionStatus: newValue })
-              }
-              options={CompletionStatus}
-              renderInput={(params) => (
-                <TextField
-                  // fullWidth
-                  {...params}
-                  type="text"
-                  name="CompletionStatus"
-                  label="CompletionStatus"
-                  id="CompletionStatus"
-                />
-              )}
-            />
+          <div className="flex m-4">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                Completion Status
+              </InputLabel>
+              <Select
+                labelId="CompletionStatus"
+                name="CompletionStatus"
+                id="CompletionStatus"
+                value={form.CompletionStatus}
+                label="Completion Status"
+                onChange={handleChange}
+                MenuProps={{
+                  style: {
+                    maxHeight: "400px",
+                  },
+                }}
+              >
+                {CompletionStatus?.map((item, j) => {
+                  return (
+                    <MenuItem key={j} value={item}>
+                      {item}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
           </div>
-
           <div className="flex m-4">
             <TextField
               fullWidth
@@ -788,111 +810,217 @@ const PropertyDrawer = ({
             />
           </div>
           {categoriesisSuccess && (
-            <div className=" flex m-4">
-              <Autocomplete
-                fullWidth
-                disablePortal
-                id="CategoryID"
-                value={form.Category}
-                onChange={(e, newValue) => {
-                  setForm({ ...form, CategoryID: newValue.id });
-                }}
-                options={categories.normalData}
-                getOptionLabel={(option) =>
-                  option.Category_Translation?.find(
-                    (x) => x.Language.Code == "En"
-                  )?.Name
-                }
-                filterOptions={createFilterOptions({
-                  matchFrom: "start",
-                  stringify: (option) =>
-                    option.Category_Translation?.find(
-                      (x) => x.Language.Code == "En"
-                    )?.Name,
-                })}
-                renderInput={(params) => (
-                  <TextField
-                    // fullWidth
-                    {...params}
-                    type="text"
-                    name="CategoryID"
-                    label="Category"
-                    id="CategoryID"
-                  />
-                )}
-              />
+            <div className="flex m-4">
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                <Select
+                  labelId="CategoryID"
+                  name="CategoryID"
+                  id="CategoryID"
+                  value={form.CategoryID}
+                  label="Category"
+                  onChange={handleChange}
+                  MenuProps={{
+                    autoFocus: false,
+                    style: {
+                      maxHeight: "400px",
+                    },
+                  }}
+                  onClose={() => setSelectSearchTerm("")}
+                  onAnimationEnd={() => selectSearchInput.current.focus()}
+                >
+                  <ListSubheader>
+                    <TextField
+                      ref={selectSearchInput}
+                      fullWidth
+                      type="text"
+                      name="SelectSearchTerm"
+                      placeholder="Search for Category"
+                      id="SelectSearchTerm"
+                      onChange={(e) => setSelectSearchTerm(e.target.value)}
+                      value={selectSearchTerm}
+                      variant="outlined"
+                      size="small"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key !== "Escape") {
+                          e.stopPropagation();
+                        }
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </ListSubheader>
+
+                  {categories.ids?.map((item, j) => {
+                    if (
+                      categories?.entities[item]?.Category_Translation.find(
+                        (x) => x.Language.Code == "En"
+                      )
+                        ?.Name.toLowerCase()
+                        .includes(selectSearchTerm.toLowerCase())
+                    )
+                      return (
+                        <MenuItem key={j} value={item}>
+                          {
+                            categories.entities[
+                              item
+                            ]?.Category_Translation.find(
+                              (x) => x.Language.Code == "En"
+                            )?.Name
+                          }
+                        </MenuItem>
+                      );
+                  })}
+                </Select>
+              </FormControl>
             </div>
           )}
           {addressesisSuccess && (
-            <div className=" flex m-4">
-              <Autocomplete
-                fullWidth
-                disablePortal
-                id="addressId"
-                value={form.Address}
-                onChange={(e, newValue) => {
-                  setForm({ ...form, addressId: newValue.id });
-                }}
-                options={addresses.normalData}
-                getOptionLabel={(option) =>
-                  option.Address_Translation?.find(
-                    (x) => x.Language.Code == "En"
-                  )?.Name
-                }
-                filterOptions={createFilterOptions({
-                  matchFrom: "start",
-                  stringify: (option) =>
-                    option.Address_Translation?.find(
-                      (x) => x.Language.Code == "En"
-                    )?.Name,
-                })}
-                renderInput={(params) => (
-                  <TextField
-                    // fullWidth
-                    {...params}
-                    type="text"
-                    name="addressId"
-                    label="Address"
-                    id="addressId"
-                  />
-                )}
-              />
+            <div className="flex m-4">
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Address</InputLabel>
+                <Select
+                  labelId="AddressID"
+                  name="AddressID"
+                  id="AddressID"
+                  value={form.AddressID}
+                  label="Address"
+                  onChange={handleChange}
+                  MenuProps={{
+                    autoFocus: false,
+                    style: {
+                      maxHeight: "400px",
+                    },
+                  }}
+                  onClose={() => setSelectSearchTerm("")}
+                  onAnimationEnd={() => selectSearchInput.current.focus()}
+                >
+                  <ListSubheader>
+                    <TextField
+                      ref={selectSearchInput}
+                      fullWidth
+                      type="text"
+                      name="SelectSearchTerm"
+                      placeholder="Search for Address"
+                      id="SelectSearchTerm"
+                      onChange={(e) => setSelectSearchTerm(e.target.value)}
+                      value={selectSearchTerm}
+                      variant="outlined"
+                      size="small"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key !== "Escape") {
+                          e.stopPropagation();
+                        }
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </ListSubheader>
+
+                  {addresses.ids?.map((item, j) => {
+                    if (
+                      addresses?.entities[item]?.Address_Translation.find(
+                        (x) => x.Language.Code == "En"
+                      )
+                        ?.Name.toLowerCase()
+                        .includes(selectSearchTerm.toLowerCase())
+                    )
+                      return (
+                        <MenuItem key={j} value={item}>
+                          {
+                            addresses.entities[item]?.Address_Translation.find(
+                              (x) => x.Language.Code == "En"
+                            )?.Name
+                          }
+                        </MenuItem>
+                      );
+                  })}
+                </Select>
+              </FormControl>
             </div>
           )}
           {developersisSuccess && (
-            <div className=" flex m-4">
-              <Autocomplete
-                fullWidth
-                disablePortal
-                id="DeveloperID"
-                value={form.Developer}
-                onChange={(e, newValue) => {
-                  setForm({ ...form, DeveloperID: newValue.id });
-                }}
-                options={developers.normalData}
-                getOptionLabel={(option) =>
-                  option.Developer_Translation?.find(
-                    (x) => x.Language.Code == "En"
-                  )?.Name
-                }
-                filterOptions={createFilterOptions({
-                  matchFrom: "start",
-                  stringify: (option) =>
-                    option.Developer_Translation?.find(
-                      (x) => x.Language.Code == "En"
-                    )?.Name,
-                })}
-                renderInput={(params) => (
-                  <TextField
-                    // fullWidth
-                    {...params}
-                    type="text"
-                    name="DeveloperID"
-                    label="Developer"
-                    id="DeveloperID"
-                  />
-                )}
-              />
+            <div className="flex m-4">
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Developer</InputLabel>
+                <Select
+                  labelId="DeveloperID"
+                  name="DeveloperID"
+                  id="DeveloperID"
+                  value={form.DeveloperID}
+                  label="Developer"
+                  onChange={handleChange}
+                  MenuProps={{
+                    autoFocus: false,
+                    style: {
+                      maxHeight: "400px",
+                    },
+                  }}
+                  onClose={() => setSelectSearchTerm("")}
+                  onAnimationEnd={() => selectSearchInput.current.focus()}
+                >
+                  <ListSubheader>
+                    <TextField
+                      ref={selectSearchInput}
+                      fullWidth
+                      type="text"
+                      name="SelectSearchTerm"
+                      placeholder="Search for Developer"
+                      id="SelectSearchTerm"
+                      onChange={(e) => setSelectSearchTerm(e.target.value)}
+                      value={selectSearchTerm}
+                      variant="outlined"
+                      size="small"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key !== "Escape") {
+                          e.stopPropagation();
+                        }
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </ListSubheader>
+
+                  {developers.ids?.map((item, j) => {
+                    if (
+                      developers?.entities[item]?.Developer_Translation.find(
+                        (x) => x.Language.Code == "En"
+                      )
+                        ?.Name.toLowerCase()
+                        .includes(selectSearchTerm.toLowerCase())
+                    )
+                      return (
+                        <MenuItem key={j} value={item}>
+                          {
+                            developers.entities[
+                              item
+                            ]?.Developer_Translation.find(
+                              (x) => x.Language.Code == "En"
+                            )?.Name
+                          }
+                        </MenuItem>
+                      );
+                  })}
+                </Select>
+              </FormControl>
             </div>
           )}
 

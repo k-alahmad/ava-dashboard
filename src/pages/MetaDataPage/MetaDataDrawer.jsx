@@ -10,9 +10,17 @@ import { useGetActiveArticlesQuery } from "../../redux/articles/articlesSlice";
 import {
   CircularProgress,
   TextField,
-  Autocomplete,
-  createFilterOptions,
+  FormGroup,
+  FormControlLabel,
+  Switch,
+  InputLabel,
+  FormControl,
+  Select,
+  ListSubheader,
+  InputAdornment,
+  MenuItem,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 const defaultFormState = {
   id: "",
   Name: "",
@@ -36,6 +44,8 @@ const MetaDataDrawer = ({
   setDrawerID,
 }) => {
   const [form, setForm] = useState(defaultFormState);
+  const [selectSearchTerm, setSelectSearchTerm] = useState("");
+  var selectSearchInput = useRef(undefined);
   const [
     getMetaDataById,
     { data, isLoading, isFetching, isError, error, isSuccess },
@@ -172,75 +182,147 @@ const MetaDataDrawer = ({
             />
           </div>
           {articlesIsSuccess && (
-            <div className=" flex m-4">
-              <Autocomplete
-                fullWidth
-                disablePortal
-                id="ArticleID"
-                value={form.Article}
-                onChange={(e, newValue) => {
-                  setForm({ ...form, ArticleID: newValue.id });
-                }}
-                options={articles.normalData}
-                getOptionLabel={(option) =>
-                  option.Articles_Translation?.find(
-                    (x) => x.Language.Code == "En"
-                  )?.Title
-                }
-                filterOptions={createFilterOptions({
-                  matchFrom: "start",
-                  stringify: (option) =>
-                    option.Articles_Translation?.find(
-                      (x) => x.Language.Code == "En"
-                    )?.Title,
-                })}
-                renderInput={(params) => (
-                  <TextField
-                    // fullWidth
-                    {...params}
-                    type="text"
-                    name="ArticleID"
-                    label="Article"
-                    id="ArticleID"
-                  />
-                )}
-              />
+            <div className="flex m-4">
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Article</InputLabel>
+                <Select
+                  labelId="ArticleID"
+                  name="ArticleID"
+                  id="ArticleID"
+                  value={form.ArticleID}
+                  disabled={form.PropertyID !== ""}
+                  label="Article"
+                  onChange={handleChange}
+                  MenuProps={{
+                    autoFocus: false,
+                    style: {
+                      maxHeight: "400px",
+                    },
+                  }}
+                  onClose={() => setSelectSearchTerm("")}
+                  onAnimationEnd={() => selectSearchInput.current.focus()}
+                >
+                  <ListSubheader>
+                    <TextField
+                      ref={selectSearchInput}
+                      fullWidth
+                      type="text"
+                      name="SelectSearchTerm"
+                      placeholder="Search for Article"
+                      id="SelectSearchTerm"
+                      onChange={(e) => setSelectSearchTerm(e.target.value)}
+                      value={selectSearchTerm}
+                      variant="outlined"
+                      size="small"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key !== "Escape") {
+                          e.stopPropagation();
+                        }
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </ListSubheader>
+
+                  {articles.ids?.map((item, j) => {
+                    if (
+                      articles?.entities[item]?.Articles_Translation.find(
+                        (x) => x.Language.Code == "En"
+                      )
+                        ?.Title.toLowerCase()
+                        .includes(selectSearchTerm.toLowerCase())
+                    )
+                      return (
+                        <MenuItem key={j} value={item}>
+                          {
+                            articles.entities[item]?.Articles_Translation.find(
+                              (x) => x.Language.Code == "En"
+                            )?.Title
+                          }
+                        </MenuItem>
+                      );
+                  })}
+                </Select>
+              </FormControl>
             </div>
           )}
           {propertiesIsSuccess && (
-            <div className=" flex m-4">
-              <Autocomplete
-                fullWidth
-                disablePortal
-                id="PropertyID"
-                value={form.Property}
-                onChange={(e, newValue) => {
-                  setForm({ ...form, PropertyID: newValue.id });
-                }}
-                options={properties.normalData}
-                getOptionLabel={(option) =>
-                  option.Property_Translation?.find(
-                    (x) => x.Language.Code == "En"
-                  )?.Name
-                }
-                filterOptions={createFilterOptions({
-                  matchFrom: "start",
-                  stringify: (option) =>
-                    option.Property_Translation?.find(
-                      (x) => x.Language.Code == "En"
-                    )?.Name,
-                })}
-                renderInput={(params) => (
-                  <TextField
-                    // fullWidth
-                    {...params}
-                    type="text"
-                    name="PropertyID"
-                    label="Property"
-                    id="PropertyID"
-                  />
-                )}
-              />
+            <div className="flex m-4">
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Property</InputLabel>
+                <Select
+                  labelId="PropertyID"
+                  name="PropertyID"
+                  id="PropertyID"
+                  disabled={form.ArticleID !== ""}
+                  value={form.PropertyID}
+                  label="Property"
+                  onChange={handleChange}
+                  MenuProps={{
+                    autoFocus: false,
+                    style: {
+                      maxHeight: "400px",
+                    },
+                  }}
+                  onClose={() => setSelectSearchTerm("")}
+                  onAnimationEnd={() => selectSearchInput.current.focus()}
+                >
+                  <ListSubheader>
+                    <TextField
+                      ref={selectSearchInput}
+                      fullWidth
+                      type="text"
+                      name="SelectSearchTerm"
+                      placeholder="Search for Property"
+                      id="SelectSearchTerm"
+                      onChange={(e) => setSelectSearchTerm(e.target.value)}
+                      value={selectSearchTerm}
+                      variant="outlined"
+                      size="small"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key !== "Escape") {
+                          e.stopPropagation();
+                        }
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </ListSubheader>
+
+                  {properties.ids?.map((item, j) => {
+                    if (
+                      properties?.entities[item]?.Property_Translation.find(
+                        (x) => x.Language.Code == "En"
+                      )
+                        ?.Name.toLowerCase()
+                        .includes(selectSearchTerm.toLowerCase())
+                    )
+                      return (
+                        <MenuItem key={j} value={item}>
+                          {
+                            properties.entities[
+                              item
+                            ]?.Property_Translation.find(
+                              (x) => x.Language.Code == "En"
+                            )?.Name
+                          }
+                        </MenuItem>
+                      );
+                  })}
+                </Select>
+              </FormControl>
             </div>
           )}
         </div>

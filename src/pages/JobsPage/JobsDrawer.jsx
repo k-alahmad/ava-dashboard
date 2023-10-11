@@ -15,9 +15,15 @@ import {
   FormGroup,
   FormControlLabel,
   Switch,
-  Autocomplete,
-  createFilterOptions,
+  InputLabel,
+  FormControl,
+  Select,
+  ListSubheader,
+  InputAdornment,
+  MenuItem,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+
 import RichTextBox from "../../components/Forms/RichTextBox";
 const defaultFormState = {
   id: "",
@@ -37,6 +43,8 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
   const [form, setForm] = useState(defaultFormState);
   const [job_Translation, setJob_Translation] = useState([]);
   const sliderRef = useRef();
+  const [selectSearchTerm, setSelectSearchTerm] = useState("");
+  var selectSearchInput = useRef(undefined);
   const [currentSlide, setCurrentSlide] = useState();
   const {
     data: lngs,
@@ -315,33 +323,73 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               />
             </FormGroup>
           </div>
+
           {usersisSuccess && (
-            <div className=" flex m-4">
-              <Autocomplete
-                fullWidth
-                disablePortal
-                id="usersID"
-                value={form.Author}
-                onChange={(e, newValue) => {
-                  setForm({ ...form, usersID: newValue.id });
-                }}
-                options={users.normalData}
-                getOptionLabel={(option) => option.Name}
-                filterOptions={createFilterOptions({
-                  matchFrom: "start",
-                  stringify: (option) => option.Name,
-                })}
-                renderInput={(params) => (
-                  <TextField
-                    // fullWidth
-                    {...params}
-                    type="text"
-                    name="usersID"
-                    label="Job Creator"
-                    id="usersID"
-                  />
-                )}
-              />
+            <div className="flex m-4">
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Job Creator
+                </InputLabel>
+                <Select
+                  labelId="usersId"
+                  name="usersId"
+                  id="usersId"
+                  value={form.usersId}
+                  label="Job Creator"
+                  onChange={handleChange}
+                  MenuProps={{
+                    autoFocus: false,
+                    style: {
+                      maxHeight: "400px",
+                    },
+                  }}
+                  onClose={() => setSelectSearchTerm("")}
+                  // renderValue={() => form.roleID}
+                  onAnimationEnd={() => selectSearchInput.current.focus()}
+                >
+                  <ListSubheader>
+                    <TextField
+                      ref={selectSearchInput}
+                      fullWidth
+                      type="text"
+                      name="SelectSearchTerm"
+                      placeholder="Search for Job Creator"
+                      id="SelectSearchTerm"
+                      onChange={(e) => setSelectSearchTerm(e.target.value)}
+                      value={selectSearchTerm}
+                      variant="outlined"
+                      size="small"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key !== "Escape") {
+                          // Prevents autoselecting item while typing (default Select behaviour)
+                          e.stopPropagation();
+                        }
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </ListSubheader>
+
+                  {users.ids?.map((item, j) => {
+                    if (
+                      users?.entities[item]?.Name.toLowerCase().includes(
+                        selectSearchTerm.toLowerCase()
+                      )
+                    )
+                      return (
+                        <MenuItem key={j} value={item}>
+                          {users.entities[item].Name}
+                        </MenuItem>
+                      );
+                  })}
+                </Select>
+              </FormControl>
             </div>
           )}
 

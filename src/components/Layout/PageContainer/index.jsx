@@ -45,7 +45,7 @@ const PageLayout = ({ children }) => {
               alt={isSuccess && !isLoading ? user.Name : "Profile"}
               className={`!w-20 !h-20 md:!w-28 md:!h-28 rounded-xl bg-secondary transition-all duration-500 `}
             />
-            <p className="font-bold whitespace-nowrap text-tiny md:text-smaller lg:text-small text-primary text-center px-1">
+            <p className="font-bold  text-tiny md:text-smaller lg:text-small text-primary text-center px-1">
               {isSuccess && !isLoading && user.Name}
             </p>
             {/* <MdClose

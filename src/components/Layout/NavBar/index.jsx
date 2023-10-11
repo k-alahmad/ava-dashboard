@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../../../assets/logo/logo.svg";
-import Drawer from "./Drawer";
-import LinkElement from "./LinkElement";
-import {
-  Dehaze as MdDehaze,
-  Close as MdClose,
-  // ExpandMore,
-  // ExpandLess,
-} from "@mui/icons-material";
+// import Drawer from "./Drawer";
+// import LinkElement from "./LinkElement";
 import { useLocation } from "react-router-dom";
 import { data } from "../../../data/navData";
 import NavMenu from "./NavMenu";
@@ -48,12 +42,12 @@ const NavBar = ({ isOpen, setIsOpen, expand, setExpand }) => {
   return (
     <>
       <div
-        className={`font-regular bg-secondary text-third z-50  fixed w-full shadow-lg`}
+        className={`font-regular bg-secondary text-third z-50 fixed w-full shadow-lg`}
       >
-        <div
-          className={`flex justify-between items-center relative  overflow-hidden`}
-        >
-          <div className="h-[500px] w-1/2 rounded-full bg-primary/50 blur-[120px]  absolute -top-[250px] -right-0" />
+        <div className={`flex justify-between items-center relative`}>
+          <div className="absolute -top-0 -right-0 h-full w-1/2 overflow-hidden">
+            <div className="h-[500px] w-full -right-[10%] rounded-full bg-primary/50 blur-[120px] absolute" />
+          </div>
 
           <div className="flex items-center justify-center">
             <div className="m-1 p-2 max-md:hidden">
@@ -64,25 +58,29 @@ const NavBar = ({ isOpen, setIsOpen, expand, setExpand }) => {
               />
             </div>
             <div
-              onClick={() => setIsOpen(!isOpen)}
-              className={`"ursor-pointer md:ml-4 ${
+              onClick={() => {
+                setIsOpen(!isOpen);
+                setExpand({ ...expand, status: false });
+              }}
+              className={`cursor-pointer md:ml-4 space-y-1 ${
                 isOpen && "md:translate-x-60"
               } transition-all duration-500`}
             >
-              {isOpen ? (
-                <MdClose
-                  className="text-primary !text-[30px] mx-2"
-                  onClick={() => {
-                    setIsOpen(false);
-                    setExpand({ ...expand, status: false });
-                  }}
-                />
-              ) : (
-                <MdDehaze
-                  fontSize="large"
-                  className="text-primary !text-[30px] mx-2"
-                />
-              )}
+              <div
+                className={`bg-primary h-[2px] w-8 transition-all duration-700 ${
+                  isOpen ? "rotate-45  translate-y-[6px]" : "rotate-0"
+                }`}
+              />
+              <div
+                className={`bg-primary h-[2px] w-8 transition-all duration-500 ${
+                  isOpen ? "opacity-0" : "opacity-100"
+                }`}
+              />
+              <div
+                className={`bg-primary h-[2px] w-8 transition-all duration-700 ${
+                  isOpen ? "-rotate-45 -translate-y-[6px]" : "rotate-0"
+                }`}
+              />
             </div>
           </div>
           <p className="text-smaller sm:text-small lg:text-med drop-shadow-2xl text-center font-bold">

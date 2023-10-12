@@ -57,9 +57,15 @@ const PageLayout = ({ children }) => {
           </header>
 
           <div className="h-[500px] w-[500px] rounded-full bg-primary/50 blur-[120px] absolute -top-[25%] -left-[50%]" />
-          <div className="h-[180px] md:min-h-[250px] !w-full" />
           <div
-            className={`h-full flex flex-col justify-start items-start space-y-6 w-full px-1`}
+            className={`${
+              isOpen
+                ? "h-[180px] md:min-h-[250px]"
+                : "h-[80px] md:min-h-[100px]"
+            }  !w-full transition-all duration-300`}
+          />
+          <div
+            className={`h-full flex flex-col justify-start items-start space-y-6 w-full px-1 z-20`}
           >
             {data.map((e, i) =>
               e.link ? (

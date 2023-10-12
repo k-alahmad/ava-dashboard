@@ -128,7 +128,7 @@ const DashboardPage = () => {
     );
   };
   return (
-    <div className="w-full grid lg:grid-cols-2 xl:grid-cols-4 2xl:gap-x-16 gap-x-12 gap-y-8 px-[5%] place-items-center my-8">
+    <div className="w-full grid lg:grid-cols-2 xl:grid-cols-3 gap-x-12 gap-y-8 px-[2%] place-items-center my-8">
       <Card
         title={"Roles"}
         count={roles?.count}

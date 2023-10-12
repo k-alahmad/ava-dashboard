@@ -1151,15 +1151,40 @@ const PropertyDrawer = ({
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      // disabled={
-      //   valueAr == "" ||
-      //   valueEn == "" ||
-      //   form.capAr == "" ||
-      //   form.capEn == "" ||
-      //   form.titleAr == "" ||
-      //   form.titleEn == "" ||
-      //   form.image == ""
-      // }
+      disabled={
+        form.Price?.toString().replace(/ /g, "") == "" ||
+        form.Area?.toString().replace(/ /g, "") == "" ||
+        form.Bedrooms?.toString().replace(/ /g, "") == "" ||
+        form.RentMin?.toString().replace(/ /g, "") == "" ||
+        form.RentMax?.toString().replace(/ /g, "") == "" ||
+        form.Handover?.replace(/ /g, "") == "" ||
+        form.FurnishingStatus?.replace(/ /g, "") == "" ||
+        form.VacantStatus?.replace(/ /g, "") == "" ||
+        form.Longitude?.toString().replace(/ /g, "") == "" ||
+        form.Latitude?.toString().replace(/ /g, "") == "" ||
+        (form.Purpose !== "Rent" && form.Purpose !== "Buy") ||
+        (form.RentFrequency !== "Yearly" &&
+          form.RentFrequency !== "Monthly" &&
+          form.RentFrequency !== "Weekly" &&
+          form.RentFrequency !== "Daily") ||
+        (form.CompletionStatus !== "Ready" &&
+          form.CompletionStatus !== "OffPlan") ||
+        form.PermitNumber?.replace(/ /g, "") == "" ||
+        form.DEDNo?.replace(/ /g, "") == "" ||
+        form.ReraNo?.replace(/ /g, "") == "" ||
+        form.BRNNo?.replace(/ /g, "") == "" ||
+        form.CategoryID?.replace(/ /g, "") == "" ||
+        form.AddressID?.replace(/ /g, "") == "" ||
+        form.DeveloperID?.replace(/ /g, "") == "" ||
+        properties_Translation
+          .find((x) => x.Language.Code == "En")
+          ?.Name.replace(/ /g, "") == "" ||
+        properties_Translation
+          .find((x) => x.Language.Code == "En")
+          ?.Description.replace(/ /g, "") == "" ||
+        image.length == 0
+      }
+      alertMessage={"Required Data Are Missing"}
       children={
         isLoading ||
         addLoading ||

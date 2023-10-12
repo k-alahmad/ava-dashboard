@@ -458,8 +458,7 @@ const AnnouncementDrawer = ({
       onSaveClick={handleSubmit}
       disabled={
         form.Rank?.toString().replace(/ /g, "") == "" ||
-        form.Type !== "Normal" ||
-        form.Type !== "Popup" ||
+        (form.Type !== "Normal" && form.Type !== "Popup") ||
         form.StartDate.replace(/ /g, "") == "" ||
         form.EndDate.replace(/ /g, "") == "" ||
         announcements_Translation

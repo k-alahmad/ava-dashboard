@@ -27,7 +27,7 @@ export default function Drawer({
         <article className="relative w-screen max-w-full pb-10 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden h-full ">
           <header className="w-[90%] p-1 rounded-xl font-bold flex items-center justify-between fixed top-[1%] md:top-[3%] left-[5%] shadow-xl drop-shadow-xl z-10">
             <img
-              src={!isLoading ? API_BASE_URL + "/" + img : ""}
+              src={!isLoading ? API_BASE_URL + img : ""}
               alt={!isLoading ? userName : "Profile"}
               className="!w-20 !h-20  md:!w-28 md:!h-28 rounded-xl bg-secondary"
             />

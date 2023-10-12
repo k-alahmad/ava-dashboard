@@ -413,7 +413,7 @@ const PropertyDrawer = ({
                       <img
                         key={index}
                         className="col-span-1 h-[200px] w-[200px]"
-                        src={API_BASE_URL + "/" + item.URL}
+                        src={API_BASE_URL + item.URL}
                       />
                       <div
                         onClick={() => {

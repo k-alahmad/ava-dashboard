@@ -28,7 +28,7 @@ export const applicationApiSlice = apiSlice.injectEndpoints({
     }),
 
     getApplicationById: builder.query({
-      query: (args) => `/application/${args.id}`,
+      query: (args) => `/applicant/${args.id}`,
       providesTags: (result, error, args) => [
         { type: "applicant", id: args.id },
       ],

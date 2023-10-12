@@ -141,7 +141,7 @@ const ProfilePage = () => {
           </p>
           <div className="relative h-[250px] w-[250px] sm:h-[350px] sm:w-[350px] bg-secondary/50 rounded-3xl">
             <img
-              src={!image ? API_BASE_URL + "/" + data?.Image?.URL : imageURL}
+              src={!image ? API_BASE_URL + data?.Image?.URL : imageURL}
               alt={data?.Name}
               className="rounded-3xl shadow-lg drop-shadow-lg object-cover object-center w-full h-full"
             />
@@ -374,9 +374,7 @@ const ProfilePage = () => {
                       className="bg-secondary text-primary rounded-lg backdrop-blur-[50px] shadow-lg drop-shadow-lg min-h-[75px] flex items-center justify-between"
                     >
                       <img
-                        src={
-                          API_BASE_URL + "/" + teamates.entities[item].Image.URL
-                        }
+                        src={API_BASE_URL + teamates.entities[item].Image.URL}
                         alt={teamates.entities[item].Name}
                         className="rounded-full h-14 w-14 m-2 object-cover"
                       />
@@ -402,7 +400,7 @@ const ProfilePage = () => {
                   className="bg-secondary text-primary rounded-lg backdrop-blur-[50px] shadow-lg drop-shadow-lg min-h-[75px] flex items-center justify-between"
                 >
                   <img
-                    src={API_BASE_URL + "/" + item?.Image?.URL}
+                    src={API_BASE_URL + item?.Image?.URL}
                     alt={"article" + index}
                     className="rounded-md h-14 w-14 object-cover"
                   />

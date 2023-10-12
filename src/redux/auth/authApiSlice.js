@@ -17,6 +17,12 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    logout: builder.query({
+      query: (args) => ({
+        url: `/auth/logout`,
+        method: "GET",
+      }),
+    }),
     updateProfile: builder.mutation({
       query: (args) => ({
         url: `/auth/profile`,
@@ -32,4 +38,6 @@ export const {
   useGetProfileQuery,
   useLazyGetProfileQuery,
   useUpdateProfileMutation,
+  useLogoutQuery,
+  useLazyLogoutQuery,
 } = authApiSlice;

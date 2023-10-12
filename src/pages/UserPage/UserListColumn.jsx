@@ -12,7 +12,7 @@ export const ComposeColumns = (onDelete, onChangePassowrd) => {
       accessor: (d) =>
         d?.Image?.URL ? (
           <img
-            src={`${API_BASE_URL}/${d?.Image?.URL}`}
+            src={API_BASE_URL + d?.Image?.URL}
             alt={d?.Name}
             className="h-[150px] w-[150px]"
           />

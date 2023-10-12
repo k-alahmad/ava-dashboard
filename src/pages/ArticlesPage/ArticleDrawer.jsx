@@ -245,7 +245,7 @@ const ArticleDrawer = ({
 
                 <img
                   className="h-[200px] w-[200px] "
-                  src={`${API_BASE_URL}/${oldImage}`}
+                  src={API_BASE_URL + oldImage}
                   alt=""
                 />
               </div>

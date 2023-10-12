@@ -216,7 +216,7 @@ const DeveloperDrawer = ({
                 <p className="text-smaller font-regular pb-1">Current image</p>
                 <img
                   className="h-[200px] w-[200px] "
-                  src={`${API_BASE_URL}/${oldImage}`}
+                  src={API_BASE_URL + oldImage}
                   alt=""
                 />
               </div>

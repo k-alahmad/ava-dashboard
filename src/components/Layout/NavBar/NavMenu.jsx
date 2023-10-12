@@ -7,6 +7,7 @@ import { Logout, Person } from "@mui/icons-material";
 import { API_BASE_URL } from "../../../constants";
 import { Style } from "@mui/icons-material";
 import { ExpandMore } from "@mui/icons-material";
+import { useLazyLogoutQuery } from "../../../redux/auth/authApiSlice";
 const NavMenu = ({ img, userName, isLoading }) => {
   // const { i18n } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -14,6 +15,8 @@ const NavMenu = ({ img, userName, isLoading }) => {
   const ref = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [logout, { isLoading: logoutloading, isSuccess: logoutSuccess }] =
+    useLazyLogoutQuery();
   const handleClickOutside = (event) => {
     if (ref.current && !ref.current.contains(event.target)) {
       setOpen(false);
@@ -39,7 +42,7 @@ const NavMenu = ({ img, userName, isLoading }) => {
             className="p-0 m-0 relative text-center font-bold text-smaller cursor-pointer"
           >
             <img
-              src={!isLoading ? API_BASE_URL + "/" + img : ""}
+              src={!isLoading ? API_BASE_URL + img : ""}
               alt={!isLoading ? userName : "User Image"}
               className="w-10 h-10 rounded-full bg-primary"
             />
@@ -88,7 +91,9 @@ const NavMenu = ({ img, userName, isLoading }) => {
           <div
             className="flex justify-start items-center cursor-pointer gap-x-2"
             onClick={() => {
-              dispatch(logOut());
+              logout().then(() => {
+                dispatch(logOut());
+              });
             }}
           >
             <Logout className="text-primary" />

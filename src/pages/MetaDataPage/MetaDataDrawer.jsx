@@ -18,20 +18,13 @@ import {
   MenuItem,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { CloseRounded } from "@mui/icons-material";
 const defaultFormState = {
   id: "",
   Name: "",
   Content: "",
   PropertyID: "",
   ArticleID: "",
-  Property: {
-    id: "",
-    Property_Translation: [{ Language: { Code: "En" }, Name: "" }],
-  },
-  Article: {
-    id: "",
-    Articles_Translation: [{ Language: { Code: "En" }, Title: "" }],
-  },
 };
 
 const MetaDataDrawer = ({
@@ -86,9 +79,13 @@ const MetaDataDrawer = ({
   useEffect(() => {
     if (drawerOpen) {
       if (drawerID !== "") {
-        getMetaDataById(drawerID);
+        getMetaDataById({ id: drawerID });
         if (isSuccess) {
-          setForm(data);
+          setForm({
+            ...data,
+            ArticleID: data.articlesId,
+            PropertyID: data.propertyId,
+          });
         }
       } else {
         setForm(defaultFormState);
@@ -187,7 +184,7 @@ const MetaDataDrawer = ({
                   name="ArticleID"
                   id="ArticleID"
                   value={form.ArticleID}
-                  disabled={form.PropertyID !== ""}
+                  disabled={form.PropertyID !== "" && form.PropertyID !== null}
                   label="Article"
                   onChange={handleChange}
                   MenuProps={{
@@ -198,6 +195,16 @@ const MetaDataDrawer = ({
                   }}
                   onClose={() => setSelectSearchTerm("")}
                   onAnimationEnd={() => selectSearchInput.current.focus()}
+                  {...(form.ArticleID !== "" && {
+                    endAdornment: (
+                      <div
+                        className="!mr-6 !cursor-pointer"
+                        onClick={() => setForm({ ...form, ArticleID: "" })}
+                      >
+                        <CloseRounded />
+                      </div>
+                    ),
+                  })}
                 >
                   <ListSubheader>
                     <TextField
@@ -257,7 +264,7 @@ const MetaDataDrawer = ({
                   labelId="PropertyID"
                   name="PropertyID"
                   id="PropertyID"
-                  disabled={form.ArticleID !== ""}
+                  disabled={form.ArticleID !== "" && form.ArticleID !== null}
                   value={form.PropertyID}
                   label="Property"
                   onChange={handleChange}
@@ -269,6 +276,16 @@ const MetaDataDrawer = ({
                   }}
                   onClose={() => setSelectSearchTerm("")}
                   onAnimationEnd={() => selectSearchInput.current.focus()}
+                  {...(form.PropertyID !== "" && {
+                    endAdornment: (
+                      <div
+                        className="!mr-6 !cursor-pointer"
+                        onClick={() => setForm({ ...form, PropertyID: "" })}
+                      >
+                        <CloseRounded />
+                      </div>
+                    ),
+                  })}
                 >
                   <ListSubheader>
                     <TextField

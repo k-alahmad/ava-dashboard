@@ -31,10 +31,6 @@ const defaultFormState = {
   Type: "",
   WeekHours: "",
   Expired: false,
-  Author: {
-    id: "",
-    Name: "",
-  },
   usersId: "",
   ActiveStatus: true,
 };

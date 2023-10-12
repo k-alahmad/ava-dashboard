@@ -39,12 +39,6 @@ const defaultFormState = {
   addressId: "",
   ActiveStatus: true,
   Image: "",
-  Role: { id: "", Name: "" },
-  Address: {
-    id: "",
-    Address_Translation: [{ Language: { Code: "En" }, Name: "" }],
-  },
-  Team: { id: "", Title: "" },
 };
 const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
   const [form, setForm] = useState(defaultFormState);

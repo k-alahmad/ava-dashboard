@@ -32,7 +32,7 @@ const PageLayout = ({ children }) => {
       >
         <article className="relative w-full pb-10 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden h-full ">
           <header
-            className={`absolute w-[90%] p-1 rounded-xl font-bold flex items-center justify-between top-[10%] left-[5%] shadow-xl drop-shadow-xl z-10 transition-all duration-500 ${
+            className={`absolute w-[90%] backdrop-blur-[200px] p-1 rounded-xl font-bold flex items-center justify-between top-[10%] left-[5%] shadow-xl drop-shadow-xl z-10 transition-all duration-500 ${
               isOpen ? "scale-100" : "scale-0"
             }`}
           >

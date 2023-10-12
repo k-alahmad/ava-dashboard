@@ -30,10 +30,6 @@ const defaultFormState = {
   MinRead: "",
   Image: "",
   ActiveStatus: true,
-  User: {
-    id: "",
-    Name: "",
-  },
   usersID: "",
 };
 

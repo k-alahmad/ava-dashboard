@@ -23,6 +23,8 @@ import {
   ListSubheader,
   InputAdornment,
   MenuItem,
+  Chip,
+  OutlinedInput,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Button from "../../components/UI/Button";
@@ -71,18 +73,6 @@ const defaultFormState = {
   AddressID: "",
   Area: "",
   ActiveStatus: true,
-  Category: {
-    id: "",
-    Category_Translation: [{ Language: { Code: "En" }, Name: "" }],
-  },
-  Address: {
-    id: "",
-    Address_Translation: [{ Language: { Code: "En" }, Name: "" }],
-  },
-  Developer: {
-    id: "",
-    Developer_Translation: [{ Language: { Code: "En" }, Name: "" }],
-  },
   Aminities: [],
 };
 
@@ -183,12 +173,17 @@ const PropertyDrawer = ({
       if (drawerID !== "") {
         getPropertyById({ id: drawerID });
         if (isSuccess) {
+          let loadedAmenities = [];
+          data.Aminities.map((item) => {
+            loadedAmenities.push(item.id);
+          });
           setForm({
             ...data,
             Bacloney: data.Bacloney,
             DeveloperID: data.developerId,
             AddressID: data.addressId,
             CategoryID: data.categoryId,
+            Aminities: loadedAmenities,
           });
           setProperties_Translation(data.Property_Translation);
         }
@@ -292,6 +287,11 @@ const PropertyDrawer = ({
     formData.append("Area", form.Area);
     formData.append("ActiveStatus", form.ActiveStatus);
 
+    if (form.Aminities) {
+      for (let i = 0; i < form.Aminities.length; i++) {
+        formData.append("Aminities", form.Aminities[i]);
+      }
+    }
     if (image) {
       for (let i = 0; i < image.length; i++) {
         formData.append("Images", image[i]);
@@ -1023,6 +1023,106 @@ const PropertyDrawer = ({
               </FormControl>
             </div>
           )}
+          {amenitiesisSuccess && (
+            <div className="flex m-4">
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Amenities</InputLabel>
+                <Select
+                  labelId="Aminities"
+                  name="Aminities"
+                  id="Aminities"
+                  value={form.Aminities}
+                  label="Amenities"
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      Aminities:
+                        typeof e.target.value === "string"
+                          ? e.target.value.split(",")
+                          : e.target.value,
+                    })
+                  }
+                  MenuProps={{
+                    autoFocus: false,
+                    style: {
+                      maxHeight: "400px",
+                    },
+                  }}
+                  onClose={() => setSelectSearchTerm("")}
+                  onAnimationEnd={() => selectSearchInput.current.focus()}
+                  input={
+                    <OutlinedInput id="select-multiple-chip" label="Chip" />
+                  }
+                  multiple
+                  renderValue={(selected) => (
+                    <div className="flex flex-wrap gap-4">
+                      {selected.map((value) => (
+                        <Chip
+                          key={value}
+                          label={
+                            amenities.entities[
+                              value
+                            ].Aminities_Translation.find(
+                              (x) => x.Language.Code == "En"
+                            )?.Name
+                          }
+                        />
+                      ))}
+                    </div>
+                  )}
+                >
+                  <ListSubheader>
+                    <TextField
+                      ref={selectSearchInput}
+                      fullWidth
+                      type="text"
+                      name="SelectSearchTerm"
+                      placeholder="Search for Developer"
+                      id="SelectSearchTerm"
+                      onChange={(e) => setSelectSearchTerm(e.target.value)}
+                      value={selectSearchTerm}
+                      variant="outlined"
+                      size="small"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key !== "Escape") {
+                          e.stopPropagation();
+                        }
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </ListSubheader>
+
+                  {amenities.ids?.map((item, j) => {
+                    if (
+                      amenities?.entities[item]?.Aminities_Translation.find(
+                        (x) => x.Language.Code == "En"
+                      )
+                        ?.Name.toLowerCase()
+                        .includes(selectSearchTerm.toLowerCase())
+                    )
+                      return (
+                        <MenuItem key={j} value={item}>
+                          {
+                            amenities.entities[
+                              item
+                            ]?.Aminities_Translation.find(
+                              (x) => x.Language.Code == "En"
+                            )?.Name
+                          }
+                        </MenuItem>
+                      );
+                  })}
+                </Select>
+              </FormControl>
+            </div>
+          )}
 
           <div className="flex m-4">
             <FormGroup>
@@ -1071,6 +1171,8 @@ const PropertyDrawer = ({
         categoriesIsFethcing ||
         developersIsLoading ||
         developersIsFethcing ||
+        amenitiesIsLoading ||
+        amenitiesIsFethcing ||
         deleteSingleImageIsLoading ||
         deleteAllImagesIsLoading ||
         lngIsLoading ||

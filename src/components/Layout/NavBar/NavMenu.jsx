@@ -76,7 +76,7 @@ const NavMenu = ({ img, userName, isLoading }) => {
             <Person className="text-primary" />
             <p>View Profile</p>
           </div>
-          <div
+          {/* <div
             className="flex justify-start items-center cursor-pointer gap-x-2"
             onClick={() => {
               navigate("/personalization");
@@ -84,7 +84,7 @@ const NavMenu = ({ img, userName, isLoading }) => {
           >
             <Style className="text-primary" />
             <p>Personalization</p>
-          </div>
+          </div> */}
           <div
             className="flex justify-start items-center cursor-pointer gap-x-2"
             onClick={() => {

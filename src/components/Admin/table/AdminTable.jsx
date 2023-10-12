@@ -262,28 +262,32 @@ const AdminTable = ({
           </TableBody>
         </Table>
       </TableContainer>
-      <div className="flex flex-col justify-center items-center w-full">
-        <TablePagination
-          style={{ border: "none" }}
-          rowsPerPageOptions={[
-            5,
-            10,
-            25,
-            { label: "All", value: dataCount + 1 },
-          ]}
-          colSpan={5}
-          count={dataCount ?? 0}
-          rowsPerPage={pageSize}
-          page={pageIndex}
-          SelectProps={{
-            inputProps: { "aria-label": "rows per page" },
-            native: false,
-          }}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          ActionsComponent={PaginationActions}
-        />
-      </div>
+      <table className="flex flex-col justify-center items-center w-full">
+        <tbody>
+          <tr>
+            <TablePagination
+              style={{ border: "none" }}
+              rowsPerPageOptions={[
+                5,
+                10,
+                25,
+                { label: "All", value: dataCount + 1 },
+              ]}
+              colSpan={5}
+              count={dataCount ?? 0}
+              rowsPerPage={pageSize}
+              page={pageIndex}
+              SelectProps={{
+                inputProps: { "aria-label": "rows per page" },
+                native: false,
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={PaginationActions}
+            />
+          </tr>
+        </tbody>
+      </table>
     </Paper>
   );
 };

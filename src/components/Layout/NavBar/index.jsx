@@ -49,7 +49,7 @@ const NavBar = ({ isOpen, setIsOpen, expand, setExpand }) => {
             <div className="h-[500px] w-full -right-[10%] rounded-full bg-primary/50 blur-[120px] absolute" />
           </div>
 
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-start flex-1">
             <div className="m-1 p-2 max-md:hidden">
               <img
                 src={Logo}
@@ -83,14 +83,16 @@ const NavBar = ({ isOpen, setIsOpen, expand, setExpand }) => {
               />
             </div>
           </div>
-          <p className="text-smaller sm:text-small lg:text-med drop-shadow-2xl text-center font-bold">
+          <p className="text-smaller sm:text-small lg:text-med drop-shadow-2xl text-center font-bold flex-1">
             {pathName ?? "Not Found"}
           </p>
-          <NavMenu
-            img={User?.Image?.URL}
-            userName={User?.Name}
-            isLoading={isLoading || isFetching}
-          />
+          <div className="flex-1 w-full flex items-center justify-end">
+            <NavMenu
+              img={User?.Image?.URL}
+              userName={User?.Name}
+              isLoading={isLoading || isFetching}
+            />
+          </div>
         </div>
       </div>
       <div className="h-24" />

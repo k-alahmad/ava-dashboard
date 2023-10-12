@@ -28,7 +28,7 @@ const PaginationActions = (props) => {
   };
 
   return (
-    <div className="shrink-0 p-12 overflow-hidden">
+    <div className="shrink-0 p-10 overflow-hidden">
       <IconButton
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}

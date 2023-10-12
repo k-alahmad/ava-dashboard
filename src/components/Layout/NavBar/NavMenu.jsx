@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { Logout, Person } from "@mui/icons-material";
 import { API_BASE_URL } from "../../../constants";
 import { Style } from "@mui/icons-material";
+import { ExpandMore } from "@mui/icons-material";
 const NavMenu = ({ img, userName, isLoading }) => {
   // const { i18n } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -46,6 +47,7 @@ const NavMenu = ({ img, userName, isLoading }) => {
           <p className="max-md:hidden font-bold text-tiny md:text-small text-third">
             {!isLoading && userName}
           </p>
+          <ExpandMore fontSize="large" />
         </div>
 
         <div
@@ -53,8 +55,10 @@ const NavMenu = ({ img, userName, isLoading }) => {
           onClick={() => setOpen(false)}
           className={`${
             open ? "scale-100" : "scale-0"
-          } absolute z-10 origin-top-right right-0 top-15 bg-secondary/80 backdrop-blur-[200px] rounded-lg shadow-2xl transition-all duration-300 p-4 space-y-2 text-third font-regular text-tiny md:text-smaller min-w-40`}
+          } overflow-hidden absolute z-10 origin-top-right right-[2%] top-16 bg-secondary rounded-lg shadow-2xl transition-all duration-300 p-4 space-y-2 text-third font-regular text-tiny md:text-smaller min-w-40`}
         >
+          <div className="h-full w-full rounded-full bg-primary/50 blur-[120px] absolute -top-1/2 -left-1/2" />
+
           <div
             className="md:hidden flex justify-start items-center cursor-pointer gap-x-2"
             onClick={() => {

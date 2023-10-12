@@ -46,7 +46,7 @@ const defaultFormState = {
   id: "",
   Price: "",
   Bedrooms: "",
-  Bacloney: "",
+  Bacloney: false,
   BalconySize: "",
   RentMin: "",
   RentMax: "",
@@ -827,7 +827,7 @@ const PropertyDrawer = ({
                     },
                   }}
                   onClose={() => setSelectSearchTerm("")}
-                  onAnimationEnd={() => selectSearchInput.current.focus()}
+                  onAnimationEnd={() => selectSearchInput.current?.focus()}
                 >
                   <ListSubheader>
                     <TextField
@@ -899,7 +899,7 @@ const PropertyDrawer = ({
                     },
                   }}
                   onClose={() => setSelectSearchTerm("")}
-                  onAnimationEnd={() => selectSearchInput.current.focus()}
+                  onAnimationEnd={() => selectSearchInput.current?.focus()}
                 >
                   <ListSubheader>
                     <TextField
@@ -969,7 +969,7 @@ const PropertyDrawer = ({
                     },
                   }}
                   onClose={() => setSelectSearchTerm("")}
-                  onAnimationEnd={() => selectSearchInput.current.focus()}
+                  onAnimationEnd={() => selectSearchInput.current?.focus()}
                 >
                   <ListSubheader>
                     <TextField
@@ -1049,7 +1049,7 @@ const PropertyDrawer = ({
                     },
                   }}
                   onClose={() => setSelectSearchTerm("")}
-                  onAnimationEnd={() => selectSearchInput.current.focus()}
+                  onAnimationEnd={() => selectSearchInput.current?.focus()}
                   input={
                     <OutlinedInput id="select-multiple-chip" label="Chip" />
                   }

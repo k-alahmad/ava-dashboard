@@ -253,10 +253,9 @@ const AnnouncementDrawer = ({
               label="Link"
               id="Link"
               onChange={handleChange}
-              value={form.Link === "" ? "" : form.Link}
+              value={form.Link}
               variant="outlined"
               size="small"
-              required
             />
           </div>
           <div className="flex m-4">
@@ -267,40 +266,42 @@ const AnnouncementDrawer = ({
               label="Rank"
               id="Rank"
               onChange={handleChange}
-              value={form.Rank === "" ? "" : form.Rank}
+              value={form.Rank}
               variant="outlined"
               size="small"
               required
             />
           </div>
-          <div className="flex m-4">
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Type</InputLabel>
-              <Select
-                labelId="Type"
-                name="Type"
-                id="Type"
-                value={form.Type === "" ? "" : form.Type}
-                label="Author"
-                onChange={handleChange}
-                MenuProps={{
-                  style: {
-                    maxHeight: "400px",
-                  },
-                }}
-              >
-                {Announcement_Type?.map((item, j) => {
-                  return (
-                    <MenuItem key={j} value={item}>
-                      {item}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-          </div>
+          {Announcement_Type.length > 0 && (
+            <div className="flex m-4">
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Type*</InputLabel>
+                <Select
+                  labelId="Type"
+                  name="Type"
+                  id="Type"
+                  value={form.Type}
+                  label="Author"
+                  onChange={handleChange}
+                  MenuProps={{
+                    style: {
+                      maxHeight: "400px",
+                    },
+                  }}
+                >
+                  {Announcement_Type?.map((item, j) => {
+                    return (
+                      <MenuItem key={j} value={item}>
+                        {item}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </div>
+          )}
           <div className=" m-4">
-            <InputLabel id="demo-simple-select-label">Start Date</InputLabel>
+            <InputLabel id="demo-simple-select-label">Start Date*</InputLabel>
             <TextField
               fullWidth
               type="date"
@@ -309,17 +310,14 @@ const AnnouncementDrawer = ({
               name="StartDate"
               id="StartDate"
               onChange={handleChange}
-              value={
-                form.StartDate?.split("T")[0] === ""
-                  ? ""
-                  : form.StartDate?.split("T")[0]
-              }
+              value={form.StartDate?.split("T")[0]}
               variant="outlined"
               size="small"
+              required
             />
           </div>
           <div className=" m-4">
-            <InputLabel id="demo-simple-select-label">End Date</InputLabel>
+            <InputLabel id="demo-simple-select-label">End Date*</InputLabel>
             <TextField
               fullWidth
               type="date"
@@ -327,13 +325,10 @@ const AnnouncementDrawer = ({
               id="EndDate"
               defaultValue="2023-01-1"
               onChange={handleChange}
-              value={
-                form.EndDate?.split("T")[0] === ""
-                  ? ""
-                  : form.EndDate?.split("T")[0]
-              }
+              value={form.EndDate?.split("T")[0]}
               variant="outlined"
               size="small"
+              required
             />
           </div>
 
@@ -393,7 +388,7 @@ const AnnouncementDrawer = ({
                       value={item.Title}
                       variant="outlined"
                       size="small"
-                      required
+                      required={item.Language.Code == "En"}
                     />
                   </div>
                   <div className="flex m-4">
@@ -409,7 +404,7 @@ const AnnouncementDrawer = ({
                       value={item.Description}
                       variant="outlined"
                       size="small"
-                      required
+                      required={item.Language.Code == "En"}
                       multiline
                       rows={5}
                     />
@@ -427,7 +422,6 @@ const AnnouncementDrawer = ({
                       value={item.ButtonName}
                       variant="outlined"
                       size="small"
-                      required
                     />
                   </div>
                 </div>
@@ -462,15 +456,21 @@ const AnnouncementDrawer = ({
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      // disabled={
-      //   valueAr == "" ||
-      //   valueEn == "" ||
-      //   form.capAr == "" ||
-      //   form.capEn == "" ||
-      //   form.titleAr == "" ||
-      //   form.titleEn == "" ||
-      //   form.image == ""
-      // }
+      disabled={
+        form.Rank?.toString().replace(/ /g, "") == "" ||
+        form.Type !== "Normal" ||
+        form.Type !== "Popup" ||
+        form.StartDate.replace(/ /g, "") == "" ||
+        form.EndDate.replace(/ /g, "") == "" ||
+        announcements_Translation
+          .find((x) => x.Language.Code == "En")
+          ?.Title.replace(/ /g, "") == "" ||
+        announcements_Translation
+          .find((x) => x.Language.Code == "En")
+          ?.Description.replace(/ /g, "") == "" ||
+        image == undefined
+      }
+      alertMessage={"Required Data Are Missing"}
       children={
         isLoading ||
         addLoading ||

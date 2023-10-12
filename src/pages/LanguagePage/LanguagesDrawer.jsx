@@ -128,7 +128,7 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
         <div className="flex m-4">
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">
-              Content Direction
+              Content Direction*
             </InputLabel>
             <Select
               labelId="Direction"
@@ -165,7 +165,12 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={form.Name == ""}
+      disabled={
+        form.Code.replace(/ /g, "") == "" ||
+        form.Direction.replace(/ /g, "") == "" ||
+        form.Name.replace(/ /g, "") == ""
+      }
+      alertMessage={"Required Data Are Missing"}
       children={
         isLoading || addLoading || updateLoading || isFetching ? (
           <div className="flex flex-row justify-center items-center h-full w-full">

@@ -230,7 +230,7 @@ const CurrenciesDrawer = ({
                       value={item.Name}
                       variant="outlined"
                       size="small"
-                      required
+                      required={item.Language.Code == "En"}
                     />
                   </div>
                 </div>
@@ -264,15 +264,13 @@ const CurrenciesDrawer = ({
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      // disabled={
-      //   valueAr == "" ||
-      //   valueEn == "" ||
-      //   form.capAr == "" ||
-      //   form.capEn == "" ||
-      //   form.titleAr == "" ||
-      //   form.titleEn == "" ||
-      //   form.image == ""
-      // }
+      disabled={
+        form.conversionRate.toString().replace(/ /g, "") == "" ||
+        currency_Translation
+          .find((x) => x.Language.Code == "En")
+          ?.Name.replace(/ /g, "") == ""
+      }
+      alertMessage={"Required Data Are Missing"}
       children={
         isLoading ||
         addLoading ||

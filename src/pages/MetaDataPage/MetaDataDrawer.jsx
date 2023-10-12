@@ -178,7 +178,7 @@ const MetaDataDrawer = ({
           {articlesIsSuccess && (
             <div className="flex m-4">
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Article</InputLabel>
+                <InputLabel id="demo-simple-select-label">Article*</InputLabel>
                 <Select
                   labelId="ArticleID"
                   name="ArticleID"
@@ -194,7 +194,7 @@ const MetaDataDrawer = ({
                     },
                   }}
                   onClose={() => setSelectSearchTerm("")}
-                  onAnimationEnd={() => selectSearchInput.current.focus()}
+                  onAnimationEnd={() => selectSearchInput.current?.focus()}
                   {...(form.ArticleID !== "" && {
                     endAdornment: (
                       <div
@@ -259,7 +259,7 @@ const MetaDataDrawer = ({
           {propertiesIsSuccess && (
             <div className="flex m-4">
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Property</InputLabel>
+                <InputLabel id="demo-simple-select-label">Property*</InputLabel>
                 <Select
                   labelId="PropertyID"
                   name="PropertyID"
@@ -275,7 +275,7 @@ const MetaDataDrawer = ({
                     },
                   }}
                   onClose={() => setSelectSearchTerm("")}
-                  onAnimationEnd={() => selectSearchInput.current.focus()}
+                  onAnimationEnd={() => selectSearchInput.current?.focus()}
                   {...(form.PropertyID !== "" && {
                     endAdornment: (
                       <div
@@ -352,10 +352,12 @@ const MetaDataDrawer = ({
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
       disabled={
-        form.Name == "" ||
-        form.Content == "" ||
-        (form.ArticleID == "" && form.PropertyID == "")
+        form.Name.replace(/ /g, "") == "" ||
+        form.Content.replace(/ /g, "") == "" ||
+        (form.ArticleID.replace(/ /g, "") == "" &&
+          form.PropertyID.replace(/ /g, "") == "")
       }
+      alertMessage={"Required Data Are Missing"}
       children={
         isLoading ||
         addLoading ||

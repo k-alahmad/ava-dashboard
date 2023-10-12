@@ -388,7 +388,7 @@ const ArticleDrawer = ({
                       value={item.Title}
                       variant="outlined"
                       size="small"
-                      required
+                      required={item.Language.Code == "En"}
                     />
                   </div>
                   <div className="flex m-4">
@@ -404,13 +404,15 @@ const ArticleDrawer = ({
                       value={item.Caption}
                       variant="outlined"
                       size="small"
-                      required
+                      required={item.Language.Code == "En"}
                       multiline
                       rows={5}
                     />
                   </div>
                   <RichTextBox
-                    label={`${item.Language.Name} Body`}
+                    label={`${item.Language.Name} Body ${
+                      item.Language.Code == "En" ? "*" : ""
+                    }`}
                     value={item.Description}
                     onChange={(e) => handleTranslationChange(e, item, "Desc")}
                   />
@@ -445,15 +447,21 @@ const ArticleDrawer = ({
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      // disabled={
-      //   valueAr == "" ||
-      //   valueEn == "" ||
-      //   form.capAr == "" ||
-      //   form.capEn == "" ||
-      //   form.titleAr == "" ||
-      //   form.titleEn == "" ||
-      //   form.image == ""
-      // }
+      disabled={
+        form.MinRead.toString().replace(/ /g, "") == "" ||
+        form.usersID.replace(/ /g, "") == "" ||
+        articles_Translation
+          .find((x) => x.Language.Code == "En")
+          ?.Title.replace(/ /g, "") == "" ||
+        articles_Translation
+          .find((x) => x.Language.Code == "En")
+          ?.Caption.replace(/ /g, "") == "" ||
+        articles_Translation
+          .find((x) => x.Language.Code == "En")
+          ?.Description.replace(/ /g, "") == "" ||
+        image == undefined
+      }
+      alertMessage={"Required Data Are Missing"}
       children={
         isLoading ||
         addLoading ||

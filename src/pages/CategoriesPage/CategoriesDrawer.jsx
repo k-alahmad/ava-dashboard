@@ -283,8 +283,14 @@ const CategoryDrawer = ({
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
       disabled={
-        form.Longitude == "" || form.Latitude == "" || form.Latitude == ""
+        category_Translation
+          .find((x) => x.Language.Code == "En")
+          ?.Name.replace(/ /g, "") == "" ||
+        category_Translation
+          .find((x) => x.Language.Code == "En")
+          ?.Description.replace(/ /g, "") == ""
       }
+      alertMessage={"English Name Or English Description Is Missing"}
       children={
         isLoading ||
         addLoading ||

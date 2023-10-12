@@ -12,10 +12,6 @@ import {
   FormGroup,
   FormControlLabel,
   Switch,
-  InputLabel,
-  FormControl,
-  Select,
-  MenuItem,
 } from "@mui/material";
 import TeamUsers from "./TeamUsers";
 import { API_BASE_URL } from "../../constants";
@@ -215,7 +211,12 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={form.Title == "" || form.Description == "" || form.Image == ""}
+      disabled={
+        form.Title.replace(/ /g, "") == "" ||
+        form.Description.replace(/ /g, "") == "" ||
+        form.Image == ""
+      }
+      alertMessage={"Required data Are Missing"}
       children={
         isLoading || addLoading || updateLoading || isFetching ? (
           <div className="flex flex-row justify-center items-center h-full w-full">

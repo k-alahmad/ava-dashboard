@@ -355,11 +355,14 @@ const AddressDrawer = ({
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
       disabled={
-        form.Longitude == "" ||
-        form.Latitude == "" ||
-        form.Latitude == "" ||
-        form.Image == ""
+        form.Longitude.toString().replace(/ /g, "") == "" ||
+        form.Latitude.toString().replace(/ /g, "") == "" ||
+        address_Translation
+          .find((x) => x.Language.Code == "En")
+          .Name.replace(/ /g, "") == "" ||
+        image == undefined
       }
+      alertMessage={"Required data Are Missing"}
       children={
         isLoading ||
         addLoading ||

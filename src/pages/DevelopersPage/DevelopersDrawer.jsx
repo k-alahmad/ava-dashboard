@@ -325,15 +325,13 @@ const DeveloperDrawer = ({
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      // disabled={
-      //   valueAr == "" ||
-      //   valueEn == "" ||
-      //   form.capAr == "" ||
-      //   form.capEn == "" ||
-      //   form.titleAr == "" ||
-      //   form.titleEn == "" ||
-      //   form.image == ""
-      // }
+      disabled={
+        image == undefined ||
+        developers_Translation
+          .find((x) => x.Language.Code == "En")
+          .Name.replace(/ /g, "") == ""
+      }
+      alertMessage={"Image Or English Name Is Missing"}
       children={
         isLoading ||
         addLoading ||

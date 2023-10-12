@@ -184,7 +184,8 @@ const RoleDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={form.Name == ""}
+      disabled={form.Name.replace(/ /g, "") == ""}
+      alertMessage={"Role Name Is Missing"}
       children={
         isLoading || addLoading || updateLoading || isFetching ? (
           <div className="flex flex-row justify-center items-center h-full w-full">

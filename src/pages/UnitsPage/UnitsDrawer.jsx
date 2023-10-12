@@ -224,7 +224,7 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                       value={item.Name}
                       variant="outlined"
                       size="small"
-                      required
+                      required={item.Language.Code == "En"}
                     />
                   </div>
                 </div>
@@ -258,15 +258,13 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      // disabled={
-      //   valueAr == "" ||
-      //   valueEn == "" ||
-      //   form.capAr == "" ||
-      //   form.capEn == "" ||
-      //   form.titleAr == "" ||
-      //   form.titleEn == "" ||
-      //   form.image == ""
-      // }
+      disabled={
+        form.conversionRate.toString().replace(/ /g, "") == "" ||
+        unit_Translation
+          .find((x) => x.Language.Code == "En")
+          ?.Name.replace(/ /g, "") == ""
+      }
+      alertMessage={"Required Data Are Missing"}
       children={
         isLoading ||
         addLoading ||

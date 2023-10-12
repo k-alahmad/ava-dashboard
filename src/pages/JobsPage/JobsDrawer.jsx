@@ -248,11 +248,13 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                       value={item.Name}
                       variant="outlined"
                       size="small"
-                      required
+                      required={item.Language.Code == "En"}
                     />
                   </div>
                   <RichTextBox
-                    label={`${item.Language.Name} Body`}
+                    label={`${item.Language.Name} Body ${
+                      item.Language.Code == "En" ? "*" : ""
+                    }`}
                     value={item.Description}
                     onChange={(e) =>
                       handleTranslationChange(e, item, "Description")
@@ -324,7 +326,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             <div className="flex m-4">
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
-                  Job Creator
+                  Job Creator*
                 </InputLabel>
                 <Select
                   labelId="usersId"
@@ -416,15 +418,18 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      // disabled={
-      //   valueAr == "" ||
-      //   valueEn == "" ||
-      //   form.capAr == "" ||
-      //   form.capEn == "" ||
-      //   form.titleAr == "" ||
-      //   form.titleEn == "" ||
-      //   form.image == ""
-      // }
+      disabled={
+        form.Location.toString().replace(/ /g, "") == "" ||
+        form.WeekHours.toString().replace(/ /g, "") == "" ||
+        form.Type.toString().replace(/ /g, "") == "" ||
+        job_Translation
+          .find((x) => x.Language.Code == "En")
+          ?.Title.replace(/ /g, "") == "" ||
+        job_Translation
+          .find((x) => x.Language.Code == "En")
+          ?.Description.replace(/ /g, "") == ""
+      }
+      alertMessage={"Required Data Are Missing"}
       children={
         isLoading ||
         addLoading ||

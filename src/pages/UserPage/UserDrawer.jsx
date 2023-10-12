@@ -266,7 +266,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
           />
         </div>
         <div className=" m-4">
-          <InputLabel id="demo-simple-select-label">Date Of Birth</InputLabel>
+          <InputLabel id="demo-simple-select-label">Date Of Birth*</InputLabel>
           <TextField
             fullWidth
             type="date"
@@ -282,7 +282,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
         </div>
         <div className="flex m-4">
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+            <InputLabel id="demo-simple-select-label">Gender*</InputLabel>
             <Select
               labelId="Gender"
               name="Gender"
@@ -309,7 +309,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
         {rolesSuccess && (
           <div className="flex m-4">
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Role</InputLabel>
+              <InputLabel id="demo-simple-select-label">Role*</InputLabel>
               <Select
                 labelId="roleID"
                 name="roleID"
@@ -325,7 +325,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                 }}
                 onClose={() => setSelectSearchTerm("")}
                 // renderValue={() => form.roleID}
-                onAnimationEnd={() => selectSearchInput.current.focus()}
+                onAnimationEnd={() => selectSearchInput.current?.focus()}
               >
                 <ListSubheader>
                   <TextField
@@ -375,7 +375,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
         {teamsSuccess && (
           <div className="flex m-4">
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Team</InputLabel>
+              <InputLabel id="demo-simple-select-label">Team*</InputLabel>
               <Select
                 labelId="teamID"
                 name="teamID"
@@ -390,7 +390,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                   },
                 }}
                 onClose={() => setSelectSearchTerm("")}
-                onAnimationEnd={() => selectSearchInput.current.focus()}
+                onAnimationEnd={() => selectSearchInput.current?.focus()}
               >
                 <ListSubheader>
                   <TextField
@@ -439,7 +439,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
         {addressesSuccess && (
           <div className="flex m-4">
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Address</InputLabel>
+              <InputLabel id="demo-simple-select-label">Address*</InputLabel>
               <Select
                 labelId="addressId"
                 name="addressId"
@@ -454,7 +454,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                   },
                 }}
                 onClose={() => setSelectSearchTerm("")}
-                onAnimationEnd={() => selectSearchInput.current.focus()}
+                onAnimationEnd={() => selectSearchInput.current?.focus()}
               >
                 <ListSubheader>
                   <TextField
@@ -533,14 +533,20 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      // disabled={
-      //   form.Name == "" ||
-      //   form.DOB == "" ||
-      //   form.Email == "" ||
-      //   form.Password == "" ||
-      //   form.PhoneNo == "" ||
-      //   form.roleID == ""
-      // }
+      disabled={
+        form.Name.replace(/ /g, "") == "" ||
+        form.Email.replace(/ /g, "") == "" ||
+        form.DOB.replace(/ /g, "") == "" ||
+        (drawerID == "" && form.Password.replace(/ /g, "") == "") ||
+        form.PhoneNo.replace(/ /g, "") == "" ||
+        form.Gender.replace(/ /g, "") == "" ||
+        form.roleID.replace(/ /g, "") == "" ||
+        form.teamID.replace(/ /g, "") == "" ||
+        form.teamID.replace(/ /g, "") == "" ||
+        form.addressId.replace(/ /g, "") == "" ||
+        form.Image == undefined
+      }
+      alertMessage={"Required data Are Missing"}
       children={
         isLoading ||
         addLoading ||

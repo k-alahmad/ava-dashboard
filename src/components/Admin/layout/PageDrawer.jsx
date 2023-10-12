@@ -9,6 +9,7 @@ export default function PageDrawer({
   newItem,
   editable,
   disabled,
+  alertMessage,
 }) {
   return (
     <main
@@ -49,11 +50,7 @@ export default function PageDrawer({
                 Cancel
               </div>
               <button
-                onClick={
-                  disabled
-                    ? () => alert("Required fields are missing!")
-                    : onSaveClick
-                }
+                onClick={disabled ? () => alert(alertMessage) : onSaveClick}
                 className={`cursor-pointer ${
                   disabled ? "text-gray-600" : "text-primary"
                 }`}

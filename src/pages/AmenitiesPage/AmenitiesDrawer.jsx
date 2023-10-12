@@ -7,17 +7,7 @@ import {
 } from "../../redux/amentities/amenitiesSlice";
 import Slider from "react-slick";
 import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
-import {
-  CircularProgress,
-  TextField,
-  FormGroup,
-  FormControlLabel,
-  Switch,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
-} from "@mui/material";
+import { CircularProgress, TextField } from "@mui/material";
 import Button from "../../components/UI/Button";
 import { API_BASE_URL } from "../../constants";
 const defaultFormState = {
@@ -313,15 +303,16 @@ const AmenityDrawer = ({
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      // disabled={
-      //   valueAr == "" ||
-      //   valueEn == "" ||
-      //   form.capAr == "" ||
-      //   form.capEn == "" ||
-      //   form.titleAr == "" ||
-      //   form.titleEn == "" ||
-      //   form.image == ""
-      // }
+      disabled={
+        amenities_Translation
+          .find((x) => x.Language.Code == "En")
+          ?.Name.replace(/ /g, "") == "" ||
+        amenities_Translation
+          .find((x) => x.Language.Code == "En")
+          ?.Description.replace(/ /g, "") == "" ||
+        image == undefined
+      }
+      alertMessage={"Required Data Are Missing"}
       children={
         isLoading ||
         addLoading ||

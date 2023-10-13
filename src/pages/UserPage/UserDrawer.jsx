@@ -536,14 +536,13 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       disabled={
         form.Name.replace(/ /g, "") == "" ||
         form.Email.replace(/ /g, "") == "" ||
-        form.DOB.replace(/ /g, "") == "" ||
+        form.DOB?.replace(/ /g, "") == "" ||
         (drawerID == "" && form.Password.replace(/ /g, "") == "") ||
-        form.PhoneNo.replace(/ /g, "") == "" ||
-        form.Gender.replace(/ /g, "") == "" ||
-        form.roleID.replace(/ /g, "") == "" ||
-        form.teamID.replace(/ /g, "") == "" ||
-        form.teamID.replace(/ /g, "") == "" ||
-        form.addressId.replace(/ /g, "") == "" ||
+        form.PhoneNo?.replace(/ /g, "") == "" ||
+        form.Gender?.replace(/ /g, "") == "" ||
+        form.roleID?.replace(/ /g, "") == "" ||
+        form.teamID?.replace(/ /g, "") == "" ||
+        form.addressId?.replace(/ /g, "") == "" ||
         form.Image == undefined
       }
       alertMessage={"Required data Are Missing"}

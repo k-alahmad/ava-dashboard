@@ -374,7 +374,7 @@ const ProfilePage = () => {
                       className="bg-secondary text-primary rounded-lg backdrop-blur-[50px] shadow-lg drop-shadow-lg min-h-[75px] flex items-center justify-between"
                     >
                       <img
-                        src={API_BASE_URL + teamates.entities[item].Image.URL}
+                        src={API_BASE_URL + teamates.entities[item].Image?.URL}
                         alt={teamates.entities[item].Name}
                         className="rounded-full h-14 w-14 m-2 object-cover"
                       />

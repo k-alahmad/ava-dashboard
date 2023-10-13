@@ -37,7 +37,9 @@ const PageLayout = ({ children }) => {
             }`}
           >
             <img
-              src={isSuccess && !isLoading ? API_BASE_URL + user.Image.URL : ""}
+              src={
+                isSuccess && !isLoading ? API_BASE_URL + user.Image?.URL : ""
+              }
               alt={isSuccess && !isLoading ? user.Name : "Profile"}
               className={`!w-20 !h-20 md:!w-28 md:!h-28 rounded-xl bg-secondary transition-all duration-500 `}
             />

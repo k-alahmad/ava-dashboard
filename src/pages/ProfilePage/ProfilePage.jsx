@@ -128,6 +128,8 @@ const ProfilePage = () => {
     formData.append("Image", form.Image);
 
     updateProfile({ formData });
+    setImage();
+    setImageURL();
     setEdit(false);
   }
   const hiddenFileInput = useRef(null);

@@ -326,7 +326,7 @@ const DeveloperDrawer = ({
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
       disabled={
-        image == undefined ||
+        (drawerID == "" && image == undefined) ||
         developers_Translation
           .find((x) => x.Language.Code == "En")
           .Name.replace(/ /g, "") == ""

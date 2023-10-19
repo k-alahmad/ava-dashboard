@@ -459,7 +459,7 @@ const ArticleDrawer = ({
         articles_Translation
           .find((x) => x.Language.Code == "En")
           ?.Description.replace(/ /g, "") == "" ||
-        image == undefined
+        (drawerID == "" && image == undefined)
       }
       alertMessage={"Required Data Are Missing"}
       children={

@@ -543,7 +543,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
         form.roleID?.replace(/ /g, "") == "" ||
         form.teamID?.replace(/ /g, "") == "" ||
         form.addressId?.replace(/ /g, "") == "" ||
-        form.Image == undefined
+        (drawerID == "" && image == undefined)
       }
       alertMessage={"Required data Are Missing"}
       children={

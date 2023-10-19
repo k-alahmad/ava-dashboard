@@ -360,7 +360,7 @@ const AddressDrawer = ({
         address_Translation
           .find((x) => x.Language.Code == "En")
           .Name.replace(/ /g, "") == "" ||
-        image == undefined
+        (drawerID == "" && image == undefined)
       }
       alertMessage={"Required data Are Missing"}
       children={

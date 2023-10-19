@@ -40,7 +40,7 @@ export const currencyApiSlice = apiSlice.injectEndpoints({
         initialActiveState.count = responseData?.length;
         initialActiveState.normalData = responseData;
         const loaded = responseData;
-        return currencyActiveAdapter.setAll(initialState, loaded);
+        return currencyActiveAdapter.setAll(initialActiveState, loaded);
       },
       providesTags: (result, error, arg) => [
         { type: "ActiveCurrency", id: "LIST" },

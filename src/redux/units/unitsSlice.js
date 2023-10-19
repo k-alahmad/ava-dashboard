@@ -24,7 +24,7 @@ export const unitApiSlice = apiSlice.injectEndpoints({
         initialState.count = responseData?.count;
         initialState.normalData = responseData.Unit;
         const loaded = responseData.Unit;
-        return unitAdapter.setAll(initialState, loaded);
+        return unitAdapter.setAll(initialActiveState, loaded);
       },
       providesTags: (result, error, arg) => [
         { type: "Unit", id: "LIST" },

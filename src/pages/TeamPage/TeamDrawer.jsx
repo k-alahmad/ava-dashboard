@@ -20,6 +20,7 @@ const defaultFormState = {
   Title: "",
   Description: "",
   Image: "",
+  ViewTag: false,
   ActiveStatus: true,
 };
 const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
@@ -93,7 +94,8 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     formData.append("Title", form.Title);
     formData.append("Description", form.Description);
     formData.append("ActiveStatus", form.ActiveStatus);
-    formData.append("Image", form.Image);
+    formData.append("ViewTag", form.ViewTag);
+    if (image) formData.append("Image", image);
     if (drawerID == "") {
       //add
       addTeam({
@@ -181,6 +183,21 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             multiline
             rows={5}
           />
+        </div>
+        <div className="flex m-4">
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  onChange={handleChange}
+                  name="ViewTag"
+                  value={form.ViewTag}
+                  checked={form.ViewTag}
+                />
+              }
+              label={form.ViewTag ? "View In Website" : "Hide In Website"}
+            />
+          </FormGroup>
         </div>
         <div className="flex m-4">
           <FormGroup>

@@ -38,6 +38,7 @@ const defaultFormState = {
   teamID: "",
   addressId: "",
   ActiveStatus: true,
+  Title: "",
   Image: "",
 };
 const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
@@ -143,6 +144,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     event.preventDefault();
     const formData = new FormData();
     formData.append("Name", form.Name);
+    formData.append("Title", form.Title);
     formData.append("Email", form.Email);
     formData.append("DOB", form.DOB);
     formData.append("Gender", form.Gender);
@@ -215,6 +217,20 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             id="Name"
             onChange={handleChange}
             value={form.Name === "" ? "" : form.Name}
+            variant="outlined"
+            size="small"
+            required
+          />
+        </div>
+        <div className="flex m-4">
+          <TextField
+            fullWidth
+            type="text"
+            name="Title"
+            label="Title"
+            id="Title"
+            onChange={handleChange}
+            value={form.Title === "" ? "" : form.Title}
             variant="outlined"
             size="small"
             required

@@ -245,7 +245,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                       onChange={(e) =>
                         handleTranslationChange(e, item, "Title")
                       }
-                      value={item.Name}
+                      value={item.Title}
                       variant="outlined"
                       size="small"
                       required={item.Language.Code == "En"}

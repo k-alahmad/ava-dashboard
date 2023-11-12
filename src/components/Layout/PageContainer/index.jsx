@@ -1,39 +1,35 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../NavBar";
-// import { Close as MdClose } from "@mui/icons-material";
 import { useGetProfileQuery } from "../../../redux/auth/authApiSlice";
 import { API_BASE_URL } from "../../../constants";
 import LinkElement from "../NavBar/LinkElement";
 import { data } from "../../../data/navData";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import { Collapse } from "@mui/material";
-
+import { selectSideNavStatus } from "../../../redux/sideBar.slice";
+import { useSelector } from "react-redux";
 const PageLayout = ({ children }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  const [isOpen, setIsOpen] = useState(false);
   const [expand, setExpand] = useState({ status: false, key: 0 });
-
+  const sideNavOpen = useSelector(selectSideNavStatus);
   const { data: user, isSuccess, isLoading } = useGetProfileQuery();
   return (
     <div className="flex overflow-x-hidden">
-      <NavBar
-        setIsOpen={setIsOpen}
-        isOpen={isOpen}
-        setExpand={setExpand}
-        expand={expand}
-      />
+      <NavBar />
       <aside
         className={
           "sticky bg-secondary h-screen overflow-y-hidden shadow-2xl duration-500 transition-all transform" +
-          (isOpen ? "w-[60%] lg:w-[35%] xl:w-[28%] 2xl:w-[25%]" : " w-[95px]")
+          (sideNavOpen
+            ? "w-[60%] lg:w-[35%] xl:w-[28%] 2xl:w-[25%]"
+            : " w-[5%]")
         }
       >
         <article className="relative w-full pb-10 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden h-full ">
           <header
             className={`absolute w-[90%] backdrop-blur-[200px] p-1 rounded-xl font-bold flex items-center justify-between top-[10%] left-[5%] shadow-xl drop-shadow-xl z-10 transition-all duration-500 ${
-              isOpen ? "!top-[10%]" : "!-top-full"
+              sideNavOpen ? "!top-[10%]" : "!-top-full"
             }`}
           >
             <img
@@ -57,7 +53,7 @@ const PageLayout = ({ children }) => {
           <div className="h-[500px] w-[500px] rounded-full bg-primary/50 blur-[120px] absolute -top-[25%] -left-[50%]" />
           <div
             className={`${
-              isOpen
+              sideNavOpen
                 ? "h-[180px] md:min-h-[250px]"
                 : "h-[80px] md:min-h-[100px]"
             }  !w-full transition-all duration-300`}
@@ -72,8 +68,7 @@ const PageLayout = ({ children }) => {
                   key={e.link}
                   name={e.name}
                   link={e.link}
-                  drawerOpen={isOpen}
-                  // onClick={() => setMobileOpen(false)}
+                  drawerOpen={sideNavOpen}
                 />
               ) : (
                 <div className="w-full" key={i}>
@@ -99,7 +94,7 @@ const PageLayout = ({ children }) => {
                           alt={e.name}
                         />
                       )}
-                      {isOpen && (
+                      {sideNavOpen && (
                         <p className={`px-1 cursor-pointer whitespace-nowrap`}>
                           {e.name}
                         </p>
@@ -125,7 +120,7 @@ const PageLayout = ({ children }) => {
                           key={index}
                           name={item.name}
                           link={item.link}
-                          drawerOpen={isOpen}
+                          drawerOpen={sideNavOpen}
                           onClick={() => {
                             // setIsOpen(false);
                             // setExpand({ ...expand, status: false });

@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../../../assets/logo/logo.svg";
-// import Drawer from "./Drawer";
-// import LinkElement from "./LinkElement";
 import { useLocation } from "react-router-dom";
 import { data } from "../../../data/navData";
 import NavMenu from "./NavMenu";
 import { useGetProfileQuery } from "../../../redux/auth/authApiSlice";
-// import { Collapse } from "@mui/material";
-
-const NavBar = ({ isOpen, setIsOpen, expand, setExpand }) => {
-  // const [mobileOpen, setMobileOpen] = useState(false);
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectSideNavStatus,
+  openSideNav,
+  closeSideNav,
+} from "../../../redux/sideBar.slice";
+const NavBar = () => {
   const location = useLocation();
   const [pathName, setPathName] = useState("");
-  // const [expand, setExpand] = useState({ status: false, key: 0 });
+  const sideNavOpen = useSelector(selectSideNavStatus);
+  const dispatch = useDispatch();
   const {
     data: User,
     isLoading,
@@ -59,26 +61,26 @@ const NavBar = ({ isOpen, setIsOpen, expand, setExpand }) => {
             </div>
             <div
               onClick={() => {
-                setIsOpen(!isOpen);
+                dispatch(sideNavOpen == true ? closeSideNav() : openSideNav());
                 // setExpand({ ...expand, status: false });
               }}
               className={`cursor-pointer md:ml-4 space-y-1 ${
-                isOpen && "md:translate-x-60"
+                sideNavOpen && "md:translate-x-52"
               } transition-all duration-500`}
             >
               <div
                 className={`bg-primary h-[2px] w-8 transition-all duration-700 ${
-                  isOpen ? "rotate-45  translate-y-[6px]" : "rotate-0"
+                  sideNavOpen ? "rotate-45  translate-y-[6px]" : "rotate-0"
                 }`}
               />
               <div
                 className={`bg-primary h-[2px] w-8 transition-all duration-500 ${
-                  isOpen ? "opacity-0" : "opacity-100"
+                  sideNavOpen ? "opacity-0" : "opacity-100"
                 }`}
               />
               <div
                 className={`bg-primary h-[2px] w-8 transition-all duration-700 ${
-                  isOpen ? "-rotate-45 -translate-y-[6px]" : "rotate-0"
+                  sideNavOpen ? "-rotate-45 -translate-y-[6px]" : "rotate-0"
                 }`}
               />
             </div>

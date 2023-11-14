@@ -52,7 +52,7 @@ export default function PageDrawer({
               <div className=" font-bold w-full flex justify-between items-center place-self-center">
                 <p className="font-regular text-med text-primary">{title}</p>
                 <MdClose
-                  size={30}
+                  fontSize="large"
                   className="cursor-pointer text-primary z-20"
                   onClick={onCancelClick}
                 />

@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { CloseRounded } from "@mui/icons-material";
+import PageModal from "../../components/Admin/layout/PageModal";
 const defaultFormState = {
   id: "",
   Name: "",
@@ -344,7 +345,7 @@ const MetaDataDrawer = ({
     );
   };
   return (
-    <PageDrawer
+    <PageModal
       isOpen={drawerOpen}
       title={drawerID == "" ? "New Meta-data" : form.Name}
       newItem={drawerID == "" && true}

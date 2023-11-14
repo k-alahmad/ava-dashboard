@@ -28,7 +28,7 @@ const PageLayout = ({ children }) => {
       >
         <article className="relative w-full pb-10 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden h-full ">
           <header
-            className={`absolute w-[90%] backdrop-blur-[200px] p-1 rounded-xl font-bold flex items-center justify-between top-[10%] left-[5%] shadow-xl drop-shadow-xl z-10 transition-all duration-500 ${
+            className={`absolute w-[90%] backdrop-blur-[100px] p-1 rounded-xl font-bold flex items-center justify-between top-[10%] left-[5%] shadow-xl drop-shadow-xl z-10 transition-all duration-500 ${
               sideNavOpen ? "!top-[10%]" : "!-top-full"
             }`}
           >
@@ -39,9 +39,14 @@ const PageLayout = ({ children }) => {
               alt={isSuccess && !isLoading ? user.Name : "Profile"}
               className={`!w-20 !h-20 md:!w-28 md:!h-28 rounded-xl bg-secondary transition-all duration-500 `}
             />
-            <p className="font-bold  text-tiny md:text-smaller lg:text-small text-primary text-center px-1">
-              {isSuccess && !isLoading && user.Name}
-            </p>
+            <div>
+              <p className="font-bold text-tiny md:text-smaller xl:text-small text-primary text-center px-1">
+                {isSuccess && !isLoading && user.Name}
+              </p>
+              <p className="font-semibold text-[14px] md:text-[16px] lg:text-tiny text-white text-center px-2">
+                {isSuccess && !isLoading && user.Title}
+              </p>
+            </div>
             {/* <MdClose
                 className="text-primary !text-[30px] mx-2"
                 onClick={() => {

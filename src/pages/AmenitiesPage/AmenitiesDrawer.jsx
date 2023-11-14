@@ -10,6 +10,7 @@ import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
 import { CircularProgress, TextField } from "@mui/material";
 import Button from "../../components/UI/Button";
 import { API_BASE_URL } from "../../constants";
+import PageModal from "../../components/Admin/layout/PageModal";
 const defaultFormState = {
   id: "",
   Image: "",
@@ -296,9 +297,13 @@ const AmenityDrawer = ({
     );
   };
   return (
-    <PageDrawer
+    <PageModal
       isOpen={drawerOpen}
-      title={drawerID == "" ? "New Amenity" : form.titleEn}
+      title={
+        drawerID == ""
+          ? "New Amenity"
+          : amenities_Translation.find((x) => x.Language.Code == "En")?.Name
+      }
       newItem={drawerID == "" && true}
       editable={true}
       onCancelClick={closeDrawer}

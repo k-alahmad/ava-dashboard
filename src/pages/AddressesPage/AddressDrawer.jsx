@@ -18,6 +18,7 @@ import Slider from "react-slick";
 import { API_BASE_URL } from "../../constants";
 import { showMessage } from "../../redux/messageAction.slice";
 import { useDispatch } from "react-redux";
+import PageModal from "../../components/Admin/layout/PageModal";
 const defaultFormState = {
   id: "",
   Image: "",
@@ -33,6 +34,7 @@ const AddressDrawer = ({
   drawerID,
   setDrawerID,
   parentId,
+  parentName,
 }) => {
   const [form, setForm] = useState(defaultFormState);
   const [image, setImage] = useState();
@@ -309,7 +311,7 @@ const AddressDrawer = ({
         >
           {address_Translation.map((item, index) => {
             return (
-              <div key={index} className="pb-12">
+              <div key={index}>
                 <div className="flex m-4">
                   <TextField
                     fullWidth
@@ -347,9 +349,15 @@ const AddressDrawer = ({
     </form>
   );
   return (
-    <PageDrawer
+    <PageModal
       isOpen={drawerOpen}
-      title={drawerID == "" ? "New Address" : "Edit Address"}
+      title={
+        drawerID == ""
+          ? parentName
+            ? `Sub-Address for ${parentName}`
+            : "New Address"
+          : "Edit Address"
+      }
       newItem={drawerID == "" && true}
       editable={true}
       onCancelClick={closeDrawer}

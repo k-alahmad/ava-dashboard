@@ -4,6 +4,7 @@ import { useLazyGetFeedbackByIdQuery } from "../../redux/feedback/feedbackSlice"
 import { CircularProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { showMessage } from "../../redux/messageAction.slice";
+import PageModal from "../../components/Admin/layout/PageModal";
 
 const defaultFormState = {
   id: "",
@@ -80,11 +81,11 @@ const FeedbackDrawer = ({
     </div>
   );
   return (
-    <PageDrawer
+    <PageModal
       isOpen={drawerOpen}
       title={drawerID == "" ? "" : form.Subject}
-      newItem={drawerID == "" && true}
-      editable={true}
+      newItem={false}
+      editable={false}
       onCancelClick={closeDrawer}
       children={
         isLoading || isFetching ? (

@@ -16,6 +16,7 @@ import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
 import Slider from "react-slick";
 import { showMessage } from "../../redux/messageAction.slice";
 import { useDispatch } from "react-redux";
+import PageModal from "../../components/Admin/layout/PageModal";
 const defaultFormState = {
   id: "",
   Category_Translation: [],
@@ -29,6 +30,7 @@ const CategoryDrawer = ({
   drawerID,
   setDrawerID,
   parentId,
+  parentName,
 }) => {
   const [form, setForm] = useState(defaultFormState);
 
@@ -136,6 +138,7 @@ const CategoryDrawer = ({
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
+
     setForm(defaultFormState);
   };
   function handleSubmit(event) {
@@ -173,7 +176,6 @@ const CategoryDrawer = ({
       });
     }
   }
-  const hiddenFileInput = React.useRef(null);
   const formRef = useRef(null);
 
   const formElements = () => (
@@ -221,7 +223,7 @@ const CategoryDrawer = ({
         >
           {category_Translation.map((item, index) => {
             return (
-              <div key={index} className="pb-12">
+              <div key={index}>
                 <div className="flex m-4">
                   <TextField
                     fullWidth
@@ -275,9 +277,15 @@ const CategoryDrawer = ({
     </form>
   );
   return (
-    <PageDrawer
+    <PageModal
       isOpen={drawerOpen}
-      title={drawerID == "" ? "New Category" : "Edit Category"}
+      title={
+        drawerID == ""
+          ? parentName
+            ? `Sub-Cateogry for ${parentName}`
+            : "New Category"
+          : "Edit Category"
+      }
       newItem={drawerID == "" && true}
       editable={true}
       onCancelClick={closeDrawer}

@@ -324,112 +324,111 @@ const PropertyDrawer = ({
 
   const formElements = () => {
     return (
-      <form ref={formRef} className="flex flex-col justify-center">
-        <div className="py-1 mx-8 grid md:grid-cols-2">
-          <div className="flex flex-col items-center justify-center col-span-full">
-            <div className="flex flex-col m-4">
-              <Button
-                textColor={"white"}
-                text={"Upload Image"}
-                bgColor={"bg-primary"}
-                customStyle={"py-2 px-4"}
-                onClick={(e) => {
-                  e.preventDefault();
-                  hiddenFileInput.current.click();
+      <form ref={formRef} className="justify-center grid grid-cols-3 gap-7">
+        <div className="flex flex-col items-center justify-start col-span-1">
+          <div className="flex flex-col m-4">
+            <Button
+              textColor={"white"}
+              text={"Upload Image"}
+              bgColor={"bg-primary"}
+              customStyle={"py-2 px-4"}
+              onClick={(e) => {
+                e.preventDefault();
+                hiddenFileInput.current.click();
+              }}
+            />
+            <input
+              type="file"
+              accept="image/png, image/jpeg, image/jpg"
+              multiple
+              name="images"
+              onChange={onImageChange}
+              style={{ display: "none" }}
+              ref={hiddenFileInput}
+            />
+          </div>
+          {imageURL.length !== 0 && (
+            <>
+              <p className="text-2xl font-bold">New Images</p>
+              <div
+                onClick={() => {
+                  setImage([]);
+                  setImageURL([]);
                 }}
-              />
-              <input
-                type="file"
-                accept="image/png, image/jpeg, image/jpg"
-                multiple
-                name="images"
-                onChange={onImageChange}
-                style={{ display: "none" }}
-                ref={hiddenFileInput}
-              />
-            </div>
-            {imageURL.length !== 0 && (
-              <>
-                <p className="text-2xl font-bold">New Images</p>
-                <div
-                  onClick={() => {
-                    setImage([]);
-                    setImageURL([]);
-                  }}
-                  className="text-center cursor-pointer flex items-end"
-                >
-                  Delete All
-                  <DeleteSweepOutlinedIcon sx={{ fontSize: "50px" }} />
-                </div>
-                <div className="grid grid-cols-3 m-4">
-                  {imageURL?.map((imageSrc, i) => {
-                    return (
-                      <div className="" key={i}>
-                        <img
-                          key={i}
-                          className="h-[200px] w-[200px] m-2 border-2"
-                          src={imageSrc}
-                          alt=""
-                        />
-                        <div
-                          className="text-center cursor-pointer"
-                          onClick={() => {
-                            let tempUrls = imageURL;
-                            let newTempUrls = tempUrls.filter(
-                              (img) => img !== imageSrc
-                            );
-                            let idx = tempUrls.indexOf(imageSrc);
-                            let tempImages = image;
-                            setImageURL(newTempUrls);
-                            if (idx > -1) {
-                              tempImages.splice(idx, 1);
-                              setImage(tempImages);
-                            }
-                          }}
-                        >
-                          <DeleteOutlinedIcon /> Delete
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
-            )}
-            {form.Images?.length !== 0 && !isLoading && (
-              <div className="flex flex-col justify-center items-center">
-                <p className="text-2xl font-bold">Current Images</p>
-                <div
-                  onClick={() => {
-                    deleteallPropertyImages({ id: drawerID });
-                  }}
-                  className="text-center cursor-pointer"
-                >
-                  <DeleteSweepOutlinedIcon sx={{ fontSize: "50px" }} /> Delete
-                  All Images
-                </div>
-                <div className="grid grid-cols-4 gap-2 m-4">
-                  {data.Images?.map((item, index) => (
-                    <div className="" key={index}>
+                className="text-center cursor-pointer flex items-end"
+              >
+                Delete All
+                <DeleteSweepOutlinedIcon sx={{ fontSize: "50px" }} />
+              </div>
+              <div className="grid grid-cols-2 m-4">
+                {imageURL?.map((imageSrc, i) => {
+                  return (
+                    <div className="" key={i}>
                       <img
-                        key={index}
-                        className="col-span-1 h-[200px] w-[200px]"
-                        src={API_BASE_URL + item?.URL}
+                        key={i}
+                        className="h-[200px] w-[200px] m-2 border-2"
+                        src={imageSrc}
+                        alt=""
                       />
                       <div
-                        onClick={() => {
-                          deleteImage({ id: item.id });
-                        }}
                         className="text-center cursor-pointer"
+                        onClick={() => {
+                          let tempUrls = imageURL;
+                          let newTempUrls = tempUrls.filter(
+                            (img) => img !== imageSrc
+                          );
+                          let idx = tempUrls.indexOf(imageSrc);
+                          let tempImages = image;
+                          setImageURL(newTempUrls);
+                          if (idx > -1) {
+                            tempImages.splice(idx, 1);
+                            setImage(tempImages);
+                          }
+                        }}
                       >
                         <DeleteOutlinedIcon /> Delete
                       </div>
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
-            )}
-          </div>
-
+            </>
+          )}
+          {form.Images?.length !== 0 && !isLoading && (
+            <div className="flex flex-col justify-center items-center">
+              <p className="text-2xl font-bold">Current Images</p>
+              <div
+                onClick={() => {
+                  deleteallPropertyImages({ id: drawerID });
+                }}
+                className="text-center cursor-pointer"
+              >
+                <DeleteSweepOutlinedIcon sx={{ fontSize: "50px" }} /> Delete All
+                Images
+              </div>
+              <div className="grid grid-cols-2 gap-2 m-4">
+                {data.Images?.map((item, index) => (
+                  <div className="" key={index}>
+                    <img
+                      key={index}
+                      className="col-span-1 h-[200px] w-[200px]"
+                      src={API_BASE_URL + item?.URL}
+                    />
+                    <div
+                      onClick={() => {
+                        deleteImage({ id: item.id });
+                      }}
+                      className="text-center cursor-pointer"
+                    >
+                      <DeleteOutlinedIcon /> Delete
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="py-1 mx-8 col-span-2 grid md:grid-cols-2">
           <div className="w-full flex justify-center items-center col-span-full">
             <Slider
               dots={false}

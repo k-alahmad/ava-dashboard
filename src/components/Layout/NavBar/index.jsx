@@ -64,23 +64,23 @@ const NavBar = () => {
                 dispatch(sideNavOpen == true ? closeSideNav() : openSideNav());
                 // setExpand({ ...expand, status: false });
               }}
-              className={`cursor-pointer md:ml-4 space-y-1 ${
+              className={`cursor-pointer md:ml-4 space-y-2 ${
                 sideNavOpen && "md:translate-x-52"
               } transition-all duration-500`}
             >
               <div
-                className={`bg-primary h-[2px] w-8 transition-all duration-700 ${
-                  sideNavOpen ? "rotate-45  translate-y-[6px]" : "rotate-0"
+                className={`bg-primary h-0.5 w-10 transition-all duration-700 ${
+                  sideNavOpen ? "rotate-45  translate-y-[10px]" : "rotate-0"
                 }`}
               />
               <div
-                className={`bg-primary h-[2px] w-8 transition-all duration-500 ${
+                className={`bg-primary h-0.5 w-10 transition-all duration-500 ${
                   sideNavOpen ? "opacity-0" : "opacity-100"
                 }`}
               />
               <div
-                className={`bg-primary h-[2px] w-8 transition-all duration-700 ${
-                  sideNavOpen ? "-rotate-45 -translate-y-[6px]" : "rotate-0"
+                className={`bg-primary h-0.5 w-10 transition-all duration-700 ${
+                  sideNavOpen ? "-rotate-45 -translate-y-[10px]" : "rotate-0"
                 }`}
               />
             </div>

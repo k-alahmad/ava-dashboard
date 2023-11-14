@@ -14,6 +14,7 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material";
+import PageModal from "../../components/Admin/layout/PageModal";
 const defaultFormState = {
   id: "",
   conversionRate: "",
@@ -251,7 +252,7 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     );
   };
   return (
-    <PageDrawer
+    <PageModal
       isOpen={drawerOpen}
       title={drawerID == "" ? "New Unit" : "Edit Unit"}
       newItem={drawerID == "" && true}

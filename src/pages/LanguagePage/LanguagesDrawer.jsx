@@ -19,6 +19,7 @@ import {
   FormLabel,
 } from "@mui/material";
 import { Directions } from "../../constants";
+import PageModal from "../../components/Admin/layout/PageModal";
 const defaultFormState = {
   id: "",
   Name: "",
@@ -158,7 +159,7 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     </form>
   );
   return (
-    <PageDrawer
+    <PageModal
       isOpen={drawerOpen}
       title={drawerID == "" ? "New Language" : form.Name}
       newItem={drawerID == "" && true}

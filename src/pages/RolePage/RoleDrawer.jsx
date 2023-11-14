@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import PageDrawer from "../../components/Admin/layout/PageDrawer";
+import PageModal from "../../components/Admin/layout/PageModal";
 import {
   useAddRoleMutation,
   useLazyGetRoleByIdQuery,
@@ -176,16 +177,37 @@ const RoleDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       </div>
     </form>
   );
-  return (
-    <PageDrawer
+  return drawerID == "" ? (
+    <PageModal
       isOpen={drawerOpen}
-      title={drawerID == "" ? "New Role" : form.Name}
-      newItem={drawerID == "" && true}
+      title={"New Role"}
+      newItem={true}
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
       disabled={form.Name.replace(/ /g, "") == ""}
       alertMessage={"Role Name Is Missing"}
+      children={
+        isLoading || addLoading || updateLoading || isFetching ? (
+          <div className="flex flex-row justify-center items-center h-full w-full">
+            <CircularProgress color="primary" />
+          </div>
+        ) : (
+          <div className="text-med font-light">{formElements()}</div>
+        )
+      }
+    />
+  ) : (
+    <PageDrawer
+      isOpen={drawerOpen}
+      title={form.Name}
+      newItem={false}
+      editable={true}
+      onCancelClick={closeDrawer}
+      onSaveClick={handleSubmit}
+      disabled={form.Name.replace(/ /g, "") == ""}
+      alertMessage={"Role Name Is Missing"}
+      modalWidth={"max-w-[70vw]"}
       children={
         isLoading || addLoading || updateLoading || isFetching ? (
           <div className="flex flex-row justify-center items-center h-full w-full">

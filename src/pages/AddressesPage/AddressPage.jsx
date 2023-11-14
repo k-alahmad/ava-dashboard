@@ -48,6 +48,8 @@ const AddressPage = () => {
   const [DrawerOpen, setDrawerOpen] = useState(false);
   const [DrawerId, setDrawerId] = useState("");
   const [parentId, setParentId] = useState("");
+  const [parentName, setParentName] = useState("");
+
   const onDelete = (event, model) => {
     event.preventDefault();
     event.stopPropagation();
@@ -141,6 +143,11 @@ const AddressPage = () => {
                       setDrawerId("");
                       setDrawerOpen(true);
                       setParentId(item1);
+                      setParentName(
+                        addresses.entities[item1]?.Address_Translation.find(
+                          (x) => x.Language.Code == "En"
+                        ).Name
+                      );
                     }}
                   >
                     <Add fontSize="medium" />
@@ -184,6 +191,7 @@ const AddressPage = () => {
         setDrawerID={setDrawerId}
         setDrawerOpen={setDrawerOpen}
         parentId={parentId}
+        parentName={parentName}
       />
 
       <PageSimple
@@ -202,6 +210,7 @@ const AddressPage = () => {
               onClickPrimaryBtn={(ev) => {
                 setParentId("");
                 setDrawerId("");
+                setParentName("");
                 setDrawerOpen(true);
               }}
               table={
@@ -291,6 +300,13 @@ const AddressPage = () => {
                                           setDrawerId("");
                                           setDrawerOpen(true);
                                           setParentId(item);
+                                          setParentName(
+                                            addresses.entities[
+                                              item
+                                            ]?.Address_Translation.find(
+                                              (x) => x.Language.Code == "En"
+                                            ).Name
+                                          );
                                         }}
                                       >
                                         <Add fontSize="medium" />

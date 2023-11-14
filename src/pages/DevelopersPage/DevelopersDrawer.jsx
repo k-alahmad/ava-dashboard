@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import Button from "../../components/UI/Button";
 import { API_BASE_URL } from "../../constants";
+import PageModal from "../../components/Admin/layout/PageModal";
 const defaultFormState = {
   id: "",
   ViewTag: false,
@@ -264,7 +265,7 @@ const DeveloperDrawer = ({
           >
             {developers_Translation.map((item, index) => {
               return (
-                <div key={index} className="pb-12">
+                <div key={index}>
                   <div className="flex m-4">
                     <TextField
                       fullWidth
@@ -318,9 +319,13 @@ const DeveloperDrawer = ({
     );
   };
   return (
-    <PageDrawer
+    <PageModal
       isOpen={drawerOpen}
-      title={drawerID == "" ? "New Developer" : form.titleEn}
+      title={
+        drawerID == ""
+          ? "New Developer"
+          : developers_Translation.find((x) => x.Language.Code == "En")?.Name
+      }
       newItem={drawerID == "" && true}
       editable={true}
       onCancelClick={closeDrawer}
@@ -329,7 +334,7 @@ const DeveloperDrawer = ({
         (drawerID == "" && image == undefined) ||
         developers_Translation
           .find((x) => x.Language.Code == "En")
-          .Name.replace(/ /g, "") == ""
+          ?.Name.replace(/ /g, "") == ""
       }
       alertMessage={"Image Or English Name Is Missing"}
       children={

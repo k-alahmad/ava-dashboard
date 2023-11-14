@@ -47,6 +47,7 @@ const CategoryPage = () => {
   const [DrawerOpen, setDrawerOpen] = useState(false);
   const [DrawerId, setDrawerId] = useState("");
   const [parentId, setParentId] = useState("");
+  const [parentName, setParentName] = useState("");
   const onDelete = (event, model) => {
     event.preventDefault();
     event.stopPropagation();
@@ -119,7 +120,7 @@ const CategoryPage = () => {
                     }
                   </p>
                   <p className="text-xl flex-1">
-                    {"Children: "}
+                    {"Sub-Categories: "}
                     {categoryes?.entities[item1]?._count.SubCategory}
                   </p>
                   <p className="text-xl flex-1">
@@ -140,6 +141,11 @@ const CategoryPage = () => {
                       setDrawerId("");
                       setDrawerOpen(true);
                       setParentId(item1);
+                      setParentName(
+                        categoryes.entities[item1]?.Category_Translation.find(
+                          (x) => x.Language.Code == "En"
+                        ).Name
+                      );
                     }}
                   >
                     <Add fontSize="medium" />
@@ -183,6 +189,8 @@ const CategoryPage = () => {
         setDrawerID={setDrawerId}
         setDrawerOpen={setDrawerOpen}
         parentId={parentId}
+        parentName={parentName}
+        setParentName={setParentName}
       />
 
       <PageSimple
@@ -201,6 +209,7 @@ const CategoryPage = () => {
               onClickPrimaryBtn={(ev) => {
                 setParentId("");
                 setDrawerId("");
+                setParentName("");
                 setDrawerOpen(true);
               }}
               table={
@@ -272,7 +281,7 @@ const CategoryPage = () => {
                                         }
                                       </p>
                                       <p className="text-xl flex-1">
-                                        {" Children: "}
+                                        {" Sub-Categories: "}
                                         {
                                           categoryes?.entities[item]._count
                                             .SubCategory
@@ -304,6 +313,13 @@ const CategoryPage = () => {
                                           setDrawerId("");
                                           setDrawerOpen(true);
                                           setParentId(item);
+                                          setParentName(
+                                            categoryes.entities[
+                                              item
+                                            ]?.Category_Translation.find(
+                                              (x) => x.Language.Code == "En"
+                                            ).Name
+                                          );
                                         }}
                                       >
                                         <Add fontSize="medium" />

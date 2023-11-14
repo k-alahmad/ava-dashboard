@@ -14,6 +14,7 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material";
+import PageModal from "../../components/Admin/layout/PageModal";
 
 const defaultFormState = {
   id: "",
@@ -155,7 +156,6 @@ const CurrenciesDrawer = ({
       });
     }
   }
-  const hiddenFileInput = React.useRef(null);
   const formRef = useRef(null);
 
   const formElements = () => {
@@ -176,7 +176,7 @@ const CurrenciesDrawer = ({
               required
             />
           </div>
-          <div className="w-full flex justify-center items-center">
+          <div className="m-4 flex">
             <Slider
               dots={false}
               arrows={false}
@@ -218,7 +218,7 @@ const CurrenciesDrawer = ({
           >
             {currency_Translation.map((item, index) => {
               return (
-                <div key={index} className="pb-12">
+                <div key={index}>
                   <div className="flex m-4">
                     <TextField
                       fullWidth
@@ -257,7 +257,7 @@ const CurrenciesDrawer = ({
     );
   };
   return (
-    <PageDrawer
+    <PageModal
       isOpen={drawerOpen}
       title={drawerID == "" ? "New Currency" : "Edit Currency"}
       newItem={drawerID == "" && true}

@@ -139,8 +139,6 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     setOldImage(null);
   };
   function submit(event) {
-    event.preventDefault();
-
     const formData = new FormData();
     formData.append("Name", values.Name);
     formData.append("Title", values.Title);

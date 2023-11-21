@@ -162,8 +162,6 @@ const AddressDrawer = ({
     setErrors({});
   };
   function submit(event) {
-    event.preventDefault();
-
     const formData = new FormData();
     formData.append("Latitude", values.Latitude);
     formData.append("Longitude", values.Longitude);

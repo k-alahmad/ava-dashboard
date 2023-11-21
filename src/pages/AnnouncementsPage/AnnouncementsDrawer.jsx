@@ -163,7 +163,6 @@ const AnnouncementDrawer = ({
     setErrors({});
   };
   function submit(event) {
-    event.preventDefault();
     const formData = new FormData();
     formData.append("ActiveStatus", values.ActiveStatus);
     formData.append("Type", values.Type);

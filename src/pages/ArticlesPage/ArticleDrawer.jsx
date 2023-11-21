@@ -171,7 +171,6 @@ const ArticleDrawer = ({
     setErrors({});
   };
   function submit(event) {
-    event.preventDefault();
     const formData = new FormData();
     formData.append("ActiveStatus", values.ActiveStatus);
     formData.append("MinRead", values.MinRead);

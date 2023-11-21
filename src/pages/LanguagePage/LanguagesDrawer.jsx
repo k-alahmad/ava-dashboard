@@ -70,8 +70,6 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     setErrors({});
   };
   function submit(event) {
-    event.preventDefault();
-
     if (drawerID == "") {
       //add
       addLNG({

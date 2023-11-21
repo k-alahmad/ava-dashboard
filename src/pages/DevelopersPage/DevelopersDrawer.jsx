@@ -150,7 +150,6 @@ const DeveloperDrawer = ({
     setErrors({});
   };
   function submit(event) {
-    event.preventDefault();
     const formData = new FormData();
     formData.append("ActiveStatus", values.ActiveStatus);
     formData.append("ViewTag", values.ViewTag);

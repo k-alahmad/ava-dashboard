@@ -143,7 +143,6 @@ const AmenityDrawer = ({
     setErrors({});
   };
   function submit(event) {
-    event.preventDefault();
     const formData = new FormData();
     if (image) formData.append("Image", image);
     for (let i = 0; i < amenities_Translation.length; i++) {

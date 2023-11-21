@@ -110,8 +110,6 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     setErrors({});
   };
   function submit(event) {
-    event.preventDefault();
-
     let UT = [];
     for (let i = 0; i < unit_Translation.length; i++) {
       UT.push({

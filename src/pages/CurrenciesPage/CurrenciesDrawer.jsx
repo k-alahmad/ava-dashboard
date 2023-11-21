@@ -122,7 +122,6 @@ const CurrenciesDrawer = ({
     setErrors({});
   };
   function submit(event) {
-    event.preventDefault();
     let CT = [];
     for (let i = 0; i < currency_Translation.length; i++) {
       CT.push({

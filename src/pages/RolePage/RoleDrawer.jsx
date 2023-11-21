@@ -108,8 +108,6 @@ const RoleDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     setErrors({});
   };
   function submit(event) {
-    event.preventDefault();
-
     if (drawerID == "") {
       //add
       addRole({

@@ -134,8 +134,6 @@ const CategoryDrawer = ({
     setErrors({});
   };
   function submit(event) {
-    event.preventDefault();
-
     let CT = [];
     for (let i = 0; i < category_Translation.length; i++) {
       CT.push({

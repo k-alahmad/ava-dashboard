@@ -135,8 +135,6 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     setErrors({});
   };
   function submit(event) {
-    event.preventDefault();
-
     let JT = [];
     for (let i = 0; i < job_Translation.length; i++) {
       JT.push({

@@ -94,7 +94,6 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     setErrors({});
   };
   function submit(event) {
-    event.preventDefault();
     const formData = new FormData();
     formData.append("Title", values.Title);
     formData.append("Description", values.Description);

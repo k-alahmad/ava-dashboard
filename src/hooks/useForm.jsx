@@ -131,7 +131,7 @@ const useForm = (callback, defaultValues, translation, setTranslation) => {
   };
   function handleTranslationChange(e, item, type, rich) {
     let val = rich ? e : e.target.value;
-    let name = e.target.name;
+    // let name = e.target.name;
     if (item.Language.Code == "En") {
       if (val.length == 0 && type !== "ButtonName") {
         setErrors({ ...errors, [type + "En"]: "this field is required" });

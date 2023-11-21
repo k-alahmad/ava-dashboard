@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import PageDrawer from "../../components/Admin/layout/PageDrawer";
 import {
   useAddUnitMutation,
   useLazyGetUnitByIdQuery,
@@ -15,6 +14,8 @@ import {
   Switch,
 } from "@mui/material";
 import PageModal from "../../components/Admin/layout/PageModal";
+import { showMessage } from "../../redux/messageAction.slice";
+import useForm from "../../hooks/useForm";
 const defaultFormState = {
   id: "",
   conversionRate: "",
@@ -22,8 +23,17 @@ const defaultFormState = {
 };
 
 const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
-  const [form, setForm] = useState(defaultFormState);
   const [unit_Translation, setUnit_Translation] = useState([]);
+  const {
+    errors,
+    handleChange,
+    handleSubmit,
+    handleTranslationChange,
+    setValues,
+    values,
+    disabled,
+    setErrors,
+  } = useForm(submit, defaultFormState, unit_Translation, setUnit_Translation);
   const sliderRef = useRef();
   const [currentSlide, setCurrentSlide] = useState();
   const {
@@ -62,11 +72,11 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       if (drawerID !== "") {
         getUnitById({ id: drawerID });
         if (isSuccess) {
-          setForm(data);
+          setValues(data);
           setUnit_Translation(data.Unit_Translation);
         }
       } else {
-        setForm(defaultFormState);
+        setValues(defaultFormState);
         if (lngisSuccess) {
           let translations = [];
           lngs.normalData.map((item) => {
@@ -85,41 +95,21 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     }
   }, [drawerID, data, lngs, drawerOpen]);
 
-  function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.type === "checkbox" ? e.target.checked : e.target.value,
-    });
-  }
-  function handleTranslationChange(e, item, type) {
-    // if (drawerID !== "")
-    setUnit_Translation((current) =>
-      current.map((obj) => {
-        if (obj.Language.Code == item.Language.Code) {
-          return {
-            ...obj,
-            Name: type == "Name" ? e.target.value : obj.Name,
-          };
-        }
-        return obj;
-      })
-    );
-  }
   useEffect(() => {
     if (addSuccess || updateSuccess || addIsError || updateIsError) {
-      setForm(defaultFormState);
+      setValues(defaultFormState);
       closeDrawer();
     }
   }, [addSuccess, updateSuccess, addIsError, updateIsError]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
-    setForm(defaultFormState);
+    setValues(defaultFormState);
     setUnit_Translation([]);
     setCurrentSlide();
+    setErrors({});
   };
-  function handleSubmit(event) {
+  function submit(event) {
     event.preventDefault();
 
     let UT = [];
@@ -133,8 +123,8 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       //add
       addUnit({
         formData: {
-          ActiveStatus: `${form.ActiveStatus}`,
-          conversionRate: form.conversionRate,
+          ActiveStatus: `${values.ActiveStatus}`,
+          conversionRate: values.conversionRate,
           Unit_Translation: UT,
         },
       });
@@ -143,19 +133,18 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       updateUnit({
         id: drawerID,
         formData: {
-          ActiveStatus: `${form.ActiveStatus}`,
-          conversionRate: form.conversionRate,
+          ActiveStatus: `${values.ActiveStatus}`,
+          conversionRate: values.conversionRate,
           Unit_Translation: UT,
         },
       });
     }
   }
-  const hiddenFileInput = React.useRef(null);
   const formRef = useRef(null);
 
   const formElements = () => {
     return (
-      <form ref={formRef} className="flex flex-col justify-center">
+      <values ref={formRef} className="flex flex-col justify-center">
         <div className="py-1 mx-8">
           <div className="flex m-4">
             <TextField
@@ -165,10 +154,12 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               label={`Conversion Rate`}
               id="conversionRate"
               onChange={handleChange}
-              value={form.conversionRate}
+              value={values.conversionRate}
               variant="outlined"
               size="small"
               required
+              error={Boolean(errors?.conversionRate)}
+              helperText={errors?.conversionRate}
             />
           </div>
           <div className="w-full flex justify-center items-center">
@@ -225,7 +216,18 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                       value={item.Name}
                       variant="outlined"
                       size="small"
-                      required={item.Language.Code == "En"}
+                      error={Boolean(
+                        Object.keys(errors).find(
+                          (x) => x == "Name" + item.Language.Code
+                        )
+                      )}
+                      helperText={
+                        errors[
+                          Object.keys(errors).find(
+                            (x) => x == "Name" + item.Language.Code
+                          )
+                        ]
+                      }
                     />
                   </div>
                 </div>
@@ -239,16 +241,16 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                   <Switch
                     onChange={handleChange}
                     name="ActiveStatus"
-                    value={form.ActiveStatus}
-                    checked={form.ActiveStatus}
+                    value={values.ActiveStatus}
+                    checked={values.ActiveStatus}
                   />
                 }
-                label={form.ActiveStatus ? "Active" : "InActive"}
+                label={values.ActiveStatus ? "Active" : "InActive"}
               />
             </FormGroup>
           </div>
         </div>
-      </form>
+      </values>
     );
   };
   return (
@@ -259,13 +261,7 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={
-        form.conversionRate.toString().replace(/ /g, "") == "" ||
-        unit_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Name.replace(/ /g, "") == ""
-      }
-      alertMessage={"Required Data Are Missing"}
+      disabled={disabled}
       children={
         isLoading ||
         addLoading ||

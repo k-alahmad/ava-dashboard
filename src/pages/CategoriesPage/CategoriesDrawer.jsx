@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import PageDrawer from "../../components/Admin/layout/PageDrawer";
 import {
   useAddCategoryMutation,
   useLazyGetCategoryByIdQuery,
@@ -17,6 +16,7 @@ import Slider from "react-slick";
 import { showMessage } from "../../redux/messageAction.slice";
 import { useDispatch } from "react-redux";
 import PageModal from "../../components/Admin/layout/PageModal";
+import useForm from "../../hooks/useForm";
 const defaultFormState = {
   id: "",
   Category_Translation: [],
@@ -32,9 +32,22 @@ const CategoryDrawer = ({
   parentId,
   parentName,
 }) => {
-  const [form, setForm] = useState(defaultFormState);
-
   const [category_Translation, setCategory_Translation] = useState([]);
+  const {
+    errors,
+    handleChange,
+    handleSubmit,
+    handleTranslationChange,
+    setValues,
+    values,
+    disabled,
+    setErrors,
+  } = useForm(
+    submit,
+    defaultFormState,
+    category_Translation,
+    setCategory_Translation
+  );
   const sliderRef = useRef();
   const [currentSlide, setCurrentSlide] = useState();
   const {
@@ -84,11 +97,11 @@ const CategoryDrawer = ({
       if (drawerID !== "") {
         getCategoryById({ id: drawerID });
         if (isSuccess) {
-          setForm(data);
+          setValues(data);
           setCategory_Translation(data.Category_Translation);
         }
       } else {
-        setForm({ ...defaultFormState, ParentID: parentId });
+        setValues({ ...defaultFormState, ParentID: parentId });
         if (lngisSuccess) {
           let translations = [];
           lngs.normalData.map((item) => {
@@ -107,41 +120,20 @@ const CategoryDrawer = ({
       }
     }
   }, [drawerID, data, drawerOpen]);
-  function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.type === "checkbox" ? e.target.checked : e.target.value,
-    });
-  }
-  function handleTranslationChange(e, item, type) {
-    setCategory_Translation((current) =>
-      current.map((obj) => {
-        if (obj.Language.Code == item.Language.Code) {
-          return {
-            ...obj,
-            Name: type == "Name" ? e.target.value : obj.Name,
-            Description:
-              type == "Description" ? e.target.value : obj.Description,
-          };
-        }
-        return obj;
-      })
-    );
-  }
+
   useEffect(() => {
     if (addSuccess || updateSuccess || addIsError || updateIsError) {
-      setForm(defaultFormState);
+      setValues(defaultFormState);
       closeDrawer();
     }
   }, [addSuccess, updateSuccess, addIsError, updateIsError]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
-
-    setForm(defaultFormState);
+    setValues(defaultFormState);
+    setErrors({});
   };
-  function handleSubmit(event) {
+  function submit(event) {
     event.preventDefault();
 
     let CT = [];
@@ -155,12 +147,12 @@ const CategoryDrawer = ({
     let formData =
       parentId == ""
         ? {
-            ActiveStatus: `${form.ActiveStatus}`,
+            ActiveStatus: `${values.ActiveStatus}`,
             Category_Translation: CT,
           }
         : {
             ParentID: parentId,
-            ActiveStatus: `${form.ActiveStatus}`,
+            ActiveStatus: `${values.ActiveStatus}`,
             Category_Translation: CT,
           };
     if (drawerID == "") {
@@ -236,6 +228,18 @@ const CategoryDrawer = ({
                     variant="outlined"
                     size="small"
                     required
+                    error={Boolean(
+                      Object.keys(errors).find(
+                        (x) => x == "Name" + item.Language.Code
+                      )
+                    )}
+                    helperText={
+                      errors[
+                        Object.keys(errors).find(
+                          (x) => x == "Name" + item.Language.Code
+                        )
+                      ]
+                    }
                   />
                 </div>
                 <div className="flex m-4">
@@ -244,7 +248,7 @@ const CategoryDrawer = ({
                     type="text"
                     name={"Description" + item.Language.Code}
                     label={`${item.Language.Name} Description`}
-                    id={"Name" + item.Language.Code}
+                    id={"Description" + item.Language.Code}
                     onChange={(e) =>
                       handleTranslationChange(e, item, "Description")
                     }
@@ -252,6 +256,18 @@ const CategoryDrawer = ({
                     variant="outlined"
                     size="small"
                     required
+                    error={Boolean(
+                      Object.keys(errors).find(
+                        (x) => x == "Description" + item.Language.Code
+                      )
+                    )}
+                    helperText={
+                      errors[
+                        Object.keys(errors).find(
+                          (x) => x == "Description" + item.Language.Code
+                        )
+                      ]
+                    }
                   />
                 </div>
               </div>
@@ -265,11 +281,11 @@ const CategoryDrawer = ({
                 <Switch
                   onChange={handleChange}
                   name="ActiveStatus"
-                  value={form.ActiveStatus}
-                  checked={form.ActiveStatus}
+                  value={values.ActiveStatus}
+                  checked={values.ActiveStatus}
                 />
               }
-              label={form.ActiveStatus ? "Active" : "InActive"}
+              label={values.ActiveStatus ? "Active" : "InActive"}
             />
           </FormGroup>
         </div>
@@ -290,15 +306,7 @@ const CategoryDrawer = ({
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={
-        category_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Name.replace(/ /g, "") == "" ||
-        category_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Description.replace(/ /g, "") == ""
-      }
-      alertMessage={"English Name Or English Description Is Missing"}
+      disabled={disabled}
       children={
         isLoading ||
         addLoading ||

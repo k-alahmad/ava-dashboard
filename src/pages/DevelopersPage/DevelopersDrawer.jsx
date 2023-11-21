@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import PageDrawer from "../../components/Admin/layout/PageDrawer";
 import {
   useAddDeveloperMutation,
   useLazyGetDeveloperByIdQuery,
@@ -13,14 +12,13 @@ import {
   FormGroup,
   FormControlLabel,
   Switch,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
 } from "@mui/material";
 import Button from "../../components/UI/Button";
 import { API_BASE_URL } from "../../constants";
 import PageModal from "../../components/Admin/layout/PageModal";
+import useForm from "../../hooks/useForm";
+import { useDispatch } from "react-redux";
+import { showMessage } from "../../redux/messageAction.slice";
 const defaultFormState = {
   id: "",
   ViewTag: false,
@@ -34,13 +32,28 @@ const DeveloperDrawer = ({
   drawerID,
   setDrawerID,
 }) => {
-  const [form, setForm] = useState(defaultFormState);
+  const [developers_Translation, setDevelopers_Translation] = useState([]);
+  const {
+    errors,
+    handleChange,
+    handleSubmit,
+    handleTranslationChange,
+    setValues,
+    values,
+    disabled,
+    setErrors,
+  } = useForm(
+    submit,
+    defaultFormState,
+    developers_Translation,
+    setDevelopers_Translation
+  );
   const [image, setImage] = useState();
   const [oldImage, setOldImage] = useState();
   const [imageURL, setImageURL] = useState();
-  const [developers_Translation, setDevelopers_Translation] = useState([]);
   const sliderRef = useRef();
   const [currentSlide, setCurrentSlide] = useState();
+  const dispatch = useDispatch();
   const {
     data: lngs,
     isLoading: lngIsLoading,
@@ -79,11 +92,11 @@ const DeveloperDrawer = ({
         getDeveloperById({ id: drawerID });
         if (isSuccess) {
           setOldImage(data.Image?.URL);
-          setForm(data);
+          setValues(data);
           setDevelopers_Translation(data.Developer_Translation);
         }
       } else {
-        setForm(defaultFormState);
+        setValues(defaultFormState);
         if (lngisSuccess) {
           let translations = [];
           lngs.normalData.map((item) => {
@@ -116,50 +129,31 @@ const DeveloperDrawer = ({
       setImage(undefined);
     }
     setImage(e.target.files[0]);
-    setForm({ ...form, Image: e.target.files[0] });
+    setValues({ ...values, Image: e.target.files[0] });
   }
-  function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.type === "checkbox" ? e.target.checked : e.target.value,
-    });
-  }
-  function handleTranslationChange(e, item, type) {
-    // if (drawerID !== "")
-    setDevelopers_Translation((current) =>
-      current.map((obj) => {
-        if (obj.Language.Code == item.Language.Code) {
-          return {
-            ...obj,
-            Name: type == "Name" ? e.target.value : obj.Name,
-          };
-        }
-        return obj;
-      })
-    );
-  }
+
   useEffect(() => {
     if (addSuccess || updateSuccess || addIsError || updateIsError) {
-      setForm(defaultFormState);
+      setValues(defaultFormState);
       closeDrawer();
     }
   }, [addSuccess, updateSuccess, addIsError, updateIsError]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
-    setForm(defaultFormState);
+    setValues(defaultFormState);
     setImage(null);
     setImageURL(null);
     setOldImage(null);
     setDevelopers_Translation([]);
     setCurrentSlide();
+    setErrors({});
   };
-  function handleSubmit(event) {
+  function submit(event) {
     event.preventDefault();
     const formData = new FormData();
-    formData.append("ActiveStatus", form.ActiveStatus);
-    formData.append("ViewTag", form.ViewTag);
+    formData.append("ActiveStatus", values.ActiveStatus);
+    formData.append("ViewTag", values.ViewTag);
     if (image) formData.append("Image", image);
     for (let i = 0; i < developers_Translation.length; i++) {
       formData.append(
@@ -278,6 +272,18 @@ const DeveloperDrawer = ({
                       variant="outlined"
                       size="small"
                       required
+                      error={Boolean(
+                        Object.keys(errors).find(
+                          (x) => x == "Name" + item.Language.Code
+                        )
+                      )}
+                      helperText={
+                        errors[
+                          Object.keys(errors).find(
+                            (x) => x == "Name" + item.Language.Code
+                          )
+                        ]
+                      }
                     />
                   </div>
                 </div>
@@ -291,11 +297,11 @@ const DeveloperDrawer = ({
                   <Switch
                     onChange={handleChange}
                     name="ViewTag"
-                    value={form.ViewTag}
-                    checked={form.ViewTag}
+                    value={values.ViewTag}
+                    checked={values.ViewTag}
                   />
                 }
-                label={form.ViewTag ? "View In Website" : "Hide In Website"}
+                label={values.ViewTag ? "View In Website" : "Hide In Website"}
               />
             </FormGroup>
           </div>
@@ -306,11 +312,11 @@ const DeveloperDrawer = ({
                   <Switch
                     onChange={handleChange}
                     name="ActiveStatus"
-                    value={form.ActiveStatus}
-                    checked={form.ActiveStatus}
+                    value={values.ActiveStatus}
+                    checked={values.ActiveStatus}
                   />
                 }
-                label={form.ActiveStatus ? "Active" : "InActive"}
+                label={values.ActiveStatus ? "Active" : "InActive"}
               />
             </FormGroup>
           </div>
@@ -330,13 +336,7 @@ const DeveloperDrawer = ({
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={
-        (drawerID == "" && image == undefined) ||
-        developers_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Name.replace(/ /g, "") == ""
-      }
-      alertMessage={"Image Or English Name Is Missing"}
+      disabled={disabled}
       children={
         isLoading ||
         addLoading ||

@@ -25,19 +25,29 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 
 import RichTextBox from "../../components/Forms/RichTextBox";
+import useForm from "../../hooks/useForm";
 const defaultFormState = {
   id: "",
   Location: "",
   Type: "",
   WeekHours: "",
   Expired: false,
-  usersId: "",
+  usersID: "",
   ActiveStatus: true,
 };
 
 const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
-  const [form, setForm] = useState(defaultFormState);
   const [job_Translation, setJob_Translation] = useState([]);
+  const {
+    errors,
+    setErrors,
+    values,
+    setValues,
+    handleChange,
+    handleTranslationChange,
+    handleSubmit,
+    disabled,
+  } = useForm(submit, defaultFormState, job_Translation, setJob_Translation);
   const sliderRef = useRef();
   const [selectSearchTerm, setSelectSearchTerm] = useState("");
   var selectSearchInput = useRef(undefined);
@@ -86,11 +96,11 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       if (drawerID !== "") {
         getJobById({ id: drawerID });
         if (isSuccess) {
-          setForm(data);
+          setValues(data);
           setJob_Translation(data.Jobs_Translation);
         }
       } else {
-        setForm(defaultFormState);
+        setValues(defaultFormState);
         if (lngisSuccess) {
           let translations = [];
           lngs.normalData.map((item) => {
@@ -110,42 +120,21 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     }
   }, [drawerID, data, lngs, drawerOpen]);
 
-  function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.type === "checkbox" ? e.target.checked : e.target.value,
-    });
-  }
-  function handleTranslationChange(e, item, type) {
-    // if (drawerID !== "")
-    setJob_Translation((current) =>
-      current.map((obj) => {
-        if (obj.Language.Code == item.Language.Code) {
-          return {
-            ...obj,
-            Title: type == "Title" ? e.target.value : obj.Title,
-            Description: type == "Description" ? e : obj.Description,
-          };
-        }
-        return obj;
-      })
-    );
-  }
   useEffect(() => {
     if (addSuccess || updateSuccess || addIsError || updateIsError) {
-      setForm(defaultFormState);
+      setValues(defaultFormState);
       closeDrawer();
     }
   }, [addSuccess, updateSuccess, addIsError, updateIsError]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
-    setForm(defaultFormState);
+    setValues(defaultFormState);
     setJob_Translation([]);
     setCurrentSlide();
+    setErrors({});
   };
-  function handleSubmit(event) {
+  function submit(event) {
     event.preventDefault();
 
     let JT = [];
@@ -160,12 +149,12 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       //add
       addJob({
         formData: {
-          ActiveStatus: `${form.ActiveStatus}`,
-          Location: form.Location,
-          Type: form.Type,
-          WeekHours: form.WeekHours,
-          Expired: `${form.Expired}`,
-          AuthorID: form.usersId,
+          ActiveStatus: `${values.ActiveStatus}`,
+          Location: values.Location,
+          Type: values.Type,
+          WeekHours: values.WeekHours,
+          Expired: `${values.Expired}`,
+          AuthorID: values.usersId,
           Jobs_Translation: JT,
         },
       });
@@ -174,18 +163,17 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       updateJob({
         id: drawerID,
         formData: {
-          ActiveStatus: `${form.ActiveStatus}`,
-          Location: form.Location,
-          Type: form.Type,
-          WeekHours: form.WeekHours,
-          Expired: `${form.Expired}`,
-          Author: form.usersId,
+          ActiveStatus: `${values.ActiveStatus}`,
+          Location: values.Location,
+          Type: values.Type,
+          WeekHours: values.WeekHours,
+          Expired: `${values.Expired}`,
+          Author: values.usersId,
           Jobs_Translation: JT,
         },
       });
     }
   }
-  const hiddenFileInput = React.useRef(null);
   const formRef = useRef(null);
 
   const formElements = () => {
@@ -248,7 +236,18 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                       value={item.Title}
                       variant="outlined"
                       size="small"
-                      required={item.Language.Code == "En"}
+                      error={Boolean(
+                        Object.keys(errors).find(
+                          (x) => x == "Title" + item.Language.Code
+                        )
+                      )}
+                      helperText={
+                        errors[
+                          Object.keys(errors).find(
+                            (x) => x == "Title" + item.Language.Code
+                          )
+                        ]
+                      }
                     />
                   </div>
                   <RichTextBox
@@ -256,10 +255,24 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                       item.Language.Code == "En" ? "*" : ""
                     }`}
                     value={item.Description}
+                    error={Boolean(
+                      Object.keys(errors).find(
+                        (x) => x == "Title" + item.Language.Code
+                      )
+                    )}
                     onChange={(e) =>
-                      handleTranslationChange(e, item, "Description")
+                      handleTranslationChange(e, item, "Description", true)
                     }
                   />
+                  <p className="text-[14px] text-red-600 px-10">
+                    {
+                      errors[
+                        Object.keys(errors).find(
+                          (x) => x == "Description" + item.Language.Code
+                        )
+                      ]
+                    }
+                  </p>
                 </div>
               );
             })}
@@ -272,10 +285,12 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               label={`Location`}
               id="Location"
               onChange={handleChange}
-              value={form.Location}
+              value={values.Location}
               variant="outlined"
               size="small"
               required
+              error={Boolean(errors?.Location)}
+              helperText={errors?.Location}
             />
           </div>
           <div className="flex m-4">
@@ -286,10 +301,12 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               label={`Type`}
               id="Type"
               onChange={handleChange}
-              value={form.Type}
+              value={values.Type}
               variant="outlined"
               size="small"
               required
+              error={Boolean(errors?.Type)}
+              helperText={errors?.Type}
             />
           </div>
           <div className="flex m-4">
@@ -300,10 +317,12 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               label={`WeekHours`}
               id="WeekHours"
               onChange={handleChange}
-              value={form.WeekHours}
+              value={values.WeekHours}
               variant="outlined"
               size="small"
               required
+              error={Boolean(errors?.WeekHours)}
+              helperText={errors?.WeekHours}
             />
           </div>
           <div className="flex m-4">
@@ -313,11 +332,11 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                   <Switch
                     onChange={handleChange}
                     name="Expired"
-                    value={form.Expired}
-                    checked={form.Expired}
+                    value={values.Expired}
+                    checked={values.Expired}
                   />
                 }
-                label={form.Expired ? "Expired" : "Not Expired"}
+                label={values.Expired ? "Expired" : "Not Expired"}
               />
             </FormGroup>
           </div>
@@ -330,9 +349,9 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                 </InputLabel>
                 <Select
                   labelId="usersId"
-                  name="usersId"
-                  id="usersId"
-                  value={form.usersId}
+                  name="usersID"
+                  id="usersID"
+                  value={values.usersID}
                   label="Job Creator"
                   onChange={handleChange}
                   MenuProps={{
@@ -342,8 +361,9 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                     },
                   }}
                   onClose={() => setSelectSearchTerm("")}
-                  // renderValue={() => form.roleID}
-                  onAnimationEnd={() => selectSearchInput.current.focus()}
+                  // renderValue={() => values.roleID}
+                  onAnimationEnd={() => selectSearchInput.current?.focus()}
+                  error={Boolean(errors?.usersID)}
                 >
                   <ListSubheader>
                     <TextField
@@ -387,6 +407,9 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                       );
                   })}
                 </Select>
+                <p className="text-[14px] text-red-600 ml-5">
+                  {errors.usersID}
+                </p>
               </FormControl>
             </div>
           )}
@@ -398,11 +421,11 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                   <Switch
                     onChange={handleChange}
                     name="ActiveStatus"
-                    value={form.ActiveStatus}
-                    checked={form.ActiveStatus}
+                    value={values.ActiveStatus}
+                    checked={values.ActiveStatus}
                   />
                 }
-                label={form.ActiveStatus ? "Active" : "InActive"}
+                label={values.ActiveStatus ? "Active" : "InActive"}
               />
             </FormGroup>
           </div>
@@ -418,18 +441,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={
-        form.Location.toString().replace(/ /g, "") == "" ||
-        form.WeekHours.toString().replace(/ /g, "") == "" ||
-        form.Type.toString().replace(/ /g, "") == "" ||
-        job_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Title.replace(/ /g, "") == "" ||
-        job_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Description.replace(/ /g, "") == ""
-      }
-      alertMessage={"Required Data Are Missing"}
+      disabled={disabled}
       children={
         isLoading ||
         addLoading ||

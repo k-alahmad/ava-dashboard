@@ -25,6 +25,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import Button from "../../components/UI/Button";
 import { API_BASE_URL } from "../../constants";
 import RichTextBox from "../../components/Forms/RichTextBox";
+import { showMessage } from "../../redux/messageAction.slice";
+import useForm from "../../hooks/useForm";
+import { useDispatch } from "react-redux";
 const defaultFormState = {
   id: "",
   MinRead: "",
@@ -39,15 +42,30 @@ const ArticleDrawer = ({
   drawerID,
   setDrawerID,
 }) => {
-  const [form, setForm] = useState(defaultFormState);
+  const [articles_Translation, setArticles_Translation] = useState([]);
+  const {
+    disabled,
+    setErrors,
+    errors,
+    setValues,
+    values,
+    handleChange,
+    handleSubmit,
+    handleTranslationChange,
+  } = useForm(
+    submit,
+    defaultFormState,
+    articles_Translation,
+    setArticles_Translation
+  );
   const [image, setImage] = useState();
   const [oldImage, setOldImage] = useState();
   const [imageURL, setImageURL] = useState();
-  const [articles_Translation, setArticles_Translation] = useState([]);
   const sliderRef = useRef();
   const [selectSearchTerm, setSelectSearchTerm] = useState("");
   var selectSearchInput = useRef(undefined);
   const [currentSlide, setCurrentSlide] = useState();
+  const dispatch = useDispatch();
   const {
     data: lngs,
     isLoading: lngIsLoading,
@@ -93,11 +111,11 @@ const ArticleDrawer = ({
         getArticleById({ id: drawerID });
         if (isSuccess) {
           setOldImage(data.Image?.URL);
-          setForm(data);
+          setValues(data);
           setArticles_Translation(data.Articles_Translation);
         }
       } else {
-        setForm(defaultFormState);
+        setValues(defaultFormState);
         if (lngisSuccess) {
           let translations = [];
           lngs.normalData.map((item) => {
@@ -132,53 +150,32 @@ const ArticleDrawer = ({
       setImage(undefined);
     }
     setImage(e.target.files[0]);
-    setForm({ ...form, Image: e.target.files[0] });
+    setValues({ ...values, Image: e.target.files[0] });
   }
-  function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.type === "checkbox" ? e.target.checked : e.target.value,
-    });
-  }
-  function handleTranslationChange(e, item, type) {
-    // if (drawerID !== "")
-    setArticles_Translation((current) =>
-      current.map((obj) => {
-        if (obj.Language.Code == item.Language.Code) {
-          return {
-            ...obj,
-            Title: type == "Title" ? e.target.value : obj.Title,
-            Caption: type == "Caption" ? e.target.value : obj.Caption,
-            Description: type == "Desc" ? e : obj.Description,
-          };
-        }
-        return obj;
-      })
-    );
-  }
+
   useEffect(() => {
     if (addSuccess || updateSuccess || addIsError || updateIsError) {
-      setForm(defaultFormState);
+      setValues(defaultFormState);
       closeDrawer();
     }
   }, [addSuccess, updateSuccess, addIsError, updateIsError]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
-    setForm(defaultFormState);
+    setValues(defaultFormState);
     setImage(null);
     setImageURL(null);
     setOldImage(null);
     setArticles_Translation([]);
     setCurrentSlide();
+    setErrors({});
   };
-  function handleSubmit(event) {
+  function submit(event) {
     event.preventDefault();
     const formData = new FormData();
-    formData.append("ActiveStatus", form.ActiveStatus);
-    formData.append("MinRead", form.MinRead);
-    formData.append("AuthorID", form.usersID);
+    formData.append("ActiveStatus", values.ActiveStatus);
+    formData.append("MinRead", values.MinRead);
+    formData.append("AuthorID", values.usersID);
     if (image) formData.append("Image", image);
     for (let i = 0; i < articles_Translation.length; i++) {
       formData.append(
@@ -211,7 +208,7 @@ const ArticleDrawer = ({
 
   const formElements = () => {
     return (
-      <form ref={formRef} className="flex flex-col justify-center">
+      <values ref={formRef} className="flex flex-col justify-center">
         <div className="py-1 mx-8">
           <div className="flex flex-row items-center justify-center">
             <div className="flex flex-col m-4">
@@ -259,10 +256,12 @@ const ArticleDrawer = ({
               label={`Minutes Of Read`}
               id="MinRead"
               onChange={handleChange}
-              value={form.MinRead}
+              value={values.MinRead}
               variant="outlined"
               size="small"
               required
+              error={Boolean(errors?.MinRead)}
+              helperText={errors?.MinRead}
             />
           </div>
           {usersisSuccess && (
@@ -270,10 +269,10 @@ const ArticleDrawer = ({
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Author</InputLabel>
                 <Select
-                  labelId="usersID"
+                  labelId="Author"
                   name="usersID"
                   id="usersID"
-                  value={form.usersID}
+                  value={values.usersID}
                   label="Author"
                   onChange={handleChange}
                   MenuProps={{
@@ -283,8 +282,8 @@ const ArticleDrawer = ({
                     },
                   }}
                   onClose={() => setSelectSearchTerm("")}
-                  // renderValue={() => form.roleID}
                   onAnimationEnd={() => selectSearchInput.current.focus()}
+                  error={Boolean(errors?.usersID)}
                 >
                   <ListSubheader>
                     <TextField
@@ -328,6 +327,9 @@ const ArticleDrawer = ({
                       );
                   })}
                 </Select>
+                <p className="text-[14px] text-red-600 ml-5">
+                  {errors.usersID}
+                </p>
               </FormControl>
             </div>
           )}
@@ -388,7 +390,18 @@ const ArticleDrawer = ({
                       value={item.Title}
                       variant="outlined"
                       size="small"
-                      required={item.Language.Code == "En"}
+                      error={Boolean(
+                        Object.keys(errors).find(
+                          (x) => x == "Title" + item.Language.Code
+                        )
+                      )}
+                      helperText={
+                        errors[
+                          Object.keys(errors).find(
+                            (x) => x == "Title" + item.Language.Code
+                          )
+                        ]
+                      }
                     />
                   </div>
                   <div className="flex m-4">
@@ -407,15 +420,45 @@ const ArticleDrawer = ({
                       required={item.Language.Code == "En"}
                       multiline
                       rows={5}
+                      error={Boolean(
+                        Object.keys(errors).find(
+                          (x) => x == "Caption" + item.Language.Code
+                        )
+                      )}
+                      helperText={
+                        errors[
+                          Object.keys(errors).find(
+                            (x) => x == "Caption" + item.Language.Code
+                          )
+                        ]
+                      }
                     />
                   </div>
-                  <RichTextBox
-                    label={`${item.Language.Name} Body ${
-                      item.Language.Code == "En" ? "*" : ""
-                    }`}
-                    value={item.Description}
-                    onChange={(e) => handleTranslationChange(e, item, "Desc")}
-                  />
+                  <div>
+                    <RichTextBox
+                      label={`${item.Language.Name} Body ${
+                        item.Language.Code == "En" ? "*" : ""
+                      }`}
+                      value={item.Description}
+                      error={Boolean(
+                        Object.keys(errors).find(
+                          (x) => x == "Title" + item.Language.Code
+                        )
+                      )}
+                      onChange={(e) =>
+                        handleTranslationChange(e, item, "Description", true)
+                      }
+                    />
+                    <p className="text-[14px] text-red-600 px-10">
+                      {
+                        errors[
+                          Object.keys(errors).find(
+                            (x) => x == "Description" + item.Language.Code
+                          )
+                        ]
+                      }
+                    </p>
+                  </div>
                 </div>
               );
             })}
@@ -427,41 +470,27 @@ const ArticleDrawer = ({
                   <Switch
                     onChange={handleChange}
                     name="ActiveStatus"
-                    value={form.ActiveStatus}
-                    checked={form.ActiveStatus}
+                    value={values.ActiveStatus}
+                    checked={values.ActiveStatus}
                   />
                 }
-                label={form.ActiveStatus ? "Active" : "InActive"}
+                label={values.ActiveStatus ? "Active" : "InActive"}
               />
             </FormGroup>
           </div>
         </div>
-      </form>
+      </values>
     );
   };
   return (
     <PageDrawer
       isOpen={drawerOpen}
-      title={drawerID == "" ? "New Article" : form.titleEn}
+      title={drawerID == "" ? "New Article" : values.titleEn}
       newItem={drawerID == "" && true}
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={
-        form.MinRead.toString().replace(/ /g, "") == "" ||
-        form.usersID.replace(/ /g, "") == "" ||
-        articles_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Title.replace(/ /g, "") == "" ||
-        articles_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Caption.replace(/ /g, "") == "" ||
-        articles_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Description.replace(/ /g, "") == "" ||
-        (drawerID == "" && image == undefined)
-      }
-      alertMessage={"Required Data Are Missing"}
+      disabled={disabled}
       children={
         isLoading ||
         addLoading ||

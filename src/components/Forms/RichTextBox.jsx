@@ -4,7 +4,14 @@ import { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "../../styles/quillStyles.css";
 
-const RichTextBox = ({ value, setValue, moreStyle, label, onChange }) => {
+const RichTextBox = ({
+  value,
+  setValue,
+  error,
+  moreStyle,
+  label,
+  onChange,
+}) => {
   const fontSizeArr = [
     // "8px",
     // "9px",
@@ -35,7 +42,9 @@ const RichTextBox = ({ value, setValue, moreStyle, label, onChange }) => {
         //   setValue(value);
         // }}
         onChange={onChange}
-        className="w-full h-[600px]"
+        className={`w-full h-[600px] ${
+          error && "border-red-600 border-[1px] pb-[60px]"
+        } `}
         modules={{
           toolbar: [
             // [{ font: [] }],

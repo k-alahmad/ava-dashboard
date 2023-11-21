@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import PageDrawer from "../../components/Admin/layout/PageDrawer";
 import {
   useAddCurrencyMutation,
   useLazyGetCurrencyByIdQuery,
@@ -15,7 +14,9 @@ import {
   Switch,
 } from "@mui/material";
 import PageModal from "../../components/Admin/layout/PageModal";
-
+import { showMessage } from "../../redux/messageAction.slice";
+import { useDispatch } from "react-redux";
+import useForm from "../../hooks/useForm";
 const defaultFormState = {
   id: "",
   conversionRate: "",
@@ -28,9 +29,24 @@ const CurrenciesDrawer = ({
   drawerID,
   setDrawerID,
 }) => {
-  const [form, setForm] = useState(defaultFormState);
   const [currency_Translation, setCurrency_Translation] = useState([]);
+  const {
+    errors,
+    handleChange,
+    handleSubmit,
+    handleTranslationChange,
+    setValues,
+    values,
+    disabled,
+    setErrors,
+  } = useForm(
+    submit,
+    defaultFormState,
+    currency_Translation,
+    setCurrency_Translation
+  );
   const sliderRef = useRef();
+  const dispatch = useDispatch();
   const [currentSlide, setCurrentSlide] = useState();
   const {
     data: lngs,
@@ -68,11 +84,11 @@ const CurrenciesDrawer = ({
       if (drawerID !== "") {
         getCurrencyById({ id: drawerID });
         if (isSuccess) {
-          setForm(data);
+          setValues(data);
           setCurrency_Translation(data.Currency_Translation);
         }
       } else {
-        setForm(defaultFormState);
+        setValues(defaultFormState);
         if (lngisSuccess) {
           let translations = [];
           lngs.normalData.map((item) => {
@@ -91,41 +107,21 @@ const CurrenciesDrawer = ({
     }
   }, [drawerID, data, lngs, drawerOpen]);
 
-  function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.type === "checkbox" ? e.target.checked : e.target.value,
-    });
-  }
-  function handleTranslationChange(e, item, type) {
-    // if (drawerID !== "")
-    setCurrency_Translation((current) =>
-      current.map((obj) => {
-        if (obj.Language.Code == item.Language.Code) {
-          return {
-            ...obj,
-            Name: type == "Name" ? e.target.value : obj.Name,
-          };
-        }
-        return obj;
-      })
-    );
-  }
   useEffect(() => {
     if (addSuccess || updateSuccess || addIsError || updateIsError) {
-      setForm(defaultFormState);
+      setValues(defaultFormState);
       closeDrawer();
     }
   }, [addSuccess, updateSuccess, addIsError, updateIsError]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
-    setForm(defaultFormState);
+    setValues(defaultFormState);
     setCurrency_Translation([]);
     setCurrentSlide();
+    setErrors({});
   };
-  function handleSubmit(event) {
+  function submit(event) {
     event.preventDefault();
     let CT = [];
     for (let i = 0; i < currency_Translation.length; i++) {
@@ -139,8 +135,8 @@ const CurrenciesDrawer = ({
       //add
       addCurrency({
         formData: {
-          ActiveStatus: `${form.ActiveStatus}`,
-          conversionRate: form.conversionRate,
+          ActiveStatus: `${values.ActiveStatus}`,
+          conversionRate: values.conversionRate,
           Currency_Translation: CT,
         },
       });
@@ -149,8 +145,8 @@ const CurrenciesDrawer = ({
       updateCurrency({
         id: drawerID,
         formData: {
-          ActiveStatus: `${form.ActiveStatus}`,
-          conversionRate: form.conversionRate,
+          ActiveStatus: `${values.ActiveStatus}`,
+          conversionRate: values.conversionRate,
           Currency_Translation: CT,
         },
       });
@@ -170,10 +166,12 @@ const CurrenciesDrawer = ({
               label={`Conversion Rate`}
               id="conversionRate"
               onChange={handleChange}
-              value={form.conversionRate}
+              value={values.conversionRate}
               variant="outlined"
               size="small"
               required
+              error={Boolean(errors?.conversionRate)}
+              helperText={errors?.conversionRate}
             />
           </div>
           <div className="m-4 flex">
@@ -230,7 +228,18 @@ const CurrenciesDrawer = ({
                       value={item.Name}
                       variant="outlined"
                       size="small"
-                      required={item.Language.Code == "En"}
+                      error={Boolean(
+                        Object.keys(errors).find(
+                          (x) => x == "Name" + item.Language.Code
+                        )
+                      )}
+                      helperText={
+                        errors[
+                          Object.keys(errors).find(
+                            (x) => x == "Name" + item.Language.Code
+                          )
+                        ]
+                      }
                     />
                   </div>
                 </div>
@@ -244,11 +253,11 @@ const CurrenciesDrawer = ({
                   <Switch
                     onChange={handleChange}
                     name="ActiveStatus"
-                    value={form.ActiveStatus}
-                    checked={form.ActiveStatus}
+                    value={values.ActiveStatus}
+                    checked={values.ActiveStatus}
                   />
                 }
-                label={form.ActiveStatus ? "Active" : "InActive"}
+                label={values.ActiveStatus ? "Active" : "InActive"}
               />
             </FormGroup>
           </div>
@@ -264,13 +273,7 @@ const CurrenciesDrawer = ({
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={
-        form.conversionRate.toString().replace(/ /g, "") == "" ||
-        currency_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Name.replace(/ /g, "") == ""
-      }
-      alertMessage={"Required Data Are Missing"}
+      disabled={disabled}
       children={
         isLoading ||
         addLoading ||

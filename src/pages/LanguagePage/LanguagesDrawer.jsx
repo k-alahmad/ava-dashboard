@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import PageDrawer from "../../components/Admin/layout/PageDrawer";
 
 import {
   useAddLNGMutation,
@@ -9,17 +8,16 @@ import {
 import {
   CircularProgress,
   TextField,
-  FormGroup,
-  FormControlLabel,
-  Switch,
   InputLabel,
   FormControl,
   Select,
   MenuItem,
-  FormLabel,
 } from "@mui/material";
 import { Directions } from "../../constants";
 import PageModal from "../../components/Admin/layout/PageModal";
+import { showMessage } from "../../redux/messageAction.slice";
+import useForm from "../../hooks/useForm";
+import { useDispatch } from "react-redux";
 const defaultFormState = {
   id: "",
   Name: "",
@@ -27,7 +25,16 @@ const defaultFormState = {
   Direction: "ltr",
 };
 const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
-  const [form, setForm] = useState(defaultFormState);
+  const {
+    errors,
+    handleChange,
+    handleSubmit,
+    setValues,
+    values,
+    disabled,
+    setErrors,
+  } = useForm(submit, defaultFormState);
+  const dispatch = useDispatch();
   const [
     getLNGById,
     { data, isLoading, isFetching, isError, error, isSuccess },
@@ -42,53 +49,46 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       if (drawerID !== "") {
         getLNGById({ id: drawerID });
         if (isSuccess) {
-          setForm(data);
+          setValues(data);
         }
       } else {
-        setForm(defaultFormState);
+        setValues(defaultFormState);
       }
     }
   }, [drawerID, data, drawerOpen]);
 
-  function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.type === "checkbox" ? e.target.checked : e.target.value,
-    });
-  }
-
   useEffect(() => {
     if (addSuccess || updateSuccess) {
-      setForm(defaultFormState);
+      setValues(defaultFormState);
       closeDrawer();
     }
   }, [addSuccess, updateSuccess]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
-    setForm(defaultFormState);
+    setValues(defaultFormState);
+    setErrors({});
   };
-  function handleSubmit(event) {
+  function submit(event) {
     event.preventDefault();
 
     if (drawerID == "") {
       //add
       addLNG({
-        form: {
-          Name: form.Name,
-          Code: form.Code,
-          Direction: form.Direction,
+        values: {
+          Name: values.Name,
+          Code: values.Code,
+          Direction: values.Direction,
         },
       });
     } else {
       //update
       updateLNG({
         id: drawerID,
-        form: {
-          Name: form.Name,
-          Code: form.Code,
-          Direction: form.Direction,
+        values: {
+          Name: values.Name,
+          Code: values.Code,
+          Direction: values.Direction,
         },
       });
     }
@@ -106,10 +106,12 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             label="Name"
             id="Name"
             onChange={handleChange}
-            value={form.Name === "" ? "" : form.Name}
+            value={values.Name === "" ? "" : values.Name}
             variant="outlined"
             size="small"
             required
+            error={Boolean(errors?.Name)}
+            helperText={errors?.Name}
           />
         </div>
         <div className="flex m-4">
@@ -120,10 +122,12 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             label="Code"
             id="Code"
             onChange={handleChange}
-            value={form.Code === "" ? "" : form.Code}
+            value={values.Code === "" ? "" : values.Code}
             variant="outlined"
             size="small"
             required
+            error={Boolean(errors?.Code)}
+            helperText={errors?.Code}
           />
         </div>
         <div className="flex m-4">
@@ -135,7 +139,7 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               labelId="Direction"
               name="Direction"
               id="Direction"
-              value={form.Direction}
+              value={values.Direction}
               label="Content Direction"
               onChange={handleChange}
               MenuProps={{
@@ -161,17 +165,12 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
   return (
     <PageModal
       isOpen={drawerOpen}
-      title={drawerID == "" ? "New Language" : form.Name}
+      title={drawerID == "" ? "New Language" : values.Name}
       newItem={drawerID == "" && true}
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={
-        form.Code.replace(/ /g, "") == "" ||
-        form.Direction.replace(/ /g, "") == "" ||
-        form.Name.replace(/ /g, "") == ""
-      }
-      alertMessage={"Required Data Are Missing"}
+      disabled={disabled}
       children={
         isLoading || addLoading || updateLoading || isFetching ? (
           <div className="flex flex-row justify-center items-center h-full w-full">

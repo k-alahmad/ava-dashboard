@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import {
   IconButton,
   Snackbar,
@@ -26,13 +26,19 @@ function Message(props) {
   const dispatch = useDispatch();
   const state = useSelector(selectState);
   const options = useSelector(selectOptions);
-
+  useEffect(() => {
+    if (state) {
+      setTimeout(() => {
+        dispatch(hideMessage());
+      }, 4000);
+    }
+  }, [state]);
   return (
     <Snackbar
       {...options}
       open={state}
       onClose={() => dispatch(hideMessage())}
-      autoHideDuration={3000}
+      // autoHideDuration={3000}
       ContentProps={{
         variant: "body2",
         headlineMapping: {

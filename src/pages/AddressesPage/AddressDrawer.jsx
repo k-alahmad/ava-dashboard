@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import PageDrawer from "../../components/Admin/layout/PageDrawer";
 import {
   useAddAddressMutation,
   useLazyGetAddressByIdQuery,
@@ -19,6 +18,7 @@ import { API_BASE_URL } from "../../constants";
 import { showMessage } from "../../redux/messageAction.slice";
 import { useDispatch } from "react-redux";
 import PageModal from "../../components/Admin/layout/PageModal";
+import useForm from "../../hooks/useForm";
 const defaultFormState = {
   id: "",
   Image: "",
@@ -36,11 +36,25 @@ const AddressDrawer = ({
   parentId,
   parentName,
 }) => {
-  const [form, setForm] = useState(defaultFormState);
+  const [address_Translation, setAddress_Translation] = useState([]);
+  const {
+    errors,
+    handleChange,
+    handleSubmit,
+    handleTranslationChange,
+    setValues,
+    values,
+    disabled,
+    setErrors,
+  } = useForm(
+    submit,
+    defaultFormState,
+    address_Translation,
+    setAddress_Translation
+  );
   const [image, setImage] = useState();
   const [oldImage, setOldImage] = useState();
   const [imageURL, setImageURL] = useState();
-  const [address_Translation, setAddress_Translation] = useState([]);
   const sliderRef = useRef();
   const [currentSlide, setCurrentSlide] = useState();
   const {
@@ -91,12 +105,12 @@ const AddressDrawer = ({
         getAddressById({ id: drawerID });
         if (isSuccess) {
           setOldImage(data.Image?.URL);
-          setForm(data);
+          setValues(data);
           setAddress_Translation(data.Address_Translation);
           console.log(data.Address_Translation);
         }
       } else {
-        setForm({ ...defaultFormState, AddressID: parentId });
+        setValues({ ...defaultFormState, AddressID: parentId });
         if (lngisSuccess) {
           let translations = [];
           lngs.normalData.map((item) => {
@@ -129,52 +143,34 @@ const AddressDrawer = ({
       setImage(undefined);
     }
     setImage(e.target.files[0]);
-    setForm({ ...form, Image: e.target.files[0] });
+    setValues({ ...values, Image: e.target.files[0] });
   }
-  function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.type === "checkbox" ? e.target.checked : e.target.value,
-    });
-  }
-  function handleTranslationChange(e, item, type) {
-    setAddress_Translation((current) =>
-      current.map((obj) => {
-        if (obj.Language.Code == item.Language.Code) {
-          return {
-            ...obj,
-            Name: type == "Name" ? e.target.value : obj.Name,
-          };
-        }
-        return obj;
-      })
-    );
-  }
+
   useEffect(() => {
     if (addSuccess || updateSuccess || addIsError || updateIsError) {
-      setForm(defaultFormState);
+      setValues(defaultFormState);
       closeDrawer();
     }
   }, [addSuccess, updateSuccess, addIsError, updateIsError]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
-    setForm(defaultFormState);
+    setValues(defaultFormState);
     setImage(null);
     setImageURL(null);
     setOldImage(null);
+    setErrors({});
   };
-  function handleSubmit(event) {
+  function submit(event) {
     event.preventDefault();
 
     const formData = new FormData();
-    formData.append("Latitude", form.Latitude);
-    formData.append("Longitude", form.Longitude);
-    form.AddressID !== "" &&
+    formData.append("Latitude", values.Latitude);
+    formData.append("Longitude", values.Longitude);
+    values.AddressID !== "" &&
       drawerID == "" &&
-      formData.append("AddressID", form.AddressID);
-    formData.append("ActiveStatus", form.ActiveStatus);
+      formData.append("AddressID", values.AddressID);
+    formData.append("ActiveStatus", values.ActiveStatus);
     if (image) formData.append("Image", image);
     for (let i = 0; i < address_Translation.length; i++) {
       formData.append(
@@ -249,24 +245,28 @@ const AddressDrawer = ({
             label="Longitude"
             id="Longitude"
             onChange={handleChange}
-            value={form.Longitude}
+            value={values.Longitude}
             variant="outlined"
             size="small"
             required
+            error={Boolean(errors?.Longitude)}
+            helperText={errors?.Longitude}
           />
         </div>
         <div className="flex m-4">
           <TextField
             fullWidth
-            type="text"
+            type="number"
             name="Latitude"
             label="Latitude"
             id="Latitude"
             onChange={handleChange}
-            value={form.Latitude}
+            value={values.Latitude}
             variant="outlined"
             size="small"
             required
+            error={Boolean(errors?.Latitude)}
+            helperText={errors?.Latitude}
           />
         </div>
         <div className="w-full flex justify-center items-center">
@@ -324,6 +324,18 @@ const AddressDrawer = ({
                     variant="outlined"
                     size="small"
                     required
+                    error={Boolean(
+                      Object.keys(errors).find(
+                        (x) => x == "Name" + item.Language.Code
+                      )
+                    )}
+                    helperText={
+                      errors[
+                        Object.keys(errors).find(
+                          (x) => x == "Name" + item.Language.Code
+                        )
+                      ]
+                    }
                   />
                 </div>
               </div>
@@ -337,11 +349,11 @@ const AddressDrawer = ({
                 <Switch
                   onChange={handleChange}
                   name="ActiveStatus"
-                  value={form.ActiveStatus}
-                  checked={form.ActiveStatus}
+                  value={values.ActiveStatus}
+                  checked={values.ActiveStatus}
                 />
               }
-              label={form.ActiveStatus ? "Active" : "InActive"}
+              label={values.ActiveStatus ? "Active" : "InActive"}
             />
           </FormGroup>
         </div>
@@ -362,15 +374,7 @@ const AddressDrawer = ({
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={
-        form.Longitude.toString().replace(/ /g, "") == "" ||
-        form.Latitude.toString().replace(/ /g, "") == "" ||
-        address_Translation
-          .find((x) => x.Language.Code == "En")
-          .Name.replace(/ /g, "") == "" ||
-        (drawerID == "" && image == undefined)
-      }
-      alertMessage={"Required data Are Missing"}
+      disabled={disabled}
       children={
         isLoading ||
         addLoading ||

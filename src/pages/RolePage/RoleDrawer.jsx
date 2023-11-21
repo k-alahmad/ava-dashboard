@@ -12,15 +12,12 @@ import {
   FormGroup,
   FormControlLabel,
   Switch,
-  InputLabel,
-  FormControl,
-  Select,
-  MenuItem,
-  FormLabel,
 } from "@mui/material";
 import RoleResourceController from "./RoleResourceController";
 import RoleUsers from "./RoleUsers";
-
+import useForm from "../../hooks/useForm";
+import { useDispatch } from "react-redux";
+import { showMessage } from "../../redux/messageAction.slice";
 const defaultFormState = {
   id: "",
   Name: "",
@@ -28,8 +25,17 @@ const defaultFormState = {
   Role_Resources: [],
 };
 const RoleDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
-  const [form, setForm] = useState(defaultFormState);
+  const {
+    errors,
+    handleChange,
+    handleSubmit,
+    setValues,
+    values,
+    disabled,
+    setErrors,
+  } = useForm(submit, defaultFormState);
   const [RoleResources, setRoleResources] = useState([]);
+  const dispatch = useDispatch();
   const [
     getRoleById,
     { data, isLoading, isFetching, isError, error, isSuccess },
@@ -44,22 +50,15 @@ const RoleDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       if (drawerID !== "") {
         getRoleById({ id: drawerID });
         if (isSuccess) {
-          setForm(data);
+          setValues(data);
           setRoleResources(data.Role_Resources);
         }
       } else {
-        setForm(defaultFormState);
+        setValues(defaultFormState);
       }
     }
   }, [drawerID, data, drawerOpen]);
 
-  function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.type === "checkbox" ? e.target.checked : e.target.value,
-    });
-  }
   function changeResourceSettings(e, item, type) {
     setRoleResources((current) =>
       current.map((obj) => {
@@ -98,24 +97,25 @@ const RoleDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
   }
   useEffect(() => {
     if (addSuccess || updateSuccess) {
-      setForm(defaultFormState);
+      setValues(defaultFormState);
       closeDrawer();
     }
   }, [addSuccess, updateSuccess]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
-    setForm(defaultFormState);
+    setValues(defaultFormState);
+    setErrors({});
   };
-  function handleSubmit(event) {
+  function submit(event) {
     event.preventDefault();
 
     if (drawerID == "") {
       //add
       addRole({
         form: {
-          Name: form.Name,
-          ActiveStatus: form.ActiveStatus,
+          Name: values.Name,
+          ActiveStatus: values.ActiveStatus,
         },
       });
     } else {
@@ -123,8 +123,8 @@ const RoleDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       updateRole({
         id: drawerID,
         form: {
-          Name: form.Name,
-          ActiveStatus: form.ActiveStatus,
+          Name: values.Name,
+          ActiveStatus: values.ActiveStatus,
         },
       });
     }
@@ -142,10 +142,12 @@ const RoleDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             label="Name"
             id="nameAr"
             onChange={handleChange}
-            value={form.Name === "" ? "" : form.Name}
+            value={values.Name}
             variant="outlined"
             size="small"
             required
+            error={Boolean(errors?.Name)}
+            helperText={errors?.Name}
           />
         </div>
 
@@ -156,68 +158,66 @@ const RoleDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                 <Switch
                   onChange={handleChange}
                   name="ActiveStatus"
-                  value={form.ActiveStatus}
-                  checked={form.ActiveStatus}
+                  value={values.ActiveStatus}
+                  checked={values.ActiveStatus}
                 />
               }
-              label={form.isActive ? "Active" : "InActive"}
+              label={values.isActive ? "Active" : "InActive"}
             />
           </FormGroup>
         </div>
         <div className="space-y-5">
-          {RoleResources.length !== 0 && (
+          {drawerID !== "" && RoleResources.length !== 0 && (
             <RoleResourceController
               id={drawerID}
               RoleResources={RoleResources}
               changeResourceSettings={changeResourceSettings}
             />
           )}
-          {drawerID !== "" && <RoleUsers id={drawerID} Name={form.Name} />}
+          {drawerID !== "" && <RoleUsers id={drawerID} Name={values.Name} />}
         </div>
       </div>
     </form>
   );
-  return drawerID == "" ? (
-    <PageModal
-      isOpen={drawerOpen}
-      title={"New Role"}
-      newItem={true}
-      editable={true}
-      onCancelClick={closeDrawer}
-      onSaveClick={handleSubmit}
-      disabled={form.Name.replace(/ /g, "") == ""}
-      alertMessage={"Role Name Is Missing"}
-      children={
-        isLoading || addLoading || updateLoading || isFetching ? (
-          <div className="flex flex-row justify-center items-center h-full w-full">
-            <CircularProgress color="primary" />
-          </div>
-        ) : (
-          <div className="text-med font-light">{formElements()}</div>
-        )
-      }
-    />
-  ) : (
-    <PageDrawer
-      isOpen={drawerOpen}
-      title={form.Name}
-      newItem={false}
-      editable={true}
-      onCancelClick={closeDrawer}
-      onSaveClick={handleSubmit}
-      disabled={form.Name.replace(/ /g, "") == ""}
-      alertMessage={"Role Name Is Missing"}
-      modalWidth={"max-w-[70vw]"}
-      children={
-        isLoading || addLoading || updateLoading || isFetching ? (
-          <div className="flex flex-row justify-center items-center h-full w-full">
-            <CircularProgress color="primary" />
-          </div>
-        ) : (
-          <div className="text-med font-light">{formElements()}</div>
-        )
-      }
-    />
+  return (
+    <>
+      <PageDrawer
+        isOpen={drawerOpen && drawerID !== ""}
+        title={values.Name}
+        newItem={false}
+        editable={true}
+        onCancelClick={closeDrawer}
+        onSaveClick={handleSubmit}
+        children={
+          isLoading || addLoading || updateLoading || isFetching ? (
+            <div className="flex flex-row justify-center items-center h-full w-full">
+              <CircularProgress color="primary" />
+            </div>
+          ) : (
+            <div className="text-med font-light">{formElements()}</div>
+          )
+        }
+      />
+      <PageModal
+        isOpen={drawerOpen && drawerID == ""}
+        title={"New Role"}
+        newItem={false}
+        editable={true}
+        onCancelClick={closeDrawer}
+        onSaveClick={handleSubmit}
+        disabled={disabled}
+        modalWidth={"max-w-[70vw]"}
+        children={
+          isLoading || addLoading || updateLoading || isFetching ? (
+            <div className="flex flex-row justify-center items-center h-full w-full">
+              <CircularProgress color="primary" />
+            </div>
+          ) : (
+            <div className="text-med font-light">{formElements()}</div>
+          )
+        }
+      />
+    </>
   );
 };
 

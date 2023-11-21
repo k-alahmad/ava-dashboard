@@ -23,9 +23,9 @@ import {
   MenuItem,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-
 import { Gender } from "../../constants/index";
 import { API_BASE_URL } from "../../constants";
+import useForm from "../../hooks/useForm";
 const defaultFormState = {
   id: "",
   Name: "",
@@ -42,7 +42,15 @@ const defaultFormState = {
   Image: "",
 };
 const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
-  const [form, setForm] = useState(defaultFormState);
+  const {
+    errors,
+    handleChange,
+    values,
+    setValues,
+    handleSubmit,
+    disabled,
+    setErrors,
+  } = useForm(submit, defaultFormState);
   const [image, setImage] = useState();
   const [oldImage, setOldImage] = useState();
   const [imageURL, setImageURL] = useState();
@@ -88,13 +96,15 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
         getUserById({ id: drawerID });
         if (isSuccess) {
           setOldImage(data.Image?.URL);
-          setForm(data);
+          setValues(data);
         }
       } else {
-        setForm(defaultFormState);
+        setValues({
+          ...defaultFormState,
+        });
       }
     }
-  }, [drawerID, data, drawerOpen]);
+  }, [drawerID, data, drawerOpen, rolesSuccess]);
 
   useEffect(() => {
     if (!image) {
@@ -110,52 +120,41 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       setImage(undefined);
     }
     setImage(e.target.files[0]);
-    setForm({ ...form, Image: e.target.files[0] });
+    setValues({ ...values, Image: e.target.files[0] });
   }
-  function handleChange(e) {
-    if (e.target.name == "DOB") {
-      setForm({
-        ...form,
-        DOB: e.target.value + "T00:00:00.000Z",
-      });
-    } else {
-      setForm({
-        ...form,
-        [e.target.name]:
-          e.target.type === "checkbox" ? e.target.checked : e.target.value,
-      });
-    }
-  }
+
   useEffect(() => {
     if (addSuccess || updateSuccess) {
-      setForm(defaultFormState);
+      setValues(defaultFormState);
       closeDrawer();
     }
   }, [addSuccess, updateSuccess]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
-    setForm(defaultFormState);
+    setValues(defaultFormState);
     setImage(null);
+    setErrors({});
     setImageURL(null);
     setOldImage(null);
   };
-  function handleSubmit(event) {
+  function submit(event) {
     event.preventDefault();
+
     const formData = new FormData();
-    formData.append("Name", form.Name);
-    formData.append("Title", form.Title);
-    formData.append("Email", form.Email);
-    formData.append("DOB", form.DOB);
-    formData.append("Gender", form.Gender);
-    formData.append("PhoneNo", form.PhoneNo);
-    formData.append("roleID", form.roleID);
-    formData.append("addressId", form.addressId);
-    formData.append("teamID", form.teamID);
-    formData.append("ActiveStatus", form.ActiveStatus);
+    formData.append("Name", values.Name);
+    formData.append("Title", values.Title);
+    formData.append("Email", values.Email);
+    formData.append("DOB", values.DOB);
+    formData.append("Gender", values.Gender);
+    formData.append("PhoneNo", values.PhoneNo);
+    formData.append("roleID", values.roleID);
+    formData.append("addressId", values.addressId);
+    formData.append("teamID", values.teamID);
+    formData.append("ActiveStatus", values.ActiveStatus);
     image && formData.append("Image", image);
     if (drawerID == "") {
-      formData.append("Password", form.Password);
+      formData.append("Password", values.Password);
 
       //add
       addUser({ formData });
@@ -208,18 +207,19 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             </div>
           )}
         </div>
-        <div className="flex m-4">
+        <div className="flex flex-col m-4">
           <TextField
             fullWidth
             type="text"
             name="Name"
-            label="Name"
+            label="Name *"
             id="Name"
             onChange={handleChange}
-            value={form.Name === "" ? "" : form.Name}
+            value={values.Name}
             variant="outlined"
             size="small"
-            required
+            error={Boolean(errors?.Name)}
+            helperText={errors?.Name}
           />
         </div>
         <div className="flex m-4">
@@ -230,13 +230,15 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             label="Title"
             id="Title"
             onChange={handleChange}
-            value={form.Title === "" ? "" : form.Title}
+            value={values.Title}
             variant="outlined"
             size="small"
             required
+            error={Boolean(errors?.Title)}
+            helperText={errors?.Title}
           />
         </div>
-        <div className="flex m-4">
+        <div className="flex flex-col m-4">
           <TextField
             fullWidth
             type="text"
@@ -244,11 +246,13 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             label="Email"
             id="Email"
             onChange={handleChange}
-            value={form.Email === "" ? "" : form.Email}
+            value={values.Email}
             variant="outlined"
             size="small"
             required
             disabled={drawerID !== ""}
+            error={Boolean(errors?.Email)}
+            helperText={errors?.Email}
           />
         </div>
         {drawerID == "" && (
@@ -260,10 +264,12 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               label="Password"
               id="Password"
               onChange={handleChange}
-              value={form.Password === "" ? "" : form.Password}
+              value={values.Password}
               variant="outlined"
               size="small"
               required
+              error={Boolean(errors?.Password)}
+              helperText={errors?.Password}
             />
           </div>
         )}
@@ -275,10 +281,12 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             label="Phone Number"
             id="PhoneNo"
             onChange={handleChange}
-            value={form.PhoneNo === "" ? "" : form.PhoneNo}
+            value={values.PhoneNo}
             variant="outlined"
             size="small"
             required
+            error={Boolean(errors?.PhoneNo)}
+            helperText={errors?.PhoneNo}
           />
         </div>
         <div className=" m-4">
@@ -289,11 +297,11 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             name="DOB"
             id="DOB"
             onChange={handleChange}
-            value={
-              form.DOB?.split("T")[0] === "" ? "" : form.DOB?.split("T")[0]
-            }
+            value={values.DOB?.split("T")[0]}
             variant="outlined"
             size="small"
+            error={Boolean(errors?.DOB)}
+            helperText={errors?.DOB}
           />
         </div>
         <div className="flex m-4">
@@ -303,7 +311,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               labelId="Gender"
               name="Gender"
               id="Gender"
-              value={form.Gender}
+              value={values.Gender}
               label="Gender"
               onChange={handleChange}
               MenuProps={{
@@ -330,7 +338,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                 labelId="roleID"
                 name="roleID"
                 id="roleID"
-                value={form.roleID}
+                value={values.roleID}
                 label="Role"
                 onChange={handleChange}
                 MenuProps={{
@@ -340,8 +348,8 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                   },
                 }}
                 onClose={() => setSelectSearchTerm("")}
-                // renderValue={() => form.roleID}
                 onAnimationEnd={() => selectSearchInput.current?.focus()}
+                error={Boolean(errors?.roleID)}
               >
                 <ListSubheader>
                   <TextField
@@ -385,6 +393,9 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                     );
                 })}
               </Select>
+              <p className="text-red-500 text-[14px] mx-4 font-[400]">
+                {errors?.roleID}
+              </p>
             </FormControl>
           </div>
         )}
@@ -396,7 +407,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                 labelId="teamID"
                 name="teamID"
                 id="teamID"
-                value={form.teamID}
+                value={values.teamID}
                 label="Team"
                 onChange={handleChange}
                 MenuProps={{
@@ -407,6 +418,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                 }}
                 onClose={() => setSelectSearchTerm("")}
                 onAnimationEnd={() => selectSearchInput.current?.focus()}
+                error={Boolean(errors?.teamID)}
               >
                 <ListSubheader>
                   <TextField
@@ -449,6 +461,9 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                     );
                 })}
               </Select>
+              <p className="text-red-500 text-[14px] mx-4 font-[400]">
+                {errors?.teamID}
+              </p>
             </FormControl>
           </div>
         )}
@@ -460,7 +475,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                 labelId="addressId"
                 name="addressId"
                 id="addressId"
-                value={form.addressId}
+                value={values.addressId}
                 label="Address"
                 onChange={handleChange}
                 MenuProps={{
@@ -471,6 +486,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                 }}
                 onClose={() => setSelectSearchTerm("")}
                 onAnimationEnd={() => selectSearchInput.current?.focus()}
+                error={Boolean(errors?.addressId)}
               >
                 <ListSubheader>
                   <TextField
@@ -519,6 +535,9 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                     );
                 })}
               </Select>
+              <p className="text-red-500 text-[14px] mx-4 font-[400]">
+                {errors?.addressId}
+              </p>
             </FormControl>
           </div>
         )}
@@ -530,11 +549,11 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                 <Switch
                   onChange={handleChange}
                   name="ActiveStatus"
-                  value={form.ActiveStatus}
-                  checked={form.ActiveStatus}
+                  value={values.ActiveStatus}
+                  checked={values.ActiveStatus}
                 />
               }
-              label={form.ActiveStatus ? "Active" : "InActive"}
+              label={values.ActiveStatus ? "Active" : "InActive"}
             />
           </FormGroup>
         </div>
@@ -544,24 +563,12 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
   return (
     <PageDrawer
       isOpen={drawerOpen}
-      title={drawerID == "" ? "New User" : form.Email}
+      title={drawerID == "" ? "New User" : values.Name}
       newItem={drawerID == "" && true}
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={
-        form.Name.replace(/ /g, "") == "" ||
-        form.Email.replace(/ /g, "") == "" ||
-        form.DOB?.replace(/ /g, "") == "" ||
-        (drawerID == "" && form.Password.replace(/ /g, "") == "") ||
-        form.PhoneNo?.replace(/ /g, "") == "" ||
-        form.Gender?.replace(/ /g, "") == "" ||
-        form.roleID?.replace(/ /g, "") == "" ||
-        form.teamID?.replace(/ /g, "") == "" ||
-        form.addressId?.replace(/ /g, "") == "" ||
-        (drawerID == "" && image == undefined)
-      }
-      alertMessage={"Required data Are Missing"}
+      disabled={disabled}
       children={
         isLoading ||
         addLoading ||

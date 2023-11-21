@@ -73,7 +73,7 @@ export default function PageDrawer({
                 Cancel
               </div>
               <button
-                onClick={disabled ? () => alert(alertMessage) : onSaveClick}
+                onClick={onSaveClick}
                 className={`cursor-pointer ${
                   disabled ? "text-gray-600" : "text-primary"
                 }`}

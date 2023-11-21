@@ -24,7 +24,7 @@ const messageSlice = createSlice({
       };
     },
     hideMessage: (state, action) => {
-      state.state = null;
+      state.state = false;
     },
   },
 });

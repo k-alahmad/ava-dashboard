@@ -20,6 +20,9 @@ import {
 } from "@mui/material";
 import Button from "../../components/UI/Button";
 import { API_BASE_URL, Announcement_Type } from "../../constants";
+import { showMessage } from "../../redux/messageAction.slice";
+import useForm from "../../hooks/useForm";
+import { useDispatch } from "react-redux";
 const defaultFormState = {
   id: "",
   StartDate: "",
@@ -38,15 +41,30 @@ const AnnouncementDrawer = ({
   drawerID,
   setDrawerID,
 }) => {
-  const [form, setForm] = useState(defaultFormState);
-  const [image, setImage] = useState();
-  const [oldImage, setOldImage] = useState();
-  const [imageURL, setImageURL] = useState();
   const [announcements_Translation, setAnnouncements_Translation] = useState(
     []
   );
+  const {
+    errors,
+    handleChange,
+    handleSubmit,
+    handleTranslationChange,
+    setValues,
+    values,
+    disabled,
+    setErrors,
+  } = useForm(
+    submit,
+    defaultFormState,
+    announcements_Translation,
+    setAnnouncements_Translation
+  );
+  const [image, setImage] = useState();
+  const [oldImage, setOldImage] = useState();
+  const [imageURL, setImageURL] = useState();
   const sliderRef = useRef();
   const [currentSlide, setCurrentSlide] = useState();
+  const dispatch = useDispatch();
   const {
     data: lngs,
     isLoading: lngIsLoading,
@@ -85,11 +103,11 @@ const AnnouncementDrawer = ({
         getAnnouncementById({ id: drawerID });
         if (isSuccess) {
           setOldImage(data.Image?.URL);
-          setForm(data);
+          setValues(data);
           setAnnouncements_Translation(data.Announcements_Translation);
         }
       } else {
-        setForm(defaultFormState);
+        setValues(defaultFormState);
         if (lngisSuccess) {
           let translations = [];
           lngs.normalData.map((item) => {
@@ -124,56 +142,35 @@ const AnnouncementDrawer = ({
       setImage(undefined);
     }
     setImage(e.target.files[0]);
-    setForm({ ...form, Image: e.target.files[0] });
+    setValues({ ...values, Image: e.target.files[0] });
   }
-  function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.type === "checkbox" ? e.target.checked : e.target.value,
-    });
-  }
-  function handleTranslationChange(e, item, type) {
-    setAnnouncements_Translation((current) =>
-      current.map((obj) => {
-        if (obj.Language.Code == item.Language.Code) {
-          return {
-            ...obj,
-            Title: type == "Title" ? e.target.value : obj.Title,
-            Description:
-              type == "Description" ? e.target.value : obj.Description,
-            ButtonName: type == "ButtonName" ? e.target.value : obj.ButtonName,
-          };
-        }
-        return obj;
-      })
-    );
-  }
+
   useEffect(() => {
     if (addSuccess || updateSuccess || addIsError || updateIsError) {
-      setForm(defaultFormState);
+      setValues(defaultFormState);
       closeDrawer();
     }
   }, [addSuccess, updateSuccess, addIsError, updateIsError]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
-    setForm(defaultFormState);
+    setValues(defaultFormState);
     setImage(null);
     setImageURL(null);
     setOldImage(null);
     setAnnouncements_Translation([]);
     setCurrentSlide();
+    setErrors({});
   };
-  function handleSubmit(event) {
+  function submit(event) {
     event.preventDefault();
     const formData = new FormData();
-    formData.append("ActiveStatus", form.ActiveStatus);
-    formData.append("Type", form.Type);
-    formData.append("Link", form.Link);
-    formData.append("Rank", form.Rank);
-    formData.append("StartDate", form.StartDate);
-    formData.append("EndDate", form.EndDate);
+    formData.append("ActiveStatus", values.ActiveStatus);
+    formData.append("Type", values.Type);
+    formData.append("Link", values.Link);
+    formData.append("Rank", values.Rank);
+    formData.append("StartDate", values.StartDate);
+    formData.append("EndDate", values.EndDate);
     if (image) formData.append("Image", image);
     for (let i = 0; i < announcements_Translation.length; i++) {
       formData.append(
@@ -253,7 +250,7 @@ const AnnouncementDrawer = ({
               label="Link"
               id="Link"
               onChange={handleChange}
-              value={form.Link}
+              value={values.Link}
               variant="outlined"
               size="small"
             />
@@ -266,10 +263,12 @@ const AnnouncementDrawer = ({
               label="Rank"
               id="Rank"
               onChange={handleChange}
-              value={form.Rank}
+              value={values.Rank}
               variant="outlined"
               size="small"
               required
+              error={Boolean(errors?.Rank)}
+              helperText={errors.Rank}
             />
           </div>
           {Announcement_Type.length > 0 && (
@@ -280,7 +279,7 @@ const AnnouncementDrawer = ({
                   labelId="Type"
                   name="Type"
                   id="Type"
-                  value={form.Type}
+                  value={values.Type}
                   label="Author"
                   onChange={handleChange}
                   MenuProps={{
@@ -310,10 +309,12 @@ const AnnouncementDrawer = ({
               name="StartDate"
               id="StartDate"
               onChange={handleChange}
-              value={form.StartDate?.split("T")[0]}
+              value={values.StartDate?.split("T")[0]}
               variant="outlined"
               size="small"
               required
+              error={Boolean(errors?.StartDate)}
+              helperText={errors?.StartDate}
             />
           </div>
           <div className=" m-4">
@@ -325,10 +326,12 @@ const AnnouncementDrawer = ({
               id="EndDate"
               defaultValue="2023-01-1"
               onChange={handleChange}
-              value={form.EndDate?.split("T")[0]}
+              value={values.EndDate?.split("T")[0]}
               variant="outlined"
               size="small"
               required
+              error={Boolean(errors?.EndDate)}
+              helperText={errors?.EndDate}
             />
           </div>
 
@@ -374,7 +377,7 @@ const AnnouncementDrawer = ({
           >
             {announcements_Translation.map((item, index) => {
               return (
-                <div key={index} className="pb-12">
+                <div key={index}>
                   <div className="flex m-4">
                     <TextField
                       fullWidth
@@ -388,14 +391,25 @@ const AnnouncementDrawer = ({
                       value={item.Title}
                       variant="outlined"
                       size="small"
-                      required={item.Language.Code == "En"}
+                      error={Boolean(
+                        Object.keys(errors).find(
+                          (x) => x == "Title" + item.Language.Code
+                        )
+                      )}
+                      helperText={
+                        errors[
+                          Object.keys(errors).find(
+                            (x) => x == "Title" + item.Language.Code
+                          )
+                        ]
+                      }
                     />
                   </div>
                   <div className="flex m-4">
                     <TextField
                       fullWidth
                       type="text"
-                      name={"Name" + item.Language.Code}
+                      name={"Description" + item.Language.Code}
                       label={`${item.Language.Name} Description`}
                       id={"Description" + item.Language.Code}
                       onChange={(e) =>
@@ -404,9 +418,20 @@ const AnnouncementDrawer = ({
                       value={item.Description}
                       variant="outlined"
                       size="small"
-                      required={item.Language.Code == "En"}
                       multiline
                       rows={5}
+                      error={Boolean(
+                        Object.keys(errors).find(
+                          (x) => x == "Description" + item.Language.Code
+                        )
+                      )}
+                      helperText={
+                        errors[
+                          Object.keys(errors).find(
+                            (x) => x == "Description" + item.Language.Code
+                          )
+                        ]
+                      }
                     />
                   </div>
                   <div className="flex m-4">
@@ -436,11 +461,11 @@ const AnnouncementDrawer = ({
                   <Switch
                     onChange={handleChange}
                     name="ActiveStatus"
-                    value={form.ActiveStatus}
-                    checked={form.ActiveStatus}
+                    value={values.ActiveStatus}
+                    checked={values.ActiveStatus}
                   />
                 }
-                label={form.ActiveStatus ? "Active" : "InActive"}
+                label={values.ActiveStatus ? "Active" : "InActive"}
               />
             </FormGroup>
           </div>
@@ -451,25 +476,12 @@ const AnnouncementDrawer = ({
   return (
     <PageDrawer
       isOpen={drawerOpen}
-      title={drawerID == "" ? "New Announcement" : form.titleEn}
+      title={drawerID == "" ? "New Announcement" : values.titleEn}
       newItem={drawerID == "" && true}
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={
-        form.Rank?.toString().replace(/ /g, "") == "" ||
-        (form.Type !== "Normal" && form.Type !== "Popup") ||
-        form.StartDate.replace(/ /g, "") == "" ||
-        form.EndDate.replace(/ /g, "") == "" ||
-        announcements_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Title.replace(/ /g, "") == "" ||
-        announcements_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Description.replace(/ /g, "") == "" ||
-        (drawerID == "" && image == undefined)
-      }
-      alertMessage={"Required Data Are Missing"}
+      disabled={disabled}
       children={
         isLoading ||
         addLoading ||

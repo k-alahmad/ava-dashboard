@@ -255,10 +255,10 @@ const UserPage = () => {
             <div className="flex m-4">
               <TextField
                 fullWidth
-                type="password"
-                name="Password"
+                type="text"
+                name="Pass"
                 label="Password"
-                id="Password"
+                id="Pass"
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 variant="outlined"
@@ -269,10 +269,10 @@ const UserPage = () => {
             <div className="flex m-4">
               <TextField
                 fullWidth
-                type="password"
-                name="Re-Password"
+                type="text"
+                name="Re-Pass"
                 label="Re-Type Password"
-                id="Re-Password"
+                id="Re-Pass"
                 onChange={(e) => setPasswordTwo(e.target.value)}
                 value={passwordTwo}
                 variant="outlined"

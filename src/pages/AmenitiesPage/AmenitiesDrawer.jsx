@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import PageDrawer from "../../components/Admin/layout/PageDrawer";
 import {
   useAddAmenityMutation,
   useLazyGetAmenityByIdQuery,
@@ -11,6 +10,9 @@ import { CircularProgress, TextField } from "@mui/material";
 import Button from "../../components/UI/Button";
 import { API_BASE_URL } from "../../constants";
 import PageModal from "../../components/Admin/layout/PageModal";
+import { showMessage } from "../../redux/messageAction.slice";
+import useForm from "../../hooks/useForm";
+import { useDispatch } from "react-redux";
 const defaultFormState = {
   id: "",
   Image: "",
@@ -22,13 +24,28 @@ const AmenityDrawer = ({
   drawerID,
   setDrawerID,
 }) => {
-  const [form, setForm] = useState(defaultFormState);
+  const [amenities_Translation, setAmenities_Translation] = useState([]);
+  const {
+    errors,
+    handleChange,
+    handleSubmit,
+    handleTranslationChange,
+    setValues,
+    values,
+    disabled,
+    setErrors,
+  } = useForm(
+    submit,
+    defaultFormState,
+    amenities_Translation,
+    setAmenities_Translation
+  );
   const [image, setImage] = useState();
   const [oldImage, setOldImage] = useState();
   const [imageURL, setImageURL] = useState();
-  const [amenities_Translation, setAmenities_Translation] = useState([]);
   const sliderRef = useRef();
   const [currentSlide, setCurrentSlide] = useState();
+  const dispatch = useDispatch();
   const {
     data: lngs,
     isLoading: lngIsLoading,
@@ -67,11 +84,11 @@ const AmenityDrawer = ({
         getAmenityById({ id: drawerID });
         if (isSuccess) {
           setOldImage(data.Image?.URL);
-          setForm(data);
+          setValues(data);
           setAmenities_Translation(data.Aminities_Translation);
         }
       } else {
-        setForm(defaultFormState);
+        setValues(defaultFormState);
         if (lngisSuccess) {
           let translations = [];
           lngs.normalData.map((item) => {
@@ -105,47 +122,27 @@ const AmenityDrawer = ({
       setImage(undefined);
     }
     setImage(e.target.files[0]);
-    setForm({ ...form, Image: e.target.files[0] });
+    setValues({ ...values, Image: e.target.files[0] });
   }
-  function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.type === "checkbox" ? e.target.checked : e.target.value,
-    });
-  }
-  function handleTranslationChange(e, item, type) {
-    setAmenities_Translation((current) =>
-      current.map((obj) => {
-        if (obj.Language.Code == item.Language.Code) {
-          return {
-            ...obj,
-            Name: type == "Name" ? e.target.value : obj.Name,
-            Description:
-              type == "Description" ? e.target.value : obj.Description,
-          };
-        }
-        return obj;
-      })
-    );
-  }
+
   useEffect(() => {
     if (addSuccess || updateSuccess || addIsError || updateIsError) {
-      setForm(defaultFormState);
+      setValues(defaultFormState);
       closeDrawer();
     }
   }, [addSuccess, updateSuccess, addIsError, updateIsError]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
-    setForm(defaultFormState);
+    setValues(defaultFormState);
     setImage(null);
     setImageURL(null);
     setOldImage(null);
     setAmenities_Translation([]);
     setCurrentSlide();
+    setErrors({});
   };
-  function handleSubmit(event) {
+  function submit(event) {
     event.preventDefault();
     const formData = new FormData();
     if (image) formData.append("Image", image);
@@ -270,6 +267,18 @@ const AmenityDrawer = ({
                       variant="outlined"
                       size="small"
                       required
+                      error={Boolean(
+                        Object.keys(errors).find(
+                          (x) => x == "Name" + item.Language.Code
+                        )
+                      )}
+                      helperText={
+                        errors[
+                          Object.keys(errors).find(
+                            (x) => x == "Name" + item.Language.Code
+                          )
+                        ]
+                      }
                     />
                   </div>
                   <div className="flex m-4">
@@ -286,6 +295,18 @@ const AmenityDrawer = ({
                       variant="outlined"
                       size="small"
                       required
+                      error={Boolean(
+                        Object.keys(errors).find(
+                          (x) => x == "Description" + item.Language.Code
+                        )
+                      )}
+                      helperText={
+                        errors[
+                          Object.keys(errors).find(
+                            (x) => x == "Description" + item.Language.Code
+                          )
+                        ]
+                      }
                     />
                   </div>
                 </div>
@@ -308,16 +329,7 @@ const AmenityDrawer = ({
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={
-        amenities_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Name.replace(/ /g, "") == "" ||
-        amenities_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Description.replace(/ /g, "") == "" ||
-        (drawerID == "" && image == undefined)
-      }
-      alertMessage={"Required Data Are Missing"}
+      disabled={disabled}
       children={
         isLoading ||
         addLoading ||

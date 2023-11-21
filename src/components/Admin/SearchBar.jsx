@@ -7,7 +7,7 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 const SearchBar = (props) => {
   return (
     <Paper
-      className="flex p-4 items-center w-full max-w-[384px] px-8 py-2 rounded font-regular"
+      className="flex p-4 items-center w-full max-w-[500px] px-8 py-2 rounded font-regular"
       elevation={1}
     >
       {/* <Icon className="mr-8" color="action"> */}
@@ -18,12 +18,17 @@ const SearchBar = (props) => {
         className="flex flex-1 font-regular"
         disableUnderline
         fullWidth
+        type="text"
+        id="table-search"
         value={props.searchText}
         inputProps={{
           "aria-label": "Search",
+          "aria-autocomplete": "none",
         }}
         onChange={props.handleChangeTextBox}
-        style={{ fontFamily: "FMed", fontSize: "24px" }}
+        style={{ fontSize: "24px" }}
+        autoComplete="off"
+        aria-autocomplete="none"
       />
     </Paper>
   );

@@ -15,6 +15,9 @@ import {
 } from "@mui/material";
 import TeamUsers from "./TeamUsers";
 import { API_BASE_URL } from "../../constants";
+import useForm from "../../hooks/useForm";
+import { showMessage } from "../../redux/messageAction.slice";
+import { useDispatch } from "react-redux";
 const defaultFormState = {
   id: "",
   Title: "",
@@ -24,11 +27,19 @@ const defaultFormState = {
   ActiveStatus: true,
 };
 const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
-  const [form, setForm] = useState(defaultFormState);
+  const {
+    handleChange,
+    handleSubmit,
+    errors,
+    setValues,
+    values,
+    disabled,
+    setErrors,
+  } = useForm(submit, defaultFormState);
   const [image, setImage] = useState();
   const [oldImage, setOldImage] = useState();
   const [imageURL, setImageURL] = useState();
-
+  const dispatch = useDispatch();
   const [
     getTeamById,
     { data, isLoading, isFetching, isError, error, isSuccess },
@@ -44,10 +55,10 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
         getTeamById({ id: drawerID });
         if (isSuccess) {
           setOldImage(data.Image?.URL);
-          setForm(data);
+          setValues(data);
         }
       } else {
-        setForm(defaultFormState);
+        setValues(defaultFormState);
       }
     }
   }, [drawerID, data, drawerOpen]);
@@ -65,36 +76,30 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       setImage(undefined);
     }
     setImage(e.target.files[0]);
-    setForm({ ...form, Image: e.target.files[0] });
-  }
-  function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.type === "checkbox" ? e.target.checked : e.target.value,
-    });
+    setValues({ ...values, Image: e.target.files[0] });
   }
   useEffect(() => {
     if (addSuccess || updateSuccess) {
-      setForm(defaultFormState);
+      setValues(defaultFormState);
       closeDrawer();
     }
   }, [addSuccess, updateSuccess]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
-    setForm(defaultFormState);
+    setValues(defaultFormState);
     setImage(null);
     setImageURL(null);
     setOldImage(null);
+    setErrors({});
   };
-  function handleSubmit(event) {
+  function submit(event) {
     event.preventDefault();
     const formData = new FormData();
-    formData.append("Title", form.Title);
-    formData.append("Description", form.Description);
-    formData.append("ActiveStatus", form.ActiveStatus);
-    formData.append("ViewTag", form.ViewTag);
+    formData.append("Title", values.Title);
+    formData.append("Description", values.Description);
+    formData.append("ActiveStatus", values.ActiveStatus);
+    formData.append("ViewTag", values.ViewTag);
     if (image) formData.append("Image", image);
     if (drawerID == "") {
       //add
@@ -162,10 +167,12 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             label="Title"
             id="Title"
             onChange={handleChange}
-            value={form.Title === "" ? "" : form.Title}
+            value={values.Title}
             variant="outlined"
             size="small"
             required
+            error={Boolean(errors?.Title)}
+            helperText={errors?.Title}
           />
         </div>
         <div className="flex m-4">
@@ -176,12 +183,14 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             label="Description"
             id="Description"
             onChange={handleChange}
-            value={form.Description === "" ? "" : form.Description}
+            value={values.Description}
             variant="outlined"
             size="small"
             required
             multiline
             rows={5}
+            error={Boolean(errors?.Description)}
+            helperText={errors?.Description}
           />
         </div>
         <div className="flex m-4">
@@ -191,11 +200,11 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                 <Switch
                   onChange={handleChange}
                   name="ViewTag"
-                  value={form.ViewTag}
-                  checked={form.ViewTag}
+                  value={values.ViewTag}
+                  checked={values.ViewTag}
                 />
               }
-              label={form.ViewTag ? "View In Website" : "Hide In Website"}
+              label={values.ViewTag ? "View In Website" : "Hide In Website"}
             />
           </FormGroup>
         </div>
@@ -206,34 +215,31 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                 <Switch
                   onChange={handleChange}
                   name="ActiveStatus"
-                  value={form.ActiveStatus}
-                  checked={form.ActiveStatus}
+                  value={values.ActiveStatus}
+                  checked={values.ActiveStatus}
                 />
               }
-              label={form.isActive ? "Active" : "InActive"}
+              label={values.isActive ? "Active" : "InActive"}
             />
           </FormGroup>
         </div>
-        <div className="space-y-5">
-          <TeamUsers id={drawerID} Title={form.Title} />
-        </div>
+        {drawerID !== "" && (
+          <div className="space-y-5">
+            <TeamUsers id={drawerID} Title={values.Title} />
+          </div>
+        )}
       </div>
     </form>
   );
   return (
     <PageDrawer
       isOpen={drawerOpen}
-      title={drawerID == "" ? "New Team" : form.Title}
+      title={drawerID == "" ? "New Team" : values.Title}
       newItem={drawerID == "" && true}
       editable={true}
       onCancelClick={closeDrawer}
+      disabled={disabled}
       onSaveClick={handleSubmit}
-      disabled={
-        form.Title.replace(/ /g, "") == "" ||
-        form.Description.replace(/ /g, "") == "" ||
-        form.Image == ""
-      }
-      alertMessage={"Required data Are Missing"}
       children={
         isLoading || addLoading || updateLoading || isFetching ? (
           <div className="flex flex-row justify-center items-center h-full w-full">

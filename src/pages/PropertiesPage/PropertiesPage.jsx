@@ -187,6 +187,7 @@ const PropertyPage = () => {
                         setDrawerID(row.original?.id);
                         setDrawerOpen(true);
                       }}
+                      isShown
                     />
                     <AdminTable
                       key={1}

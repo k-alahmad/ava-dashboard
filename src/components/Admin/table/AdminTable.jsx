@@ -146,19 +146,21 @@ const AdminTable = ({
                 {headerGroup.headers.map((column, i) => (
                   <TableCell
                     key={i}
-                    className="whitespace-no-wrap !p-6 !sticky"
+                    className="whitespace-no-wrap !sticky !m-0 !p-3 !font-bold"
                     {...(!column.sortable
                       ? column.getHeaderProps()
                       : column.getHeaderProps(column.getSortByToggleProps()))}
                   >
-                    {column.render("Header")}
-                    {column.sortable ? (
-                      <TableSortLabel
-                        active={column.isSorted}
-                        // react-table has a unsorted state which is not treated here
-                        direction={column.isSortedDesc ? "desc" : "asc"}
-                      />
-                    ) : null}
+                    <div className="w-full h-full flex justify-center items-center text-center">
+                      {column.render("Header")}
+                      {column.sortable ? (
+                        <TableSortLabel
+                          active={column.isSorted}
+                          // react-table has a unsorted state which is not treated here
+                          direction={column.isSortedDesc ? "desc" : "asc"}
+                        />
+                      ) : null}
+                    </div>
                   </TableCell>
                 ))}
               </TableRow>
@@ -198,24 +200,26 @@ const AdminTable = ({
                       <TableCell
                         key={c}
                         {...cell.getCellProps()}
-                        className={clsx("!p-6 relative", cell.column.className)}
+                        className={clsx("!p-3 relative", cell.column.className)}
+                        onMouseEnter={() => {
+                          setCellName(cell.column.id);
+                          if (cell.column.hover) {
+                            setRowId(row.id);
+                            onMouseChange(true);
+                          }
+                        }}
+                        onMouseLeave={() => {
+                          setCellName();
+                          if (cell.column.hover) {
+                            setRowId("");
+                            onMouseChange(false);
+                          }
+                        }}
                       >
                         <div
-                          onMouseEnter={() => {
-                            setCellName(cell.column.id);
-                            if (cell.column.hover) {
-                              setRowId(row.id);
-                              onMouseChange(true);
-                            }
-                          }}
-                          onMouseLeave={() => {
-                            setCellName();
-                            if (cell.column.hover) {
-                              setRowId("");
-                              onMouseChange(false);
-                            }
-                          }}
-                          className="overflow-ellipsis whitespace-nowrap overflow-hidden font-regular text-[18px] min-w-[150px] max-w-[250px]"
+                          className={`overflow-ellipsis whitespace-nowrap overflow-hidden font-regular text-[18px] ${
+                            cell.column.id == "Image" && "min-w-[150px]"
+                          } max-w-[250px]`}
                         >
                           {cell.render("Cell")}
                         </div>
@@ -227,10 +231,10 @@ const AdminTable = ({
                             isShown
                               ? "scale-100"
                               : "scale-0"
-                          } z-50 transition-all duration-200 origin-top-left ease-out bg-primary absolute top-[60%] left-[5%] p-4 rounded-md text-secondary m-auto text-[20px]`}
+                          } z-50 transition-all duration-200 origin-top-left ease-out bg-primary absolute top-0 left-0 p-4 rounded-md text-secondary m-auto text-[20px] h-full`}
                         >
                           <Typography className="w-[250px] inline !font-semibold text-[20px]">
-                            {cellName} : <br /> {cell.render("Cell")}
+                            {cell.render("Cell")}
                           </Typography>
                         </div>
                       </TableCell>

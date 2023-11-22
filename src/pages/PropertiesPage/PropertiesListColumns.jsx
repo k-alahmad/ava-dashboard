@@ -13,6 +13,7 @@ export const ComposeColumns = (onDelete) => {
       show: false,
       checked: true,
       lockToggle: false,
+      hover: true,
     },
     {
       Header: "Price",

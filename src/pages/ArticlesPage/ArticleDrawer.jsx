@@ -207,7 +207,7 @@ const ArticleDrawer = ({
 
   const formElements = () => {
     return (
-      <values ref={formRef} className="flex flex-col justify-center">
+      <form ref={formRef} className="flex flex-col justify-center">
         <div className="py-1 mx-8">
           <div className="flex flex-row items-center justify-center">
             <div className="flex flex-col m-4">
@@ -281,7 +281,7 @@ const ArticleDrawer = ({
                     },
                   }}
                   onClose={() => setSelectSearchTerm("")}
-                  onAnimationEnd={() => selectSearchInput.current.focus()}
+                  onAnimationEnd={() => selectSearchInput.current?.focus()}
                   error={Boolean(errors?.usersID)}
                 >
                   <ListSubheader>
@@ -478,7 +478,7 @@ const ArticleDrawer = ({
             </FormGroup>
           </div>
         </div>
-      </values>
+      </form>
     );
   };
   return (

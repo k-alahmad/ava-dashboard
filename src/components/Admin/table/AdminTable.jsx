@@ -198,61 +198,41 @@ const AdminTable = ({
                       <TableCell
                         key={c}
                         {...cell.getCellProps()}
-                        className={clsx("!p-6 ", cell.column.className)}
-                        onMouseEnter={() => {
-                          setCellName(cell.column.id);
-                          if (cell.column.hover) {
-                            setRowId(row.id);
-                            onMouseChange(true);
-                          }
-                        }}
-                        onMouseLeave={() => {
-                          setCellName();
-                          if (cell.column.hover) {
-                            setRowId("");
-                            onMouseChange(false);
-                          }
-                        }}
+                        className={clsx("!p-6 relative", cell.column.className)}
                       >
                         <div
-                          style={{
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            fontFamily: "regular",
-                            fontSize: "18px",
-                            maxWidth: "250px",
+                          onMouseEnter={() => {
+                            setCellName(cell.column.id);
+                            if (cell.column.hover) {
+                              setRowId(row.id);
+                              onMouseChange(true);
+                            }
                           }}
+                          onMouseLeave={() => {
+                            setCellName();
+                            if (cell.column.hover) {
+                              setRowId("");
+                              onMouseChange(false);
+                            }
+                          }}
+                          className="overflow-ellipsis whitespace-nowrap overflow-hidden font-regular text-[18px] min-w-[150px] max-w-[250px]"
                         >
                           {cell.render("Cell")}
                         </div>
-                        {cell.column.id === cellName &&
-                        rowId === row.id &&
-                        isShown ? (
-                          <div
-                            style={{
-                              backgroundColor: "grey",
-                              position: "fixed",
-                              padding: "15px",
-                              borderRadius: "20px",
-                              color: "white",
-                              margin: "auto",
-                              fontFamily: "regular",
-                              fontSize: "20px",
-                            }}
-                          >
-                            <Typography
-                              style={{
-                                width: "250px",
-                                display: "inline",
-                                fontFamily: "FMed",
-                                fontSize: "20px",
-                              }}
-                            >
-                              {cellName} : <br /> {cell.render("Cell")}
-                            </Typography>
-                          </div>
-                        ) : null}
+
+                        <div
+                          className={`${
+                            cell.column.id === cellName &&
+                            rowId === row.id &&
+                            isShown
+                              ? "scale-100"
+                              : "scale-0"
+                          } z-50 transition-all duration-200 origin-top-left ease-out bg-primary absolute top-[60%] left-[5%] p-4 rounded-md text-secondary m-auto text-[20px]`}
+                        >
+                          <Typography className="w-[250px] inline !font-semibold text-[20px]">
+                            {cellName} : <br /> {cell.render("Cell")}
+                          </Typography>
+                        </div>
                       </TableCell>
                     );
                   })}

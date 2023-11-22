@@ -142,7 +142,7 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
 
   const formElements = () => {
     return (
-      <values ref={formRef} className="flex flex-col justify-center">
+      <form ref={formRef} className="flex flex-col justify-center">
         <div className="py-1 mx-8">
           <div className="flex m-4">
             <TextField
@@ -248,7 +248,7 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             </FormGroup>
           </div>
         </div>
-      </values>
+      </form>
     );
   };
   return (

@@ -143,6 +143,7 @@ const ArticlePage = () => {
                     setDrawerID(row.original?.id);
                     setDrawerOpen(true);
                   }}
+                  isShown
                 />
               )
             }

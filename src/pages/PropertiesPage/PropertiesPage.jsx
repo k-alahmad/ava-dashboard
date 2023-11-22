@@ -23,6 +23,7 @@ import {
 } from "../../redux/properties/propertiesSlice";
 import PropertyDrawer from "./PropertiesDrawer";
 import { Add } from "@mui/icons-material";
+import Slider from "react-slick";
 const PropertyPage = () => {
   const {
     data: properties,
@@ -47,6 +48,8 @@ const PropertyPage = () => {
   const [searchText, setSearchText] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerID, setDrawerID] = useState("");
+  const sliderRef = useRef();
+  const [currentSlide, setCurrentSlide] = useState(0);
   const onDelete = (event, model) => {
     event.preventDefault();
     event.stopPropagation();
@@ -107,6 +110,7 @@ const PropertyPage = () => {
   const handleOnCSVExport = () => {
     exportToCSV("Properties", columns, properties);
   };
+  const puposeButtons = ["All", "Rent", "Buy"];
   return (
     <>
       <PropertyDrawer
@@ -118,51 +122,119 @@ const PropertyPage = () => {
 
       <PageSimple
         content={
-          <PageCard
-            searchText={searchText}
-            handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel={<Add fontSize="large" />}
-            onClickPrimaryBtn={(ev) => {
-              setDrawerID("");
-              setDrawerOpen(true);
-            }}
-            table={
-              isLoading || isFetching ? (
-                <div className="flex flex-row justify-center items-center p-44">
-                  <CircularProgress color="primary" />
+          <>
+            <PageCard
+              searchText={searchText}
+              handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
+              PrimaryButtonlabel={
+                currentSlide !== 0 && <Add fontSize="large" />
+              }
+              onClickPrimaryBtn={(ev) => {
+                if (currentSlide !== 0) {
+                  setDrawerID("");
+                  setDrawerOpen(true);
+                }
+              }}
+              other={
+                <div className="flex justify-start items-center gap-x-8 px-12 w-full">
+                  {puposeButtons.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className={`w-full max-w-[250px] py-1 px-2 text-center font-semibold shadow-md ${
+                          currentSlide == index
+                            ? "bg-primary text-secondary"
+                            : "bg-secondary text-white"
+                        } cursor-pointer transition-all duration-300 text-black rounded-md`}
+                        onClick={() => {
+                          sliderRef.current.slickGoTo(index);
+                          setCurrentSlide(index);
+                          setSearchText("");
+                          setDrawerID("");
+                        }}
+                      >
+                        {item}
+                      </div>
+                    );
+                  })}
                 </div>
-              ) : (
-                <AdminTable
-                  noDataMessage="There are no Properties"
-                  searchText={searchText}
-                  columns={columns}
-                  loading={isLoading}
-                  data={properties?.entities}
-                  dataCount={properties?.ids?.length}
-                  onRowClick={(ev, row) => {
-                    setDrawerID(row.original?.id);
-                    setDrawerOpen(true);
-                  }}
-                />
-              )
-            }
-            handleCheckChange={(columnId) => handleToggleColumn(columnId)}
-            columnsOfTogglerColumns={columns
-              .filter(
-                (column) =>
-                  !(column.id === "action" || column.id === "monitor") &&
-                  !column.lockToggle
-              )
-              .map((column) => ({
-                name: column.Header,
-                id: column.id,
-                checked: column.checked,
-              }))}
-            columnsToggler
-            // exportMenu={{
-            //   onCSVExport: handleOnCSVExport,
-            // }}
-          />
+              }
+              table={
+                isLoading || isFetching ? (
+                  <div className="flex flex-row justify-center items-center p-44">
+                    <CircularProgress color="primary" />
+                  </div>
+                ) : (
+                  <Slider
+                    ref={sliderRef}
+                    dots={false}
+                    touchMove={false}
+                    swipe={false}
+                    arrows={false}
+                    initialSlide={currentSlide}
+                    infinite={false}
+                    className="overflow-hidden h-full w-full col-span-full"
+                  >
+                    <AdminTable
+                      key={0}
+                      noDataMessage="There are no Properties"
+                      searchText={searchText}
+                      columns={columns}
+                      loading={isLoading}
+                      data={properties.allProperties?.entities}
+                      dataCount={properties.allProperties?.count}
+                      onRowClick={(ev, row) => {
+                        setDrawerID(row.original?.id);
+                        setDrawerOpen(true);
+                      }}
+                    />
+                    <AdminTable
+                      key={1}
+                      noDataMessage="There are no Properties"
+                      searchText={searchText}
+                      columns={columns}
+                      loading={isLoading}
+                      data={properties.rentProperties?.entities}
+                      dataCount={properties.rentProperties?.count}
+                      onRowClick={(ev, row) => {
+                        setDrawerID(row.original?.id);
+                        setDrawerOpen(true);
+                      }}
+                    />
+                    <AdminTable
+                      key={2}
+                      noDataMessage="There are no Properties"
+                      searchText={searchText}
+                      columns={columns}
+                      loading={isLoading}
+                      data={properties.buyProperties?.entities}
+                      dataCount={properties.buyProperties?.ids?.length}
+                      onRowClick={(ev, row) => {
+                        setDrawerID(row.original?.id);
+                        setDrawerOpen(true);
+                      }}
+                    />
+                  </Slider>
+                )
+              }
+              handleCheckChange={(columnId) => handleToggleColumn(columnId)}
+              columnsOfTogglerColumns={columns
+                .filter(
+                  (column) =>
+                    !(column.id === "action" || column.id === "monitor") &&
+                    !column.lockToggle
+                )
+                .map((column) => ({
+                  name: column.Header,
+                  id: column.id,
+                  checked: column.checked,
+                }))}
+              columnsToggler
+              // exportMenu={{
+              //   onCSVExport: handleOnCSVExport,
+              // }}
+            />
+          </>
         }
         sidebarInner
         ref={pageLayout}

@@ -28,6 +28,7 @@ import userInfo from "../assets/icons/user-info.svg";
 
 export const data = [
   { icon: dashboard, name: "Dashboard", link: "/" },
+  { icon: property, name: "Properties", link: "/property" },
   {
     icon: access,
     name: "Access",
@@ -54,7 +55,6 @@ export const data = [
       { icon: developer, name: "Developers", link: "/developers" },
       { icon: amenities, name: "Amenities", link: "/amenities" },
       { icon: announcement, name: "Announcements", link: "/announcements" },
-      { icon: property, name: "Properties", link: "/property" },
     ],
   },
   {

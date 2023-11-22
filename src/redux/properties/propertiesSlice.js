@@ -2,9 +2,19 @@ import { createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "../api/apiSlice";
 
 const propertiesAdapter = createEntityAdapter();
+const propertiesRentAdapter = createEntityAdapter();
+const propertiesBuyAdapter = createEntityAdapter();
 const propertiesActiveAdapter = createEntityAdapter();
 
 const initialState = propertiesAdapter.getInitialState({
+  count: "",
+  normalData: [],
+});
+const initialRentState = propertiesRentAdapter.getInitialState({
+  count: "",
+  normalData: [],
+});
+const initialBuyState = propertiesBuyAdapter.getInitialState({
   count: "",
   normalData: [],
 });
@@ -23,13 +33,32 @@ export const propertiesApiSlice = apiSlice.injectEndpoints({
       transformResponse: (responseData) => {
         initialState.count = responseData.count;
         initialState.normalData = responseData.Properties;
+        let rent = responseData.Properties.filter((x) => x.Purpose == "Rent");
+        let buy = responseData.Properties.filter((x) => x.Purpose == "Buy");
         const loadedProperties = responseData.Properties;
+        const loadedRentProperties = rent;
+        const loadedBuyProperties = buy;
 
-        return propertiesAdapter.setAll(initialState, loadedProperties);
+        return {
+          allProperties: propertiesAdapter.setAll(
+            initialState,
+            loadedProperties
+          ),
+          rentProperties: propertiesRentAdapter.setAll(
+            initialRentState,
+            loadedRentProperties
+          ),
+          buyProperties: propertiesBuyAdapter.setAll(
+            initialBuyState,
+            loadedBuyProperties
+          ),
+        };
       },
       providesTags: (result, error, arg) => [
         { type: "Properties", id: "LIST" },
-        ...result.ids.map((id) => ({ type: "Properties", id })),
+        ...result.allProperties.ids.map((id) => ({ type: "Properties", id })),
+        ...result.rentProperties.ids.map((id) => ({ type: "Properties", id })),
+        ...result.buyProperties.ids.map((id) => ({ type: "Properties", id })),
       ],
     }),
     getActiveProperties: builder.query({

@@ -35,7 +35,7 @@ const PageSimple = forwardRef((props, ref) => {
           <PageSimpleHeader header={props.header} />
         )}
 
-        <div className="flex flex-row flex-1 max-w-full min-w-0 h-full bg-[gold] z-2">
+        <div className="flex flex-row flex-1 max-w-full min-w-0 h-full bg-white z-2">
           {(props.leftSidebarHeader || props.leftSidebarContent) && (
             <PageSimpleSidebar
               position="left"

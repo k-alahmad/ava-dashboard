@@ -231,7 +231,7 @@ const AdminTable = ({
                             isShown
                               ? "scale-100"
                               : "scale-0"
-                          } z-50 transition-all duration-200 origin-top-left ease-out bg-primary absolute top-0 left-0 p-4 rounded-md text-secondary m-auto text-[20px] h-full`}
+                          } z-50 transition-all duration-200 origin-top-left ease-out bg-primary absolute top-0 left-0 p-3 rounded-md text-secondary m-auto text-[20px] h-full`}
                         >
                           <Typography className="w-[250px] inline !font-semibold text-[20px]">
                             {cell.render("Cell")}

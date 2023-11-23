@@ -44,10 +44,10 @@ import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 
 const defaultFormState = {
   id: "",
-  Price: "",
-  Bedrooms: "",
-  Bacloney: false,
-  BalconySize: "",
+  // Price: "",
+  // Bedrooms: "",
+  // Bacloney: false,
+  // BalconySize: "",
   RentMin: "",
   RentMax: "",
   Handover: "",
@@ -58,8 +58,8 @@ const defaultFormState = {
   Purpose: "Rent",
   RentFrequency: "Yearly",
   CompletionStatus: "Ready",
-  PermitNumber: "",
-  DEDNo: "",
+  // PermitNumber: "",
+  // DEDNo: "",
   ReraNo: "",
   BRNNo: "",
   Developer: "",
@@ -71,7 +71,7 @@ const defaultFormState = {
   DeveloperID: "",
   CategoryID: "",
   AddressID: "",
-  Area: "",
+  // size: "",
   ActiveStatus: true,
   Aminities: [],
 };
@@ -263,10 +263,10 @@ const PropertyDrawer = ({
   function handleSubmit(event) {
     event.preventDefault();
     const formData = new FormData();
-    formData.append("Price", form.Price);
-    formData.append("Bedrooms", form.Bedrooms);
-    formData.append("Bacloney", form.Bacloney);
-    formData.append("BalconySize", form.BalconySize);
+    // formData.append("Price", form.Price);
+    // formData.append("Bedrooms", form.Bedrooms);
+    // formData.append("Bacloney", form.Bacloney);
+    // formData.append("BalconySize", form.BalconySize);
     formData.append("RentMin", form.RentMin);
     formData.append("RentMax", form.RentMax);
     formData.append("Handover", form.Handover);
@@ -277,14 +277,14 @@ const PropertyDrawer = ({
     formData.append("Longitude", form.Longitude);
     formData.append("Latitude", form.Latitude);
     formData.append("Purpose", form.Purpose);
-    formData.append("PermitNumber", form.PermitNumber);
-    formData.append("DEDNo", form.DEDNo);
+    // formData.append("PermitNumber", form.PermitNumber);
+    // formData.append("DEDNo", form.DEDNo);
     formData.append("ReraNo", form.ReraNo);
     formData.append("BRNNo", form.BRNNo);
     formData.append("DeveloperID", form.DeveloperID);
     formData.append("CategoryID", form.CategoryID);
     formData.append("AddressID", form.AddressID);
-    formData.append("Area", form.Area);
+    // formData.append("Area", form.Area);
     formData.append("ActiveStatus", form.ActiveStatus);
 
     if (form.Aminities) {
@@ -498,7 +498,7 @@ const PropertyDrawer = ({
               );
             })}
           </Slider>
-          <div className="flex m-4">
+          {/* <div className="flex m-4">
             <TextField
               fullWidth
               type="number"
@@ -511,8 +511,8 @@ const PropertyDrawer = ({
               size="small"
               required
             />
-          </div>
-          <div className="flex m-4">
+          </div> */}
+          {/* <div className="flex m-4">
             <TextField
               fullWidth
               type="number"
@@ -525,8 +525,8 @@ const PropertyDrawer = ({
               size="small"
               required
             />
-          </div>
-          <div className="flex m-4">
+          </div> */}
+          {/* <div className="flex m-4">
             <TextField
               fullWidth
               type="number"
@@ -539,8 +539,8 @@ const PropertyDrawer = ({
               size="small"
               required
             />
-          </div>
-          <div className="flex m-4">
+          </div> */}
+          {/* <div className="flex m-4">
             <FormGroup>
               <FormControlLabel
                 control={
@@ -554,8 +554,8 @@ const PropertyDrawer = ({
                 label={form.Bacloney ? "Balcony" : "No Balcony"}
               />
             </FormGroup>
-          </div>
-          <div
+          </div> */}
+          {/* <div
             className={`flex m-4 ${form.Bacloney ? "visible" : "invisible"}`}
           >
             <TextField
@@ -570,7 +570,7 @@ const PropertyDrawer = ({
               size="small"
               required
             />
-          </div>
+          </div> */}
 
           <div className="flex m-4">
             <TextField
@@ -752,7 +752,7 @@ const PropertyDrawer = ({
               </Select>
             </FormControl>
           </div>
-          <div className="flex m-4">
+          {/* <div className="flex m-4">
             <TextField
               fullWidth
               type="text"
@@ -765,8 +765,8 @@ const PropertyDrawer = ({
               size="small"
               required
             />
-          </div>
-          <div className="flex m-4">
+          </div> */}
+          {/* <div className="flex m-4">
             <TextField
               fullWidth
               type="text"
@@ -779,7 +779,7 @@ const PropertyDrawer = ({
               size="small"
               required
             />
-          </div>
+          </div> */}
           <div className="flex m-4">
             <TextField
               fullWidth
@@ -1150,40 +1150,7 @@ const PropertyDrawer = ({
       editable={true}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
-      disabled={
-        form.Price?.toString().replace(/ /g, "") == "" ||
-        form.Area?.toString().replace(/ /g, "") == "" ||
-        form.Bedrooms?.toString().replace(/ /g, "") == "" ||
-        form.RentMin?.toString().replace(/ /g, "") == "" ||
-        form.RentMax?.toString().replace(/ /g, "") == "" ||
-        form.Handover?.replace(/ /g, "") == "" ||
-        form.FurnishingStatus?.replace(/ /g, "") == "" ||
-        form.VacantStatus?.replace(/ /g, "") == "" ||
-        form.Longitude?.toString().replace(/ /g, "") == "" ||
-        form.Latitude?.toString().replace(/ /g, "") == "" ||
-        (form.Purpose !== "Rent" && form.Purpose !== "Buy") ||
-        (form.RentFrequency !== "Yearly" &&
-          form.RentFrequency !== "Monthly" &&
-          form.RentFrequency !== "Weekly" &&
-          form.RentFrequency !== "Daily") ||
-        (form.CompletionStatus !== "Ready" &&
-          form.CompletionStatus !== "OffPlan") ||
-        form.PermitNumber?.replace(/ /g, "") == "" ||
-        form.DEDNo?.replace(/ /g, "") == "" ||
-        form.ReraNo?.replace(/ /g, "") == "" ||
-        form.BRNNo?.replace(/ /g, "") == "" ||
-        form.CategoryID?.replace(/ /g, "") == "" ||
-        form.AddressID?.replace(/ /g, "") == "" ||
-        form.DeveloperID?.replace(/ /g, "") == "" ||
-        properties_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Name.replace(/ /g, "") == "" ||
-        properties_Translation
-          .find((x) => x.Language.Code == "En")
-          ?.Description.replace(/ /g, "") == "" ||
-        image.length == 0
-      }
-      alertMessage={"Required Data Are Missing"}
+      // disabled={      }
       children={
         isLoading ||
         addLoading ||

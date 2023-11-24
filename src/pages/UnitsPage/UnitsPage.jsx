@@ -23,6 +23,8 @@ import {
 } from "../../redux/units/unitsSlice";
 import UnitsDrawer from "./UnitsDrawer";
 import { Add } from "@mui/icons-material";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+
 const UnitsPage = () => {
   const {
     data: units,
@@ -47,6 +49,8 @@ const UnitsPage = () => {
   const [searchText, setSearchText] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerID, setDrawerID] = useState("");
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+
   const onDelete = (event, model) => {
     event.preventDefault();
     event.stopPropagation();
@@ -121,7 +125,10 @@ const UnitsPage = () => {
           <PageCard
             searchText={searchText}
             handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel={<Add fontSize="large" />}
+            PrimaryButtonlabel={
+              profile.Role.Role_Resources.find((x) => x.resource.Name == "Unit")
+                .Create == true && <Add fontSize="large" />
+            }
             onClickPrimaryBtn={(ev) => {
               setDrawerID("");
               setDrawerOpen(true);

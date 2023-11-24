@@ -1,8 +1,11 @@
 import React from "react";
 import { IconButton } from "@mui/material";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
 
 export const ComposeColumns = (onDelete) => {
+  const { data, isSuccess } = useGetProfileQuery();
+
   return [
     {
       Header: "Name",
@@ -46,16 +49,22 @@ export const ComposeColumns = (onDelete) => {
       width: 128,
       sortable: false,
       Cell: ({ row }) => {
-        return (
-          <div className="flex items-center">
-            <IconButton
-              className="p-4"
-              onClick={(ev) => onDelete(ev, row.original)}
-            >
-              <DeleteRoundedIcon color="action" />
-            </IconButton>
-          </div>
-        );
+        if (isSuccess)
+          if (
+            data?.Role?.Role_Resources?.find(
+              (x) => x?.resource?.Name == "Language"
+            )?.Delete == true
+          )
+            return (
+              <div className="flex items-center">
+                <IconButton
+                  className="p-4"
+                  onClick={(ev) => onDelete(ev, row.original)}
+                >
+                  <DeleteRoundedIcon color="action" />
+                </IconButton>
+              </div>
+            );
       },
     },
   ];

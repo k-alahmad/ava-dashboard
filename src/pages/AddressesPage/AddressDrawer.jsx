@@ -19,6 +19,8 @@ import { showMessage } from "../../redux/messageAction.slice";
 import { useDispatch } from "react-redux";
 import PageModal from "../../components/Admin/layout/PageModal";
 import useForm from "../../hooks/useForm";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+
 const defaultFormState = {
   id: "",
   Image: "",
@@ -52,6 +54,8 @@ const AddressDrawer = ({
     address_Translation,
     setAddress_Translation
   );
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+  const [disableField, setDisableField] = useState(false);
   const [image, setImage] = useState();
   const [oldImage, setOldImage] = useState();
   const [imageURL, setImageURL] = useState();
@@ -194,29 +198,45 @@ const AddressDrawer = ({
   const hiddenFileInput = React.useRef(null);
   const formRef = useRef(null);
 
+  useEffect(() => {
+    if (profileIsSuccess) {
+      if (drawerID !== "") {
+        if (
+          profile.Role.Role_Resources.find((x) => x.resource.Name == "Address")
+            .Update == true
+        ) {
+          setDisableField(false);
+        } else {
+          setDisableField(true);
+        }
+      }
+    }
+  }, [profileIsSuccess, profile]);
   const formElements = () => (
     <form ref={formRef} className="flex flex-col justify-center">
       <div className="py-8 md:mx-12">
         <div className="flex flex-row items-center justify-center">
-          <div className="flex flex-col m-4">
-            <Button
-              textColor={"text-white font-regular"}
-              text={"Upload Image"}
-              bgColor={"bg-primary"}
-              customStyle={"py-2 px-4"}
-              onClick={(e) => {
-                e.preventDefault();
-                hiddenFileInput.current.click();
-              }}
-            />
-            <input
-              type="file"
-              accept="images/*"
-              onChange={onImageChange}
-              style={{ display: "none" }}
-              ref={hiddenFileInput}
-            />
-          </div>
+          {!disableField && (
+            <div className="flex flex-col m-4">
+              <Button
+                textColor={"text-white font-regular"}
+                text={"Upload Image"}
+                bgColor={"bg-primary"}
+                customStyle={"py-2 px-4"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  hiddenFileInput.current.click();
+                }}
+              />
+              <input
+                type="file"
+                accept="images/*"
+                onChange={onImageChange}
+                style={{ display: "none" }}
+                ref={hiddenFileInput}
+              />
+            </div>
+          )}
           {imageURL && (
             <div className="flex flex-col m-4">
               <p className="text-smaller font-regular pb-1">New image</p>
@@ -249,6 +269,7 @@ const AddressDrawer = ({
             required
             error={Boolean(errors?.Longitude)}
             helperText={errors?.Longitude}
+            disabled={disableField}
           />
         </div>
         <div className="flex m-4">
@@ -265,6 +286,7 @@ const AddressDrawer = ({
             required
             error={Boolean(errors?.Latitude)}
             helperText={errors?.Latitude}
+            disabled={disableField}
           />
         </div>
         <div className="w-full flex justify-center items-center">
@@ -334,6 +356,7 @@ const AddressDrawer = ({
                         )
                       ]
                     }
+                    disabled={disableField}
                   />
                 </div>
               </div>
@@ -349,6 +372,7 @@ const AddressDrawer = ({
                   name="ActiveStatus"
                   value={values.ActiveStatus}
                   checked={values.ActiveStatus}
+                  disabled={disableField}
                 />
               }
               label={values.ActiveStatus ? "Active" : "InActive"}
@@ -369,7 +393,7 @@ const AddressDrawer = ({
           : "Edit Address"
       }
       newItem={drawerID == "" && true}
-      editable={true}
+      editable={!disableField}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
       disabled={disabled}

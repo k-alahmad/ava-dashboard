@@ -24,6 +24,8 @@ import {
 } from "../../redux/languages/languagesSlice";
 import LanguagesDrawer from "./LanguagesDrawer";
 import { Add } from "@mui/icons-material";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+
 const LNGPage = () => {
   const {
     data: lngs,
@@ -48,6 +50,8 @@ const LNGPage = () => {
   const [searchText, setSearchText] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerID, setDrawerID] = useState("");
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+
   const onDelete = (event, model) => {
     event.preventDefault();
     event.stopPropagation();
@@ -122,7 +126,11 @@ const LNGPage = () => {
           <PageCard
             searchText={searchText}
             handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel={<Add fontSize="large" />}
+            PrimaryButtonlabel={
+              profile.Role.Role_Resources.find(
+                (x) => x.resource.Name == "Language"
+              ).Create == true && <Add fontSize="large" />
+            }
             onClickPrimaryBtn={(ev) => {
               setDrawerID("");
               setDrawerOpen(true);

@@ -11,6 +11,7 @@ const RichTextBox = ({
   moreStyle,
   label,
   onChange,
+  disabled,
 }) => {
   const fontSizeArr = [
     // "8px",
@@ -36,6 +37,7 @@ const RichTextBox = ({
     <div className={`flex flex-col m-4 h-[600px] ${moreStyle}`}>
       <div className="text-tiny pb-2"> {label}</div>
       <ReactQuill
+        readOnly={disabled}
         theme="snow"
         value={value}
         // onChange={(value) => {

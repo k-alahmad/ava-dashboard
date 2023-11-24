@@ -14,8 +14,9 @@ import {
   Switch,
 } from "@mui/material";
 import PageModal from "../../components/Admin/layout/PageModal";
-import { showMessage } from "../../redux/messageAction.slice";
 import useForm from "../../hooks/useForm";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+
 const defaultFormState = {
   id: "",
   conversionRate: "",
@@ -34,6 +35,8 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     disabled,
     setErrors,
   } = useForm(submit, defaultFormState, unit_Translation, setUnit_Translation);
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+  const [disableField, setDisableField] = useState(false);
   const sliderRef = useRef();
   const [currentSlide, setCurrentSlide] = useState();
   const {
@@ -139,7 +142,20 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     }
   }
   const formRef = useRef(null);
-
+  useEffect(() => {
+    if (profileIsSuccess) {
+      if (drawerID !== "") {
+        if (
+          profile.Role.Role_Resources.find((x) => x.resource.Name == "Unit")
+            .Update == true
+        ) {
+          setDisableField(false);
+        } else {
+          setDisableField(true);
+        }
+      }
+    }
+  }, [profileIsSuccess, profile]);
   const formElements = () => {
     return (
       <form ref={formRef} className="flex flex-col justify-center">
@@ -158,6 +174,7 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               required
               error={Boolean(errors?.conversionRate)}
               helperText={errors?.conversionRate}
+              disabled={disableField}
             />
           </div>
           <div className="w-full flex justify-center items-center">
@@ -226,6 +243,7 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                           )
                         ]
                       }
+                      disabled={disableField}
                     />
                   </div>
                 </div>
@@ -241,6 +259,7 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                     name="ActiveStatus"
                     value={values.ActiveStatus}
                     checked={values.ActiveStatus}
+                    disabled={disableField}
                   />
                 }
                 label={values.ActiveStatus ? "Active" : "InActive"}
@@ -256,7 +275,7 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       isOpen={drawerOpen}
       title={drawerID == "" ? "New Unit" : "Edit Unit"}
       newItem={drawerID == "" && true}
-      editable={true}
+      editable={!disableField}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
       disabled={disabled}

@@ -14,9 +14,9 @@ import {
   Switch,
 } from "@mui/material";
 import PageModal from "../../components/Admin/layout/PageModal";
-import { showMessage } from "../../redux/messageAction.slice";
-import { useDispatch } from "react-redux";
 import useForm from "../../hooks/useForm";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+
 const defaultFormState = {
   id: "",
   conversionRate: "",
@@ -45,8 +45,9 @@ const CurrenciesDrawer = ({
     currency_Translation,
     setCurrency_Translation
   );
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+  const [disableField, setDisableField] = useState(false);
   const sliderRef = useRef();
-  const dispatch = useDispatch();
   const [currentSlide, setCurrentSlide] = useState();
   const {
     data: lngs,
@@ -152,7 +153,20 @@ const CurrenciesDrawer = ({
     }
   }
   const formRef = useRef(null);
-
+  useEffect(() => {
+    if (profileIsSuccess) {
+      if (drawerID !== "") {
+        if (
+          profile.Role.Role_Resources.find((x) => x.resource.Name == "Currency")
+            .Update == true
+        ) {
+          setDisableField(false);
+        } else {
+          setDisableField(true);
+        }
+      }
+    }
+  }, [profileIsSuccess, profile]);
   const formElements = () => {
     return (
       <form ref={formRef} className="flex flex-col justify-center">
@@ -171,6 +185,7 @@ const CurrenciesDrawer = ({
               required
               error={Boolean(errors?.conversionRate)}
               helperText={errors?.conversionRate}
+              disabled={disableField}
             />
           </div>
           <div className="m-4 flex">
@@ -239,6 +254,7 @@ const CurrenciesDrawer = ({
                           )
                         ]
                       }
+                      disabled={disableField}
                     />
                   </div>
                 </div>
@@ -254,6 +270,7 @@ const CurrenciesDrawer = ({
                     name="ActiveStatus"
                     value={values.ActiveStatus}
                     checked={values.ActiveStatus}
+                    disabled={disableField}
                   />
                 }
                 label={values.ActiveStatus ? "Active" : "InActive"}
@@ -269,7 +286,7 @@ const CurrenciesDrawer = ({
       isOpen={drawerOpen}
       title={drawerID == "" ? "New Currency" : "Edit Currency"}
       newItem={drawerID == "" && true}
-      editable={true}
+      editable={!disableField}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
       disabled={disabled}

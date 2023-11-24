@@ -64,7 +64,7 @@ export const data = [
       { icon: language, name: "Languages", link: "/lngs" },
       { icon: currency, name: "Currencies", link: "/currency" },
       { icon: ruler, name: "Units", link: "/unit" },
-      { icon: meta, name: "Meta Data", link: "/meta-data" },
+      // { icon: meta, name: "Meta Data", link: "/meta-data" },
     ],
   },
   {

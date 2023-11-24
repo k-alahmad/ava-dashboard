@@ -30,8 +30,7 @@ import ApplicationPage from "./pages/ApplicationsPage/ApplicationPage";
 import ListingPage from "./pages/ListingsPage/ListingsPage";
 import { useGetProfileQuery } from "./redux/auth/authApiSlice";
 const App = () => {
-  const { data, isSuccess, isFetching, isLoading, isError } =
-    useGetProfileQuery();
+  const { data, isSuccess } = useGetProfileQuery();
 
   const PermissionDenied = () => {
     return (
@@ -45,9 +44,6 @@ const App = () => {
     );
   };
 
-  useEffect(() => {
-    isSuccess && console.log(data.Role.Role_Resources);
-  }, [isSuccess]);
   return (
     <Routes>
       <Route path="/login" element={<AdminLogin />} />

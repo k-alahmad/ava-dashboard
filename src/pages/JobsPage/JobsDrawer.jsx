@@ -26,6 +26,8 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import RichTextBox from "../../components/Forms/RichTextBox";
 import useForm from "../../hooks/useForm";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+
 const defaultFormState = {
   id: "",
   Location: "",
@@ -48,6 +50,8 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     handleSubmit,
     disabled,
   } = useForm(submit, defaultFormState, job_Translation, setJob_Translation);
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+  const [disableField, setDisableField] = useState(false);
   const sliderRef = useRef();
   const [selectSearchTerm, setSelectSearchTerm] = useState("");
   var selectSearchInput = useRef(undefined);
@@ -173,7 +177,20 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     }
   }
   const formRef = useRef(null);
-
+  useEffect(() => {
+    if (profileIsSuccess) {
+      if (drawerID !== "") {
+        if (
+          profile.Role.Role_Resources.find((x) => x.resource.Name == "Job")
+            .Update == true
+        ) {
+          setDisableField(false);
+        } else {
+          setDisableField(true);
+        }
+      }
+    }
+  }, [profileIsSuccess, profile]);
   const formElements = () => {
     return (
       <form ref={formRef} className="flex flex-col justify-center">
@@ -246,6 +263,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                           )
                         ]
                       }
+                      disabled={disableField}
                     />
                   </div>
                   <RichTextBox
@@ -261,6 +279,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                     onChange={(e) =>
                       handleTranslationChange(e, item, "Description", true)
                     }
+                    disabled={disableField}
                   />
                   <p className="text-[14px] text-red-600 px-10">
                     {
@@ -289,6 +308,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               required
               error={Boolean(errors?.Location)}
               helperText={errors?.Location}
+              disabled={disableField}
             />
           </div>
           <div className="flex m-4">
@@ -305,6 +325,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               required
               error={Boolean(errors?.Type)}
               helperText={errors?.Type}
+              disabled={disableField}
             />
           </div>
           <div className="flex m-4">
@@ -321,6 +342,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               required
               error={Boolean(errors?.WeekHours)}
               helperText={errors?.WeekHours}
+              disabled={disableField}
             />
           </div>
           <div className="flex m-4">
@@ -332,6 +354,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                     name="Expired"
                     value={values.Expired}
                     checked={values.Expired}
+                    disabled={disableField}
                   />
                 }
                 label={values.Expired ? "Expired" : "Not Expired"}
@@ -362,6 +385,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                   // renderValue={() => values.roleID}
                   onAnimationEnd={() => selectSearchInput.current?.focus()}
                   error={Boolean(errors?.usersID)}
+                  disabled={disableField}
                 >
                   <ListSubheader>
                     <TextField
@@ -421,6 +445,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                     name="ActiveStatus"
                     value={values.ActiveStatus}
                     checked={values.ActiveStatus}
+                    disabled={disableField}
                   />
                 }
                 label={values.ActiveStatus ? "Active" : "InActive"}
@@ -436,7 +461,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       isOpen={drawerOpen}
       title={drawerID == "" ? "New Job" : "Edit Job"}
       newItem={drawerID == "" && true}
-      editable={true}
+      editable={!disableField}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
       disabled={disabled}

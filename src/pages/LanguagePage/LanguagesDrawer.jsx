@@ -15,9 +15,9 @@ import {
 } from "@mui/material";
 import { Directions } from "../../constants";
 import PageModal from "../../components/Admin/layout/PageModal";
-import { showMessage } from "../../redux/messageAction.slice";
 import useForm from "../../hooks/useForm";
-import { useDispatch } from "react-redux";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+
 const defaultFormState = {
   id: "",
   Name: "",
@@ -34,7 +34,8 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     disabled,
     setErrors,
   } = useForm(submit, defaultFormState);
-  const dispatch = useDispatch();
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+  const [disableField, setDisableField] = useState(false);
   const [
     getLNGById,
     { data, isLoading, isFetching, isError, error, isSuccess },
@@ -92,7 +93,20 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     }
   }
   const formRef = useRef(null);
-
+  useEffect(() => {
+    if (profileIsSuccess) {
+      if (drawerID !== "") {
+        if (
+          profile.Role.Role_Resources.find((x) => x.resource.Name == "Language")
+            .Update == true
+        ) {
+          setDisableField(false);
+        } else {
+          setDisableField(true);
+        }
+      }
+    }
+  }, [profileIsSuccess, profile]);
   const formElements = () => (
     <form ref={formRef} className="flex flex-col justify-center">
       <div className="py-8 md:mx-12">
@@ -110,6 +124,7 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             required
             error={Boolean(errors?.Name)}
             helperText={errors?.Name}
+            disabled={disableField}
           />
         </div>
         <div className="flex m-4">
@@ -126,6 +141,7 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             required
             error={Boolean(errors?.Code)}
             helperText={errors?.Code}
+            disabled={disableField}
           />
         </div>
         <div className="flex m-4">
@@ -145,6 +161,7 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                   maxHeight: "400px",
                 },
               }}
+              disabled={disableField}
             >
               {Directions?.map((item, j) => {
                 return (
@@ -165,7 +182,7 @@ const LNGDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       isOpen={drawerOpen}
       title={drawerID == "" ? "New Language" : values.Name}
       newItem={drawerID == "" && true}
-      editable={true}
+      editable={!disableField}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
       disabled={disabled}

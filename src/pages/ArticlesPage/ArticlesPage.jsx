@@ -23,6 +23,8 @@ import {
 } from "../../redux/articles/articlesSlice";
 import ArticleDrawer from "./ArticleDrawer";
 import { Add } from "@mui/icons-material";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+
 const ArticlePage = () => {
   const {
     data: articles,
@@ -47,6 +49,8 @@ const ArticlePage = () => {
   const [searchText, setSearchText] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerID, setDrawerID] = useState("");
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+
   const onDelete = (event, model) => {
     event.preventDefault();
     event.stopPropagation();
@@ -121,7 +125,11 @@ const ArticlePage = () => {
           <PageCard
             searchText={searchText}
             handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel={<Add fontSize="large" />}
+            PrimaryButtonlabel={
+              profile.Role.Role_Resources.find(
+                (x) => x.resource.Name == "Article"
+              ).Create == true && <Add fontSize="large" />
+            }
             onClickPrimaryBtn={(ev) => {
               setDrawerID("");
               setDrawerOpen(true);

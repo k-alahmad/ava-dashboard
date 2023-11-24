@@ -25,9 +25,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import Button from "../../components/UI/Button";
 import { API_BASE_URL } from "../../constants";
 import RichTextBox from "../../components/Forms/RichTextBox";
-import { showMessage } from "../../redux/messageAction.slice";
 import useForm from "../../hooks/useForm";
-import { useDispatch } from "react-redux";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
 const defaultFormState = {
   id: "",
   MinRead: "",
@@ -58,6 +57,9 @@ const ArticleDrawer = ({
     articles_Translation,
     setArticles_Translation
   );
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+  const [disableField, setDisableField] = useState(false);
+  8;
   const [image, setImage] = useState();
   const [oldImage, setOldImage] = useState();
   const [imageURL, setImageURL] = useState();
@@ -65,7 +67,6 @@ const ArticleDrawer = ({
   const [selectSearchTerm, setSelectSearchTerm] = useState("");
   var selectSearchInput = useRef(undefined);
   const [currentSlide, setCurrentSlide] = useState();
-  const dispatch = useDispatch();
   const {
     data: lngs,
     isLoading: lngIsLoading,
@@ -204,31 +205,46 @@ const ArticleDrawer = ({
   }
   const hiddenFileInput = React.useRef(null);
   const formRef = useRef(null);
-
+  useEffect(() => {
+    if (profileIsSuccess) {
+      if (drawerID !== "") {
+        if (
+          profile.Role.Role_Resources.find((x) => x.resource.Name == "Article")
+            .Update == false
+        ) {
+          setDisableField(false);
+        } else {
+          setDisableField(true);
+        }
+      }
+    }
+  }, [profileIsSuccess, profile]);
   const formElements = () => {
     return (
       <form ref={formRef} className="flex flex-col justify-center">
         <div className="py-1 mx-8">
           <div className="flex flex-row items-center justify-center">
-            <div className="flex flex-col m-4">
-              <Button
-                textColor={"text-white font-regular"}
-                text={"Upload Image"}
-                bgColor={"bg-primary"}
-                customStyle={"py-2 px-4"}
-                onClick={(e) => {
-                  e.preventDefault();
-                  hiddenFileInput.current.click();
-                }}
-              />
-              <input
-                type="file"
-                accept="images/*"
-                onChange={onImageChange}
-                style={{ display: "none" }}
-                ref={hiddenFileInput}
-              />
-            </div>
+            {!disableField && (
+              <div className="flex flex-col m-4">
+                <Button
+                  textColor={"text-white font-regular"}
+                  text={"Upload Image"}
+                  bgColor={"bg-primary"}
+                  customStyle={"py-2 px-4"}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    hiddenFileInput.current.click();
+                  }}
+                />
+                <input
+                  type="file"
+                  accept="images/*"
+                  onChange={onImageChange}
+                  style={{ display: "none" }}
+                  ref={hiddenFileInput}
+                />
+              </div>
+            )}
             {imageURL && (
               <div className="flex flex-col m-4">
                 <p className="text-smaller font-regular pb-1">New image</p>
@@ -261,6 +277,7 @@ const ArticleDrawer = ({
               required
               error={Boolean(errors?.MinRead)}
               helperText={errors?.MinRead}
+              disabled={disableField}
             />
           </div>
           {usersisSuccess && (
@@ -283,6 +300,7 @@ const ArticleDrawer = ({
                   onClose={() => setSelectSearchTerm("")}
                   onAnimationEnd={() => selectSearchInput.current?.focus()}
                   error={Boolean(errors?.usersID)}
+                  disabled={disableField}
                 >
                   <ListSubheader>
                     <TextField
@@ -401,6 +419,7 @@ const ArticleDrawer = ({
                           )
                         ]
                       }
+                      disabled={disableField}
                     />
                   </div>
                   <div className="flex m-4">
@@ -431,6 +450,7 @@ const ArticleDrawer = ({
                           )
                         ]
                       }
+                      disabled={disableField}
                     />
                   </div>
                   <div>
@@ -447,6 +467,7 @@ const ArticleDrawer = ({
                       onChange={(e) =>
                         handleTranslationChange(e, item, "Description", true)
                       }
+                      disabled={disableField}
                     />
                     <p className="text-[14px] text-red-600 px-10">
                       {
@@ -471,6 +492,7 @@ const ArticleDrawer = ({
                     name="ActiveStatus"
                     value={values.ActiveStatus}
                     checked={values.ActiveStatus}
+                    disabled={disableField}
                   />
                 }
                 label={values.ActiveStatus ? "Active" : "InActive"}
@@ -486,7 +508,7 @@ const ArticleDrawer = ({
       isOpen={drawerOpen}
       title={drawerID == "" ? "New Article" : values.titleEn}
       newItem={drawerID == "" && true}
-      editable={true}
+      editable={!disableField}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
       disabled={disabled}

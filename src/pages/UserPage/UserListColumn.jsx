@@ -3,8 +3,11 @@ import { IconButton } from "@mui/material";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import { API_BASE_URL } from "../../constants";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
 
 export const ComposeColumns = (onDelete, onChangePassowrd) => {
+  const { data, isSuccess } = useGetProfileQuery();
+
   return [
     {
       Header: "Image",
@@ -111,22 +114,31 @@ export const ComposeColumns = (onDelete, onChangePassowrd) => {
       width: 128,
       sortable: false,
       Cell: ({ row }) => {
-        return (
-          <div className="flex items-center">
-            <IconButton
-              className="p-4"
-              onClick={(ev) => onDelete(ev, row.original)}
-            >
-              <DeleteRoundedIcon color="action" />
-            </IconButton>
-            <IconButton
-              className="p-4"
-              onClick={(ev) => onChangePassowrd(ev, row.original)}
-            >
-              <LockResetIcon color="action" />
-            </IconButton>
-          </div>
-        );
+        if (isSuccess)
+          return (
+            <div className="flex items-center">
+              {data?.Role?.Role_Resources?.find(
+                (x) => x?.resource?.Name == "Users"
+              )?.Delete == true && (
+                <IconButton
+                  className="p-4"
+                  onClick={(ev) => onDelete(ev, row.original)}
+                >
+                  <DeleteRoundedIcon color="action" />
+                </IconButton>
+              )}
+              {data?.Role?.Role_Resources?.find(
+                (x) => x?.resource?.Name == "Users"
+              )?.Update == true && (
+                <IconButton
+                  className="p-4"
+                  onClick={(ev) => onChangePassowrd(ev, row.original)}
+                >
+                  <LockResetIcon color="action" />
+                </IconButton>
+              )}
+            </div>
+          );
       },
     },
   ];

@@ -17,6 +17,8 @@ import { showMessage } from "../../redux/messageAction.slice";
 import { useDispatch } from "react-redux";
 import PageModal from "../../components/Admin/layout/PageModal";
 import useForm from "../../hooks/useForm";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+
 const defaultFormState = {
   id: "",
   Category_Translation: [],
@@ -48,6 +50,8 @@ const CategoryDrawer = ({
     category_Translation,
     setCategory_Translation
   );
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+  const [disableField, setDisableField] = useState(false);
   const sliderRef = useRef();
   const [currentSlide, setCurrentSlide] = useState();
   const {
@@ -168,6 +172,20 @@ const CategoryDrawer = ({
   }
   const formRef = useRef(null);
 
+  useEffect(() => {
+    if (profileIsSuccess) {
+      if (drawerID !== "") {
+        if (
+          profile.Role.Role_Resources.find((x) => x.resource.Name == "Category")
+            .Update == true
+        ) {
+          setDisableField(false);
+        } else {
+          setDisableField(true);
+        }
+      }
+    }
+  }, [profileIsSuccess, profile]);
   const formElements = () => (
     <form ref={formRef} className="flex flex-col justify-center">
       <div className="py-8 md:mx-12">
@@ -238,6 +256,7 @@ const CategoryDrawer = ({
                         )
                       ]
                     }
+                    disabled={disableField}
                   />
                 </div>
                 <div className="flex m-4">
@@ -266,6 +285,7 @@ const CategoryDrawer = ({
                         )
                       ]
                     }
+                    disabled={disableField}
                   />
                 </div>
               </div>
@@ -281,6 +301,7 @@ const CategoryDrawer = ({
                   name="ActiveStatus"
                   value={values.ActiveStatus}
                   checked={values.ActiveStatus}
+                  disabled={disableField}
                 />
               }
               label={values.ActiveStatus ? "Active" : "InActive"}
@@ -301,7 +322,7 @@ const CategoryDrawer = ({
           : "Edit Category"
       }
       newItem={drawerID == "" && true}
-      editable={true}
+      editable={!disableField}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
       disabled={disabled}

@@ -30,6 +30,8 @@ import {
 } from "../../redux/customDialogAction";
 import { TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+
 const UserPage = () => {
   const {
     data: users,
@@ -66,6 +68,8 @@ const UserPage = () => {
   const [searchText, setSearchText] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerID, setDrawerID] = useState("");
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+
   const onDelete = (event, model) => {
     event.preventDefault();
     event.stopPropagation();
@@ -178,60 +182,66 @@ const UserPage = () => {
         drawerID={drawerID}
         setDrawerID={setDrawerID}
       />
-      <PageSimple
-        content={
-          <PageCard
-            searchText={searchText}
-            handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-            PrimaryButtonlabel={<Add fontSize="large" />}
-            onClickPrimaryBtn={(ev) => {
-              setDrawerID("");
-              setDrawerOpen(true);
-            }}
-            table={
-              isLoading || isFetching ? (
-                <div className="flex flex-row justify-center items-center p-44">
-                  <CircularProgress color="primary" />
-                </div>
-              ) : (
-                isSuccess && (
-                  <AdminTable
-                    noDataMessage="There are no Users"
-                    searchText={searchText}
-                    columns={columns}
-                    loading={isLoading}
-                    data={users?.entities}
-                    dataCount={users?.ids?.length}
-                    onRowClick={(ev, row) => {
-                      setDrawerID(row.original?.id);
-                      setDrawerOpen(true);
-                    }}
-                  />
+      {profileIsSuccess && (
+        <PageSimple
+          content={
+            <PageCard
+              searchText={searchText}
+              handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
+              PrimaryButtonlabel={
+                profile.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "Users"
+                ).Create == true && <Add fontSize="large" />
+              }
+              onClickPrimaryBtn={(ev) => {
+                setDrawerID("");
+                setDrawerOpen(true);
+              }}
+              table={
+                isLoading || isFetching ? (
+                  <div className="flex flex-row justify-center items-center p-44">
+                    <CircularProgress color="primary" />
+                  </div>
+                ) : (
+                  isSuccess && (
+                    <AdminTable
+                      noDataMessage="There are no Users"
+                      searchText={searchText}
+                      columns={columns}
+                      loading={isLoading}
+                      data={users?.entities}
+                      dataCount={users?.ids?.length}
+                      onRowClick={(ev, row) => {
+                        setDrawerID(row.original?.id);
+                        setDrawerOpen(true);
+                      }}
+                    />
+                  )
                 )
-              )
-            }
-            handleCheckChange={(columnId) => handleToggleColumn(columnId)}
-            columnsOfTogglerColumns={columns
-              .filter(
-                (column) =>
-                  !(column.id === "action" || column.id === "monitor") &&
-                  !column.lockToggle
-              )
-              .map((column) => ({
-                name: column.Header,
-                id: column.id,
-                checked: column.checked,
-              }))}
-            columnsToggler
-            exportMenu={{
-              onCSVExport: handleOnCSVExport,
-            }}
-          />
-        }
-        sidebarInner
-        ref={pageLayout}
-        innerScroll
-      />
+              }
+              handleCheckChange={(columnId) => handleToggleColumn(columnId)}
+              columnsOfTogglerColumns={columns
+                .filter(
+                  (column) =>
+                    !(column.id === "action" || column.id === "monitor") &&
+                    !column.lockToggle
+                )
+                .map((column) => ({
+                  name: column.Header,
+                  id: column.id,
+                  checked: column.checked,
+                }))}
+              columnsToggler
+              exportMenu={{
+                onCSVExport: handleOnCSVExport,
+              }}
+            />
+          }
+          sidebarInner
+          ref={pageLayout}
+          innerScroll
+        />
+      )}
       <DeleteDialog
         deletedName={deletedName}
         loading={deleteLoading}

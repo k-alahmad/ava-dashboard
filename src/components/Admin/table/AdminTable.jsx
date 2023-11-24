@@ -151,7 +151,7 @@ const AdminTable = ({
                       ? column.getHeaderProps()
                       : column.getHeaderProps(column.getSortByToggleProps()))}
                   >
-                    <div className="w-full h-full flex justify-center items-center text-center">
+                    <div className="w-full h-full flex justify-start items-center">
                       {column.render("Header")}
                       {column.sortable ? (
                         <TableSortLabel

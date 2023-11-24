@@ -16,8 +16,7 @@ import {
 import TeamUsers from "./TeamUsers";
 import { API_BASE_URL } from "../../constants";
 import useForm from "../../hooks/useForm";
-import { showMessage } from "../../redux/messageAction.slice";
-import { useDispatch } from "react-redux";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
 const defaultFormState = {
   id: "",
   Title: "",
@@ -36,10 +35,11 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     disabled,
     setErrors,
   } = useForm(submit, defaultFormState);
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+  const [disableField, setDisableField] = useState(false);
   const [image, setImage] = useState();
   const [oldImage, setOldImage] = useState();
   const [imageURL, setImageURL] = useState();
-  const dispatch = useDispatch();
   const [
     getTeamById,
     { data, isLoading, isFetching, isError, error, isSuccess },
@@ -116,30 +116,46 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
 
   const hiddenFileInput = React.useRef(null);
   const formRef = useRef(null);
-
+  useEffect(() => {
+    if (profileIsSuccess) {
+      if (drawerID !== "") {
+        if (
+          profile.Role.Role_Resources.find((x) => x.resource.Name == "Team")
+            .Update == true
+        ) {
+          setDisableField(false);
+        } else {
+          setDisableField(true);
+        }
+      }
+    }
+  }, [profileIsSuccess, profile]);
   const formElements = () => (
     <form ref={formRef} className="flex flex-col justify-center">
       <div className="py-8 md:mx-12">
         <div className="flex flex-row items-center justify-center">
-          <div className="flex flex-col m-4">
-            <Button
-              textColor={"text-white font-regular"}
-              text={"Upload Image"}
-              bgColor={"bg-primary"}
-              customStyle={"py-2 px-4"}
-              onClick={(e) => {
-                e.preventDefault();
-                hiddenFileInput.current.click();
-              }}
-            />
-            <input
-              type="file"
-              accept="images/*"
-              onChange={onImageChange}
-              style={{ display: "none" }}
-              ref={hiddenFileInput}
-            />
-          </div>
+          {!disableField && (
+            <div className="flex flex-col m-4">
+              <Button
+                textColor={"text-white font-regular"}
+                text={"Upload Image"}
+                bgColor={"bg-primary"}
+                customStyle={"py-2 px-4"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  hiddenFileInput.current.click();
+                }}
+              />
+              <input
+                type="file"
+                accept="images/*"
+                onChange={onImageChange}
+                style={{ display: "none" }}
+                ref={hiddenFileInput}
+              />
+            </div>
+          )}
+
           {imageURL && (
             <div className="flex flex-col m-4">
               <p className="text-smaller font-regular pb-1">New Image</p>
@@ -172,6 +188,7 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             required
             error={Boolean(errors?.Title)}
             helperText={errors?.Title}
+            disabled={disableField}
           />
         </div>
         <div className="flex m-4">
@@ -190,6 +207,7 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             rows={5}
             error={Boolean(errors?.Description)}
             helperText={errors?.Description}
+            disabled={disableField}
           />
         </div>
         <div className="flex m-4">
@@ -201,6 +219,7 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                   name="ViewTag"
                   value={values.ViewTag}
                   checked={values.ViewTag}
+                  disabled={disableField}
                 />
               }
               label={values.ViewTag ? "View In Website" : "Hide In Website"}
@@ -216,39 +235,44 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                   name="ActiveStatus"
                   value={values.ActiveStatus}
                   checked={values.ActiveStatus}
+                  disabled={disableField}
                 />
               }
               label={values.isActive ? "Active" : "InActive"}
             />
           </FormGroup>
         </div>
-        {drawerID !== "" && (
-          <div className="space-y-5">
-            <TeamUsers id={drawerID} Title={values.Title} />
-          </div>
-        )}
+        {drawerID !== "" &&
+          profile.Role.Role_Resources.find((x) => x.resource.Name == "Users")
+            .Read == true && (
+            <div className="space-y-5">
+              <TeamUsers id={drawerID} Title={values.Title} />
+            </div>
+          )}
       </div>
     </form>
   );
   return (
-    <PageDrawer
-      isOpen={drawerOpen}
-      title={drawerID == "" ? "New Team" : values.Title}
-      newItem={drawerID == "" && true}
-      editable={true}
-      onCancelClick={closeDrawer}
-      disabled={disabled}
-      onSaveClick={handleSubmit}
-      children={
-        isLoading || addLoading || updateLoading || isFetching ? (
-          <div className="flex flex-row justify-center items-center h-full w-full">
-            <CircularProgress color="primary" />
-          </div>
-        ) : (
-          <div className="text-med font-light">{formElements()}</div>
-        )
-      }
-    />
+    profileIsSuccess && (
+      <PageDrawer
+        isOpen={drawerOpen}
+        title={drawerID == "" ? "New Team" : values.Title}
+        newItem={drawerID == "" && true}
+        editable={!disableField}
+        onCancelClick={closeDrawer}
+        disabled={disabled}
+        onSaveClick={handleSubmit}
+        children={
+          isLoading || addLoading || updateLoading || isFetching ? (
+            <div className="flex flex-row justify-center items-center h-full w-full">
+              <CircularProgress color="primary" />
+            </div>
+          ) : (
+            <div className="text-med font-light">{formElements()}</div>
+          )
+        }
+      />
+    )
   );
 };
 

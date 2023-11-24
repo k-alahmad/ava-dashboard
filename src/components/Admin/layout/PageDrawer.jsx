@@ -11,7 +11,6 @@ export default function PageDrawer({
   newItem,
   editable,
   disabled,
-  alertMessage,
 }) {
   const sideNavOpen = useSelector(selectSideNavStatus);
   return (

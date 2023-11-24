@@ -17,8 +17,8 @@ import Button from "../../components/UI/Button";
 import { API_BASE_URL } from "../../constants";
 import PageModal from "../../components/Admin/layout/PageModal";
 import useForm from "../../hooks/useForm";
-import { useDispatch } from "react-redux";
-import { showMessage } from "../../redux/messageAction.slice";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+
 const defaultFormState = {
   id: "",
   ViewTag: false,
@@ -48,12 +48,13 @@ const DeveloperDrawer = ({
     developers_Translation,
     setDevelopers_Translation
   );
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+  const [disableField, setDisableField] = useState(false);
   const [image, setImage] = useState();
   const [oldImage, setOldImage] = useState();
   const [imageURL, setImageURL] = useState();
   const sliderRef = useRef();
   const [currentSlide, setCurrentSlide] = useState();
-  const dispatch = useDispatch();
   const {
     data: lngs,
     isLoading: lngIsLoading,
@@ -174,31 +175,47 @@ const DeveloperDrawer = ({
   }
   const hiddenFileInput = React.useRef(null);
   const formRef = useRef(null);
-
+  useEffect(() => {
+    if (profileIsSuccess) {
+      if (drawerID !== "") {
+        if (
+          profile.Role.Role_Resources.find(
+            (x) => x.resource.Name == "Developer"
+          ).Update == true
+        ) {
+          setDisableField(false);
+        } else {
+          setDisableField(true);
+        }
+      }
+    }
+  }, [profileIsSuccess, profile]);
   const formElements = () => {
     return (
       <form ref={formRef} className="flex flex-col justify-center">
         <div className="py-1 mx-8">
           <div className="flex flex-row items-center justify-center">
-            <div className="flex flex-col m-4">
-              <Button
-                textColor={"text-white font-regular"}
-                text={"Upload Image"}
-                bgColor={"bg-primary"}
-                customStyle={"py-2 px-4"}
-                onClick={(e) => {
-                  e.preventDefault();
-                  hiddenFileInput.current.click();
-                }}
-              />
-              <input
-                type="file"
-                accept="images/*"
-                onChange={onImageChange}
-                style={{ display: "none" }}
-                ref={hiddenFileInput}
-              />
-            </div>
+            {!disableField && (
+              <div className="flex flex-col m-4">
+                <Button
+                  textColor={"text-white font-regular"}
+                  text={"Upload Image"}
+                  bgColor={"bg-primary"}
+                  customStyle={"py-2 px-4"}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    hiddenFileInput.current.click();
+                  }}
+                />
+                <input
+                  type="file"
+                  accept="images/*"
+                  onChange={onImageChange}
+                  style={{ display: "none" }}
+                  ref={hiddenFileInput}
+                />
+              </div>
+            )}
             {imageURL && (
               <div className="flex flex-col m-4">
                 <p className="text-smaller font-regular pb-1">New image</p>
@@ -283,6 +300,7 @@ const DeveloperDrawer = ({
                           )
                         ]
                       }
+                      disabled={disableField}
                     />
                   </div>
                 </div>
@@ -298,6 +316,7 @@ const DeveloperDrawer = ({
                     name="ViewTag"
                     value={values.ViewTag}
                     checked={values.ViewTag}
+                    disabled={disableField}
                   />
                 }
                 label={values.ViewTag ? "View In Website" : "Hide In Website"}
@@ -313,6 +332,7 @@ const DeveloperDrawer = ({
                     name="ActiveStatus"
                     value={values.ActiveStatus}
                     checked={values.ActiveStatus}
+                    disabled={disableField}
                   />
                 }
                 label={values.ActiveStatus ? "Active" : "InActive"}
@@ -332,7 +352,7 @@ const DeveloperDrawer = ({
           : developers_Translation.find((x) => x.Language.Code == "En")?.Name
       }
       newItem={drawerID == "" && true}
-      editable={true}
+      editable={!disableField}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
       disabled={disabled}

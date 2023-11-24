@@ -26,6 +26,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Gender } from "../../constants/index";
 import { API_BASE_URL } from "../../constants";
 import useForm from "../../hooks/useForm";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+
 const defaultFormState = {
   id: "",
   Name: "",
@@ -51,6 +53,9 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     disabled,
     setErrors,
   } = useForm(submit, defaultFormState);
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+  const [disableField, setDisableField] = useState(false);
+
   const [image, setImage] = useState();
   const [oldImage, setOldImage] = useState();
   const [imageURL, setImageURL] = useState();
@@ -164,29 +169,52 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
   const hiddenFileInput = React.useRef(null);
   const formRef = useRef(null);
 
+  useEffect(() => {
+    if (profileIsSuccess) {
+      if (drawerID !== "") {
+        if (
+          profile.Role.Role_Resources.find((x) => x.resource.Name == "Users")
+            .Update == true
+        ) {
+          setDisableField(false);
+        } else {
+          setDisableField(true);
+        }
+      }
+    }
+  }, [profileIsSuccess, profile]);
   const formElements = () => (
     <form ref={formRef} className="flex flex-col justify-center">
       <div className="py-8 md:mx-12">
-        <div className="flex flex-row items-center justify-center">
-          <div className="flex flex-col m-4">
-            <Button
-              textColor={"text-white font-regular"}
-              text={"Upload Image"}
-              bgColor={"bg-primary"}
-              customStyle={"py-2 px-4"}
-              onClick={(e) => {
-                e.preventDefault();
-                hiddenFileInput.current.click();
-              }}
-            />
-            <input
-              type="file"
-              accept="images/*"
-              onChange={onImageChange}
-              style={{ display: "none" }}
-              ref={hiddenFileInput}
-            />
+        {disableField && (
+          <div className="flex m-4">
+            <p className="font-bold text-[24px] text-center">
+              You Don't Have the Permission To Edit Roles !
+            </p>
           </div>
+        )}
+        <div className="flex flex-row items-center justify-center">
+          {!disableField && (
+            <div className="flex flex-col m-4">
+              <Button
+                textColor={"text-white font-regular"}
+                text={"Upload Image"}
+                bgColor={"bg-primary"}
+                customStyle={"py-2 px-4"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  hiddenFileInput.current.click();
+                }}
+              />
+              <input
+                type="file"
+                accept="images/*"
+                onChange={onImageChange}
+                style={{ display: "none" }}
+                ref={hiddenFileInput}
+              />
+            </div>
+          )}
           {imageURL && (
             <div className="flex flex-col m-4">
               <p className="text-smaller font-regular pb-1">New Image</p>
@@ -218,6 +246,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             size="small"
             error={Boolean(errors?.Name)}
             helperText={errors?.Name}
+            disabled={disableField}
           />
         </div>
         <div className="flex m-4">
@@ -234,6 +263,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             required
             error={Boolean(errors?.Title)}
             helperText={errors?.Title}
+            disabled={disableField}
           />
         </div>
         <div className="flex flex-col m-4">
@@ -248,7 +278,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             variant="outlined"
             size="small"
             required
-            disabled={drawerID !== ""}
+            disabled={disableField || drawerID !== ""}
             error={Boolean(errors?.Email)}
             helperText={errors?.Email}
           />
@@ -268,6 +298,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               required
               error={Boolean(errors?.Password)}
               helperText={errors?.Password}
+              disabled={disableField}
             />
           </div>
         )}
@@ -285,6 +316,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             required
             error={Boolean(errors?.PhoneNo)}
             helperText={errors?.PhoneNo}
+            disabled={disableField}
           />
         </div>
         <div className=" m-4">
@@ -300,6 +332,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             size="small"
             error={Boolean(errors?.DOB)}
             helperText={errors?.DOB}
+            disabled={disableField}
           />
         </div>
         <div className="flex m-4">
@@ -312,6 +345,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               value={values.Gender}
               label="Gender"
               onChange={handleChange}
+              disabled={disableField}
               MenuProps={{
                 style: {
                   maxHeight: "400px",
@@ -339,6 +373,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                 value={values.roleID}
                 label="Role"
                 onChange={handleChange}
+                disabled={disableField}
                 MenuProps={{
                   autoFocus: false,
                   style: {
@@ -408,6 +443,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                 value={values.teamID}
                 label="Team"
                 onChange={handleChange}
+                disabled={disableField}
                 MenuProps={{
                   autoFocus: false,
                   style: {
@@ -476,6 +512,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                 value={values.addressId}
                 label="Address"
                 onChange={handleChange}
+                disabled={disableField}
                 MenuProps={{
                   autoFocus: false,
                   style: {
@@ -549,6 +586,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                   name="ActiveStatus"
                   value={values.ActiveStatus}
                   checked={values.ActiveStatus}
+                  disabled={disableField}
                 />
               }
               label={values.ActiveStatus ? "Active" : "InActive"}
@@ -563,7 +601,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       isOpen={drawerOpen}
       title={drawerID == "" ? "New User" : values.Name}
       newItem={drawerID == "" && true}
-      editable={true}
+      editable={!disableField}
       onCancelClick={closeDrawer}
       onSaveClick={handleSubmit}
       disabled={disabled}

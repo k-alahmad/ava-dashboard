@@ -3,6 +3,8 @@ import PageCard from "../../components/Admin/PageCard";
 import { useDispatch } from "react-redux";
 import AdminTable from "../../components/Admin/table/AdminTable";
 import { ComposeColumns } from "./PropertiesListColumns";
+import { ComposeColumns as BuyCompose } from "./PropertiesBuyListColumns";
+import { ComposeColumns as RentCompose } from "./PropertiesRentListColumns";
 import {
   toggleAllColumns,
   toggleColumn,
@@ -21,9 +23,11 @@ import {
   useDeletePropertyMutation,
   useGetPropertiesQuery,
 } from "../../redux/properties/propertiesSlice";
-import PropertyDrawer from "./PropertiesDrawer";
+// import PropertyDrawer from "./PropertiesDrawer";
+import PropertyRentDrawer from "./PropertiesRentDrawer";
 import { Add } from "@mui/icons-material";
 import Slider from "react-slick";
+import PropertyBuyDrawer from "./PropertiesBuyDrawer";
 const PropertyPage = () => {
   const {
     data: properties,
@@ -48,6 +52,10 @@ const PropertyPage = () => {
   const [searchText, setSearchText] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerID, setDrawerID] = useState("");
+  const [drawerRentOpen, setDrawerRentOpen] = useState(false);
+  const [drawerRentID, setDrawerRentID] = useState("");
+  const [drawerBuyOpen, setDrawerBuyOpen] = useState(false);
+  const [drawerBuyID, setDrawerBuyID] = useState("");
   const sliderRef = useRef();
   const [currentSlide, setCurrentSlide] = useState(0);
   const onDelete = (event, model) => {
@@ -84,6 +92,8 @@ const PropertyPage = () => {
     }
   }, [isError, deleteIsError, deleteIsSuccess]);
   const [columns, setColumns] = useState(ComposeColumns(onDelete));
+  const [buyColumns, setBuyColumns] = useState(BuyCompose(onDelete));
+  const [rentColumns, setRentColumns] = useState(RentCompose(onDelete));
   function yesDeleteContact(flg, data) {
     if (flg === true) {
       //delete
@@ -101,25 +111,59 @@ const PropertyPage = () => {
   }
   const handleToggleColumn = (columnId) => {
     //it's a toggle all
-    if (!columnId) setColumns(toggleAllColumns(columns));
-    else setColumns(toggleColumn(columns, columnId));
+    if (currentSlide == 0) {
+      if (!columnId) setColumns(toggleAllColumns(columns));
+      else setColumns(toggleColumn(columns, columnId));
+    }
+    if (currentSlide == 1) {
+      if (!columnId) setRentColumns(toggleAllColumns(rentColumns));
+      else setRentColumns(toggleColumn(columns, columnId));
+    }
+    if (currentSlide == 2) {
+      if (!columnId) setBuyColumns(toggleAllColumns(buyColumns));
+      else setBuyColumns(toggleColumn(columns, columnId));
+    }
   };
   useEffect(() => {
     dispatch(hideMessage());
   }, []);
+  const [columnsArray, setColumnsArray] = useState(columns);
+  const [propertiesData, setPropertiesData] = useState();
+  useEffect(() => {
+    if (currentSlide == 0) {
+      setColumnsArray(columns);
+      if (isSuccess) setPropertiesData(properties.allProperties);
+    }
+    if (currentSlide == 1) {
+      setColumnsArray(rentColumns);
+      if (isSuccess) setPropertiesData(properties.rentProperties);
+    }
+    if (currentSlide == 2) {
+      setColumnsArray(buyColumns);
+      if (isSuccess) setPropertiesData(properties.buyProperties);
+    } else {
+      setColumnsArray(columns);
+      if (isSuccess) setPropertiesData(properties.allProperties);
+    }
+  }, [currentSlide, isSuccess]);
   const handleOnCSVExport = () => {
-    exportToCSV("Properties", columns, properties);
+    exportToCSV("Properties", columnsArray, propertiesData);
   };
   const puposeButtons = ["All", "Rent", "Buy"];
   return (
     <>
-      <PropertyDrawer
-        drawerOpen={drawerOpen}
-        setDrawerOpen={setDrawerOpen}
-        drawerID={drawerID}
-        setDrawerID={setDrawerID}
+      <PropertyRentDrawer
+        drawerOpen={drawerRentOpen}
+        setDrawerOpen={setDrawerRentOpen}
+        drawerID={drawerRentID}
+        setDrawerID={setDrawerRentID}
       />
-
+      <PropertyBuyDrawer
+        drawerOpen={drawerBuyOpen}
+        setDrawerOpen={setDrawerBuyOpen}
+        drawerID={drawerBuyID}
+        setDrawerID={setDrawerBuyID}
+      />
       <PageSimple
         content={
           <>
@@ -130,9 +174,12 @@ const PropertyPage = () => {
                 currentSlide !== 0 && <Add fontSize="large" />
               }
               onClickPrimaryBtn={(ev) => {
-                if (currentSlide !== 0) {
-                  setDrawerID("");
-                  setDrawerOpen(true);
+                if (currentSlide == 1) {
+                  setDrawerRentID("");
+                  setDrawerRentOpen(true);
+                } else if (currentSlide == 2) {
+                  setDrawerBuyID("");
+                  setDrawerBuyOpen(true);
                 }
               }}
               other={
@@ -181,11 +228,11 @@ const PropertyPage = () => {
                       searchText={searchText}
                       columns={columns}
                       loading={isLoading}
-                      data={properties.allProperties?.entities}
-                      dataCount={properties.allProperties?.count}
+                      data={properties?.allProperties?.entities}
+                      dataCount={properties?.allProperties?.count}
                       onRowClick={(ev, row) => {
-                        setDrawerID(row.original?.id);
-                        setDrawerOpen(true);
+                        // setDrawerID(row.original?.id);
+                        // setDrawerOpen(true);
                       }}
                       isShown
                     />
@@ -193,33 +240,35 @@ const PropertyPage = () => {
                       key={1}
                       noDataMessage="There are no Properties"
                       searchText={searchText}
-                      columns={columns}
+                      columns={rentColumns}
                       loading={isLoading}
                       data={properties.rentProperties?.entities}
                       dataCount={properties.rentProperties?.count}
                       onRowClick={(ev, row) => {
-                        setDrawerID(row.original?.id);
-                        setDrawerOpen(true);
+                        setDrawerRentID(row.original?.id);
+                        setDrawerRentOpen(true);
                       }}
+                      isShown
                     />
                     <AdminTable
                       key={2}
                       noDataMessage="There are no Properties"
                       searchText={searchText}
-                      columns={columns}
+                      columns={buyColumns}
                       loading={isLoading}
                       data={properties.buyProperties?.entities}
-                      dataCount={properties.buyProperties?.ids?.length}
+                      dataCount={properties.buyProperties?.count}
                       onRowClick={(ev, row) => {
-                        setDrawerID(row.original?.id);
-                        setDrawerOpen(true);
+                        setDrawerBuyID(row.original?.id);
+                        setDrawerBuyOpen(true);
                       }}
+                      isShown
                     />
                   </Slider>
                 )
               }
               handleCheckChange={(columnId) => handleToggleColumn(columnId)}
-              columnsOfTogglerColumns={columns
+              columnsOfTogglerColumns={columnsArray
                 .filter(
                   (column) =>
                     !(column.id === "action" || column.id === "monitor") &&
@@ -231,9 +280,9 @@ const PropertyPage = () => {
                   checked: column.checked,
                 }))}
               columnsToggler
-              // exportMenu={{
-              //   onCSVExport: handleOnCSVExport,
-              // }}
+              exportMenu={{
+                onCSVExport: handleOnCSVExport,
+              }}
             />
           </>
         }

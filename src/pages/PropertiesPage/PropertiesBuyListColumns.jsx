@@ -15,7 +15,6 @@ export const ComposeColumns = (onDelete) => {
       lockToggle: false,
       hover: true,
     },
-
     {
       Header: "Handover",
       id: "Handover",
@@ -26,9 +25,9 @@ export const ComposeColumns = (onDelete) => {
       checked: true,
     },
     {
-      Header: "Furnishing Status",
-      id: "FurnishingStatus",
-      accessor: (d) => d.FurnishingStatus,
+      Header: "Completion Status",
+      id: "CompletionStatus",
+      accessor: (d) => d.CompletionStatus,
       className: "font-bold",
       sortable: true,
       show: false,
@@ -37,16 +36,16 @@ export const ComposeColumns = (onDelete) => {
     {
       Header: "Vacant Status",
       id: "VacantStatus",
-      accessor: (d) => d.VacantStatus,
+      accessor: (d) => (d.CompletionStatus == "Ready" ? d.VacantStatus : "-"),
       className: "font-bold",
       sortable: true,
       show: false,
       checked: true,
     },
     {
-      Header: "Purpose",
-      id: "Purpose",
-      accessor: (d) => d.Purpose,
+      Header: "Furnishing Status",
+      id: "FurnishingStatus",
+      accessor: (d) => d.FurnishingStatus,
       className: "font-bold",
       sortable: true,
       show: false,
@@ -86,6 +85,15 @@ export const ComposeColumns = (onDelete) => {
       checked: true,
     },
     {
+      Header: "Units",
+      id: "propertyUnits",
+      accessor: (d) => d?.propertyUnits?.length,
+      className: "font-bold",
+      sortable: true,
+      show: false,
+      checked: true,
+    },
+    {
       Header: "Created At",
       id: "CreatedAt",
       accessor: (d) => d.CreatedAt.split("T")[0],
@@ -117,7 +125,6 @@ export const ComposeColumns = (onDelete) => {
       show: false,
       checked: true,
     },
-
     {
       Header: "Action",
       id: "action",

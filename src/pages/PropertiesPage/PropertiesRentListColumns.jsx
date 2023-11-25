@@ -17,14 +17,24 @@ export const ComposeColumns = (onDelete) => {
     },
 
     {
-      Header: "Handover",
-      id: "Handover",
-      accessor: (d) => d.Handover,
+      Header: "Minimum Number Of Checks",
+      id: "RentMin",
+      accessor: (d) => d.RentMin,
       className: "font-bold",
       sortable: true,
       show: false,
       checked: true,
     },
+    {
+      Header: "Maximum Number Of Checks",
+      id: "RentMax",
+      accessor: (d) => d.RentMax,
+      className: "font-bold",
+      sortable: true,
+      show: false,
+      checked: true,
+    },
+
     {
       Header: "Furnishing Status",
       id: "FurnishingStatus",
@@ -38,15 +48,6 @@ export const ComposeColumns = (onDelete) => {
       Header: "Vacant Status",
       id: "VacantStatus",
       accessor: (d) => d.VacantStatus,
-      className: "font-bold",
-      sortable: true,
-      show: false,
-      checked: true,
-    },
-    {
-      Header: "Purpose",
-      id: "Purpose",
-      accessor: (d) => d.Purpose,
       className: "font-bold",
       sortable: true,
       show: false,

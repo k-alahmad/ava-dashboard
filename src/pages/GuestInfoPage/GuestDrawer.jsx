@@ -1,15 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import PageDrawer from "../../components/Admin/layout/PageDrawer";
 import { useLazyGetGuestByIdQuery } from "../../redux/guestInfo/guestInfo";
-import Slider from "react-slick";
-import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
-import {
-  CircularProgress,
-  TextField,
-  FormGroup,
-  FormControlLabel,
-  Switch,
-} from "@mui/material";
+import PageModal from "../../components/Admin/layout/PageModal";
+import { CircularProgress, TextField } from "@mui/material";
 const defaultFormState = {
   id: "",
   FullName: "",
@@ -21,8 +13,6 @@ const defaultFormState = {
 
 const GuestsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
   const [form, setForm] = useState(defaultFormState);
-  const sliderRef = useRef();
-  const [currentSlide, setCurrentSlide] = useState();
   const [
     getGuestById,
     { data, isLoading, isFetching, isError, error, isSuccess },
@@ -45,7 +35,6 @@ const GuestsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     setDrawerID("");
     setDrawerOpen(false);
     setForm(defaultFormState);
-    setCurrentSlide();
   };
 
   const formRef = useRef(null);
@@ -129,7 +118,7 @@ const GuestsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     );
   };
   return (
-    <PageDrawer
+    <PageModal
       isOpen={drawerOpen}
       title={drawerID == "" ? "New Guest" : "Edit Guest"}
       newItem={drawerID == "" && true}

@@ -914,20 +914,6 @@ const PropertyRentDrawer = ({
                 <TextField
                   fullWidth
                   type="number"
-                  name="BalconySize"
-                  label={`Balcony Size`}
-                  id="BalconySize"
-                  onChange={handleChange}
-                  value={values.BalconySize}
-                  variant="outlined"
-                  size="medium"
-                  required
-                />
-              </div>
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
                   name="Bathrooms"
                   label={`Bathrooms`}
                   id="Bathrooms"
@@ -1067,6 +1053,24 @@ const PropertyRentDrawer = ({
                     label={values.Bacloney ? "Balcony" : "No Balcony"}
                   />
                 </FormGroup>
+              </div>
+              <div
+                className={`flex m-4 transition-all duration-200 ${
+                  values.Bacloney ? "scale-100" : "scale-0"
+                }`}
+              >
+                <TextField
+                  fullWidth
+                  type="number"
+                  name="BalconySize"
+                  label={`Balcony Size`}
+                  id="BalconySize"
+                  onChange={handleChange}
+                  value={values.BalconySize}
+                  variant="outlined"
+                  size="medium"
+                  required
+                />
               </div>
             </div>
           </div>

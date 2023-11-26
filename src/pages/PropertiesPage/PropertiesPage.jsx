@@ -197,7 +197,8 @@ const PropertyPage = () => {
                           sliderRef.current.slickGoTo(index);
                           setCurrentSlide(index);
                           setSearchText("");
-                          setDrawerID("");
+                          setDrawerRentID("");
+                          setDrawerBuyID("");
                         }}
                       >
                         {item}

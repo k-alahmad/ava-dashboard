@@ -28,6 +28,7 @@ import MetaDataPage from "./pages/MetaDataPage/MetaDataPage";
 import JobsPage from "./pages/JobsPage/JobsPage";
 import ApplicationPage from "./pages/ApplicationsPage/ApplicationPage";
 import ListingPage from "./pages/ListingsPage/ListingsPage";
+import PaymentPlanPage from "./pages/PaymentPlanPage/PaymentPlanPage";
 import { useGetProfileQuery } from "./redux/auth/authApiSlice";
 const App = () => {
   const { data, isSuccess } = useGetProfileQuery();
@@ -48,259 +49,277 @@ const App = () => {
     <Routes>
       <Route path="/login" element={<AdminLogin />} />
       {/* Protected Routes */}
-      {isSuccess && (
-        <Route
-          path="/"
-          element={
-            <AdminContainer
-              children={
-                <>
-                  <Message />
-                  <RequireAuth />
-                </>
+
+      <Route
+        path="/"
+        element={
+          <AdminContainer
+            children={
+              <>
+                <Message />
+                <RequireAuth />
+              </>
+            }
+          />
+        }
+      >
+        <Route path="/" element={<DashboardPage />} />
+        {isSuccess && (
+          <>
+            <Route
+              path="/roles"
+              element={
+                data.Role.Role_Resources.find((x) => x.resource.Name == "Role")
+                  .Read == true ? (
+                  <RolePage />
+                ) : (
+                  <PermissionDenied />
+                )
               }
             />
-          }
-        >
-          <Route path="/" element={<DashboardPage />} />
-          <Route
-            path="/roles"
-            element={
-              data.Role.Role_Resources.find((x) => x.resource.Name == "Role")
-                .Read == true ? (
-                <RolePage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/users"
-            element={
-              data.Role.Role_Resources.find((x) => x.resource.Name == "Users")
-                .Read == true ? (
-                <UserPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/teams"
-            element={
-              data.Role.Role_Resources.find((x) => x.resource.Name == "Team")
-                .Read == true ? (
-                <TeamPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/address"
-            element={
-              data.Role.Role_Resources.find((x) => x.resource.Name == "Address")
-                .Read == true ? (
-                <AddressPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/lngs"
-            element={
-              data.Role.Role_Resources.find(
-                (x) => x.resource.Name == "Language"
-              ).Read == true ? (
-                <LNGPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/articles"
-            element={
-              data.Role.Role_Resources.find((x) => x.resource.Name == "Article")
-                .Read == true ? (
-                <ArticlePage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/currency"
-            element={
-              data.Role.Role_Resources.find(
-                (x) => x.resource.Name == "Currency"
-              ).Read == true ? (
-                <CurrenciesPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/unit"
-            element={
-              data.Role.Role_Resources.find((x) => x.resource.Name == "Unit")
-                .Read == true ? (
-                <UnitsPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/developers"
-            element={
-              data.Role.Role_Resources.find(
-                (x) => x.resource.Name == "Developer"
-              ).Read == true ? (
-                <DeveloperPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/category"
-            element={
-              data.Role.Role_Resources.find(
-                (x) => x.resource.Name == "Category"
-              ).Read == true ? (
-                <CategoryPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/amenities"
-            element={
-              data.Role.Role_Resources.find(
-                (x) => x.resource.Name == "Aminities"
-              ).Read == true ? (
-                <AmenityPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/announcements"
-            element={
-              data.Role.Role_Resources.find(
-                (x) => x.resource.Name == "Announcement"
-              ).Read == true ? (
-                <AnnouncementPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route
-            path="/property"
-            element={
-              data.Role.Role_Resources.find(
-                (x) => x.resource.Name == "Property"
-              ).Read == true ? (
-                <PropertyPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
+            <Route
+              path="/users"
+              element={
+                data.Role.Role_Resources.find((x) => x.resource.Name == "Users")
+                  .Read == true ? (
+                  <UserPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/teams"
+              element={
+                data.Role.Role_Resources.find((x) => x.resource.Name == "Team")
+                  .Read == true ? (
+                  <TeamPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/address"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "Address"
+                ).Read == true ? (
+                  <AddressPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/lngs"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "Language"
+                ).Read == true ? (
+                  <LNGPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/articles"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "Article"
+                ).Read == true ? (
+                  <ArticlePage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/payment-plan"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "PaymentPlan"
+                ).Read == true ? (
+                  <PaymentPlanPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/currency"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "Currency"
+                ).Read == true ? (
+                  <CurrenciesPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/unit"
+              element={
+                data.Role.Role_Resources.find((x) => x.resource.Name == "Unit")
+                  .Read == true ? (
+                  <UnitsPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/developers"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "Developer"
+                ).Read == true ? (
+                  <DeveloperPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/category"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "Category"
+                ).Read == true ? (
+                  <CategoryPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/amenities"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "Aminities"
+                ).Read == true ? (
+                  <AmenityPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/announcements"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "Announcement"
+                ).Read == true ? (
+                  <AnnouncementPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route
+              path="/property"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "Property"
+                ).Read == true ? (
+                  <PropertyPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
 
-          <Route
-            path="/guest-info"
-            element={
-              data.Role.Role_Resources.find(
-                (x) => x.resource.Name == "Guest-info"
-              ).Read == true ? (
-                <GuestsPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route path="/personalization" element={<PersonalizationPage />} />
-          <Route
-            path="/feedback"
-            element={
-              data.Role.Role_Resources.find(
-                (x) => x.resource.Name == "Feedback"
-              ).Read == true ? (
-                <FeedbackPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/enquiry"
-            element={
-              data.Role.Role_Resources.find((x) => x.resource.Name == "Enquiry")
-                .Read == true ? (
-                <EnquiryPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/meta-data"
-            element={
-              data.Role.Role_Resources.find(
-                (x) => x.resource.Name == "meta-Data"
-              ).Read == true ? (
-                <MetaDataPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/jobs"
-            element={
-              data.Role.Role_Resources.find((x) => x.resource.Name == "Job")
-                .Read == true ? (
-                <JobsPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/applicants"
-            element={
-              data.Role.Role_Resources.find(
-                (x) => x.resource.Name == "Applicant"
-              ).Read == true ? (
-                <ApplicationPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route
-            path="/list-with-us"
-            element={
-              data.Role.Role_Resources.find(
-                (x) => x.resource.Name == "List-with-us"
-              ).Read == true ? (
-                <ListingPage />
-              ) : (
-                <PermissionDenied />
-              )
-            }
-          />
-          <Route path="*" element={<DashboardPage />} />
-        </Route>
-      )}
+            <Route
+              path="/guest-info"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "Guest-info"
+                ).Read == true ? (
+                  <GuestsPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route path="/personalization" element={<PersonalizationPage />} />
+            <Route
+              path="/feedback"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "Feedback"
+                ).Read == true ? (
+                  <FeedbackPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/enquiry"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "Enquiry"
+                ).Read == true ? (
+                  <EnquiryPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/meta-data"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "meta-Data"
+                ).Read == true ? (
+                  <MetaDataPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/jobs"
+              element={
+                data.Role.Role_Resources.find((x) => x.resource.Name == "Job")
+                  .Read == true ? (
+                  <JobsPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/applicants"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "Applicant"
+                ).Read == true ? (
+                  <ApplicationPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route
+              path="/list-with-us"
+              element={
+                data.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "List-with-us"
+                ).Read == true ? (
+                  <ListingPage />
+                ) : (
+                  <PermissionDenied />
+                )
+              }
+            />
+            <Route path="*" element={<DashboardPage />} />
+          </>
+        )}
+      </Route>
     </Routes>
   );
 };

@@ -30,9 +30,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import Button from "../../components/UI/Button";
 import {
   API_BASE_URL,
-  Purpose,
   CompletionStatus,
-  RentFrequency,
+  FurnishingStatus,
+  VacantStatus,
 } from "../../constants";
 import RichTextBox from "../../components/Forms/RichTextBox";
 import {
@@ -42,15 +42,17 @@ import {
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import useForm from "../../hooks/useForm";
+import { Add, Delete } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
+import { showMessage } from "../../redux/messageAction.slice";
 const defaultFormState = {
   id: "",
-  RentMin: "",
-  RentMax: "",
+  CompletionStatus: "",
   FurnishingStatus: "",
   VacantStatus: "",
   Longitude: "",
   Latitude: "",
-  RentFrequency: "Yearly",
+  Handover: "",
   ReraNo: "",
   BRNNo: "",
   Developer: "",
@@ -65,16 +67,7 @@ const defaultFormState = {
   // size: "",
   ActiveStatus: true,
   Aminities: [],
-  Bacloney: false,
-  BalconySize: "",
-  Bathrooms: "",
-  Bedrooms: "",
-  DEDNo: "",
-  EstimatedRent: "",
-  PermitNumber: "",
-  Price: "",
-  PricePerSQFT: "",
-  Size: "",
+  propertyUnits: [],
 };
 
 const PropertyBuyDrawer = ({
@@ -84,6 +77,8 @@ const PropertyBuyDrawer = ({
   setDrawerID,
 }) => {
   const [properties_Translation, setProperties_Translation] = useState([]);
+  const [units, setUnits] = useState([]);
+  const [paymentPlan, setPaymentPlan] = useState({});
   const {
     disabled,
     setErrors,
@@ -93,11 +88,14 @@ const PropertyBuyDrawer = ({
     handleChange,
     handleSubmit,
     handleTranslationChange,
+    handleUnitsChange,
   } = useForm(
     submit,
     defaultFormState,
     properties_Translation,
-    setProperties_Translation
+    setProperties_Translation,
+    units,
+    setUnits
   );
   const [image, setImage] = useState([]);
   const [oldImage, setOldImage] = useState();
@@ -105,6 +103,7 @@ const PropertyBuyDrawer = ({
   const sliderRef = useRef();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectSearchTerm, setSelectSearchTerm] = useState("");
+  const dispatch = useDispatch();
   var selectSearchInput = useRef(undefined);
   const {
     data: lngs,
@@ -199,18 +198,11 @@ const PropertyBuyDrawer = ({
             AddressID: data.addressId,
             CategoryID: data.categoryId,
             Aminities: loadedAmenities,
-            Bacloney: data.propertyUnits[0].Bacloney,
-            BalconySize: data.propertyUnits[0].BalconySize,
-            Bathrooms: data.propertyUnits[0].Bathrooms,
-            Bedrooms: data.propertyUnits[0].Bedrooms,
-            DEDNo: data.propertyUnits[0].DEDNo,
-            EstimatedRent: data.propertyUnits[0].EstimatedRent,
-            PermitNumber: data.propertyUnits[0].PermitNumber,
-            Price: data.propertyUnits[0].Price,
-            PricePerSQFT: data.propertyUnits[0].PricePerSQFT,
-            Size: data.propertyUnits[0].Size,
+            propertyUnits: data.propertyUnits,
           });
           setProperties_Translation(data.Property_Translation);
+          setUnits(data.propertyUnits);
+          setPaymentPlan(data.propertyUnits[0]?.Paymentplan[0]);
         }
       } else {
         setValues(defaultFormState);
@@ -229,6 +221,20 @@ const PropertyBuyDrawer = ({
           });
           setProperties_Translation(translations);
         }
+        let pUnits = [];
+        pUnits.push({
+          Bacloney: false,
+          BalconySize: "",
+          Bathrooms: "",
+          Bedrooms: "",
+          DEDNo: "",
+          PermitNumber: "",
+          Price: "",
+          PricePerSQFT: "",
+          Size: "",
+        });
+
+        setUnits(pUnits);
       }
     }
   }, [drawerID, data, lngs, drawerOpen]);
@@ -263,18 +269,20 @@ const PropertyBuyDrawer = ({
     setOldImage(null);
     setProperties_Translation([]);
     setCurrentSlide(0);
+    setErrors({});
+    setUnits([]);
   };
   function submit(event) {
     event.preventDefault();
     const formData = new FormData();
-    formData.append("RentMin", values.RentMin);
-    formData.append("RentMax", values.RentMax);
-    formData.append("RentFrequency", values.RentFrequency);
+
+    formData.append("Handover", values.Handover);
     formData.append("FurnishingStatus", values.FurnishingStatus);
+    formData.append("CompletionStatus", values.CompletionStatus);
     formData.append("VacantStatus", values.VacantStatus);
     formData.append("Longitude", values.Longitude);
     formData.append("Latitude", values.Latitude);
-    formData.append("Purpose", "Rent");
+    formData.append("Purpose", "Buy");
     formData.append("ReraNo", values.ReraNo);
     formData.append("BRNNo", values.BRNNo);
     formData.append("DeveloperID", values.DeveloperID);
@@ -306,16 +314,27 @@ const PropertyBuyDrawer = ({
         properties_Translation[i].languagesID
       );
     }
-    formData.append(`propertyUnits[0][Bacloney]`, values.Bacloney);
-    formData.append(`propertyUnits[0][BalconySize]`, values.BalconySize);
-    formData.append(`propertyUnits[0][Bathrooms]`, values.Bathrooms);
-    formData.append(`propertyUnits[0][Bedrooms]`, values.Bedrooms);
-    formData.append(`propertyUnits[0][DEDNo]`, values.DEDNo);
-    formData.append(`propertyUnits[0][EstimatedRent]`, values.EstimatedRent);
-    formData.append(`propertyUnits[0][PermitNumber]`, values.PermitNumber);
-    formData.append(`propertyUnits[0][Price]`, values.Price);
-    formData.append(`propertyUnits[0][PricePerSQFT]`, values.PricePerSQFT);
-    formData.append(`propertyUnits[0][Size]`, values.Size);
+    for (let i = 0; i < units.length; i++) {
+      formData.append(`propertyUnits[${i}][Bacloney]`, units[i].Bacloney);
+      formData.append(`propertyUnits[${i}][BalconySize]`, units[i].BalconySize);
+      formData.append(`propertyUnits[${i}][Bathrooms]`, units[i].Bathrooms);
+      formData.append(`propertyUnits[${i}][Bedrooms]`, units[i].Bedrooms);
+      formData.append(`propertyUnits[${i}][DEDNo]`, units[i].DEDNo);
+      formData.append(
+        `propertyUnits[${i}][EstimatedRent]`,
+        units[i].EstimatedRent
+      );
+      formData.append(
+        `propertyUnits[${i}][PermitNumber]`,
+        units[i].PermitNumber
+      );
+      formData.append(`propertyUnits[${i}][Price]`, units[i].Price);
+      formData.append(
+        `propertyUnits[${i}][PricePerSQFT]`,
+        units[i].PricePerSQFT
+      );
+      formData.append(`propertyUnits[${i}][Size]`, units[i].Size);
+    }
 
     if (drawerID == "") {
       //add
@@ -333,7 +352,7 @@ const PropertyBuyDrawer = ({
 
   const formElements = () => {
     return (
-      <values ref={formRef} className="">
+      <form ref={formRef} className="">
         <div className="flex flex-col items-center justify-start mx-8">
           <div className="flex flex-col m-4">
             <Button
@@ -548,34 +567,60 @@ const PropertyBuyDrawer = ({
                 <TextField
                   fullWidth
                   type="text"
-                  name="FurnishingStatus"
-                  label={`Furnishing Status`}
-                  id="FurnishingStatus"
-                  onChange={handleChange}
-                  value={values.FurnishingStatus}
+                  name="unitsCount"
+                  label={`Units Count`}
+                  id="unitsCount"
+                  value={units.length}
                   variant="outlined"
                   size="medium"
-                  required
-                  error={Boolean(errors?.FurnishingStatus)}
-                  helperText={errors?.FurnishingStatus}
+                  disabled
                 />
               </div>
               <div className="flex m-4">
                 <TextField
                   fullWidth
                   type="text"
-                  name="VacantStatus"
-                  label={`Vacant Status`}
-                  id="VacantStatus"
+                  name="Handover"
+                  label={`Handover`}
+                  id="Handover"
                   onChange={handleChange}
-                  value={values.VacantStatus}
+                  value={values.Handover}
                   variant="outlined"
                   size="medium"
                   required
-                  error={Boolean(errors?.VacantStatus)}
-                  helperText={errors?.VacantStatus}
+                  error={Boolean(errors?.Handover)}
+                  helperText={errors?.Handover}
                 />
               </div>
+              <div className="flex m-4">
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Furnishing Status
+                  </InputLabel>
+                  <Select
+                    labelId="FurnishingStatus"
+                    name="FurnishingStatus"
+                    id="FurnishingStatus"
+                    value={values.FurnishingStatus}
+                    label="Furnishing Status"
+                    onChange={handleChange}
+                    MenuProps={{
+                      style: {
+                        maxHeight: "400px",
+                      },
+                    }}
+                  >
+                    {FurnishingStatus?.map((item, j) => {
+                      return (
+                        <MenuItem key={j} value={item}>
+                          {item}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </div>
+
               {developersisSuccess && (
                 <div className="flex m-4">
                   <FormControl fullWidth>
@@ -656,6 +701,7 @@ const PropertyBuyDrawer = ({
                   </FormControl>
                 </div>
               )}
+
               {amenitiesisSuccess && (
                 <div className="flex m-4">
                   <FormControl fullWidth>
@@ -840,54 +886,17 @@ const PropertyBuyDrawer = ({
                   </FormControl>
                 </div>
               )}
-            </div>
-          </div>
-          <div className="bg-secondary/10 p-4 space-y-4 rounded-lg mt-8 shadow-lg">
-            <p className="font-bold tex-2xl m-4">Rent Details</p>
-            <div className="grid grid-cols-2">
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="RentMin"
-                  label={`Rent Minimum`}
-                  id="RentMin"
-                  onChange={handleChange}
-                  value={values.RentMin}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.RentMin)}
-                  helperText={errors?.RentMin}
-                />
-              </div>
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="RentMax"
-                  label={`Rent Maximum`}
-                  id="RentMax"
-                  onChange={handleChange}
-                  value={values.RentMax}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.RentMax)}
-                  helperText={errors?.RentMax}
-                />
-              </div>
               <div className="flex m-4">
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">
-                    Rent Frequency
+                    Completion Status
                   </InputLabel>
                   <Select
-                    labelId="Rent Frequency"
-                    name="RentFrequency"
-                    id="RentFrequency"
-                    value={values.RentFrequency}
-                    label="Rent Frequency"
+                    labelId="CompletionStatus"
+                    name="CompletionStatus"
+                    id="CompletionStatus"
+                    value={values.CompletionStatus}
+                    label="Completion Status"
                     onChange={handleChange}
                     MenuProps={{
                       style: {
@@ -895,7 +904,39 @@ const PropertyBuyDrawer = ({
                       },
                     }}
                   >
-                    {RentFrequency?.map((item, j) => {
+                    {CompletionStatus?.map((item, j) => {
+                      return (
+                        <MenuItem key={j} value={item}>
+                          {item}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </div>
+              <div
+                className={`flex m-4 ${
+                  values.CompletionStatus == "Ready" ? "scale-100" : "scale-0"
+                }`}
+              >
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Vacant Status
+                  </InputLabel>
+                  <Select
+                    labelId="VacantStatus"
+                    name="VacantStatus"
+                    id="VacantStatus"
+                    value={values.VacantStatus}
+                    label="Vacant Status"
+                    onChange={handleChange}
+                    MenuProps={{
+                      style: {
+                        maxHeight: "400px",
+                      },
+                    }}
+                  >
+                    {VacantStatus?.map((item, j) => {
                       return (
                         <MenuItem key={j} value={item}>
                           {item}
@@ -907,168 +948,230 @@ const PropertyBuyDrawer = ({
               </div>
             </div>
           </div>
-          <div className="bg-secondary/10 p-4 space-y-4 rounded-lg mt-8 shadow-lg">
-            <p className="font-bold tex-2xl m-4">Unit Details</p>
-            <div className="grid grid-cols-2">
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="BalconySize"
-                  label={`Balcony Size`}
-                  id="BalconySize"
-                  onChange={handleChange}
-                  value={values.BalconySize}
-                  variant="outlined"
-                  size="medium"
-                  required
-                />
-              </div>
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="Bathrooms"
-                  label={`Bathrooms`}
-                  id="Bathrooms"
-                  onChange={handleChange}
-                  value={values.Bathrooms}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.Bathrooms)}
-                  helperText={errors?.Bathrooms}
-                />
-              </div>
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="DEDNo"
-                  label={`DEDNo`}
-                  id="DEDNo"
-                  onChange={handleChange}
-                  value={values.DEDNo}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.DEDNo)}
-                  helperText={errors?.DEDNo}
-                />
-              </div>
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="EstimatedRent"
-                  label={`Estimated Rent`}
-                  id="EstimatedRent"
-                  onChange={handleChange}
-                  value={values.EstimatedRent}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.EstimatedRent)}
-                  helperText={errors?.EstimatedRent}
-                />
-              </div>
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="PermitNumber"
-                  label={`Permit Number`}
-                  id="PermitNumber"
-                  onChange={handleChange}
-                  value={values.PermitNumber}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.PermitNumber)}
-                  helperText={errors?.PermitNumber}
-                />
-              </div>
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="Price"
-                  label={`Price`}
-                  id="Price"
-                  onChange={handleChange}
-                  value={values.Price}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.Price)}
-                  helperText={errors?.Price}
-                />
-              </div>
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="PricePerSQFT"
-                  label={`Price Per SQFT`}
-                  id="PricePerSQFT"
-                  onChange={handleChange}
-                  value={values.PricePerSQFT}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.PricePerSQFT)}
-                  helperText={errors?.PricePerSQFT}
-                />
-              </div>
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="Size"
-                  label={`Size`}
-                  id="Size"
-                  onChange={handleChange}
-                  value={values.Size}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.Size)}
-                  helperText={errors?.Size}
-                />
-              </div>
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="Bedrooms"
-                  label={`Bedrooms`}
-                  id="Bedrooms"
-                  onChange={handleChange}
-                  value={values.Bedrooms}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.Bedrooms)}
-                  helperText={errors?.Bedrooms}
-                />
-              </div>
-
-              <div className="flex m-4">
-                <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        onChange={handleChange}
-                        name="Bacloney"
-                        value={values.Bacloney}
-                        checked={values.Bacloney}
-                      />
-                    }
-                    label={values.Bacloney ? "Balcony" : "No Balcony"}
-                  />
-                </FormGroup>
-              </div>
+          <div className="relative">
+            <div
+              onClick={() => {
+                setUnits([
+                  ...units,
+                  {
+                    Bacloney: false,
+                    BalconySize: "",
+                    Bathrooms: "",
+                    Bedrooms: "",
+                    DEDNo: "",
+                    PermitNumber: "",
+                    Price: "",
+                    PricePerSQFT: "",
+                    Size: "",
+                  },
+                ]);
+              }}
+              className="absolute bottom-5 right-5 rounded-lg bg-primary p-2 shadow-lg flex items-center  !cursor-pointer z-10"
+            >
+              <Add fontSize="large" />
+              <p className="text-small">Add Unit</p>
             </div>
+            {units.map((item, index) => {
+              return (
+                <div
+                  className="bg-secondary/10 p-4 space-y-4 rounded-lg mt-8 shadow-lg relative"
+                  key={index}
+                >
+                  <div
+                    onClick={() => {
+                      if (units.length > 1) {
+                        let tempUnits = [...units];
+                        let idx = tempUnits.indexOf(item);
+                        if (idx > -1) {
+                          tempUnits.splice(idx, 1);
+                          setUnits(tempUnits);
+                        }
+                      } else {
+                        dispatch(
+                          showMessage({
+                            message: "At Least One Unit Must Exist",
+                            variant: "error",
+                          })
+                        );
+                      }
+                    }}
+                    className="absolute top-5 right-5 rounded-lg bg-primary p-2 shadow-lg flex items-center cursor-pointer"
+                  >
+                    <Delete fontSize="large" color="error" />
+                    <p className="text-small text-red-600">Delete Unit</p>
+                  </div>
+                  <p className="font-bold tex-2xl m-4">
+                    Unit Details {index + 1}
+                  </p>
+                  <div className="grid grid-cols-2">
+                    <div className="flex m-4">
+                      <TextField
+                        fullWidth
+                        type="number"
+                        name={"Bathrooms" + index}
+                        label={`Bathrooms`}
+                        id={"Bathrooms" + index}
+                        onChange={(e) => {
+                          handleUnitsChange(e, "Bathrooms", index);
+                        }}
+                        value={item.Bathrooms}
+                        variant="outlined"
+                        size="medium"
+                        required
+                        error={Boolean(errors?.Bathrooms)}
+                        helperText={errors?.Bathrooms}
+                      />
+                    </div>
+                    <div className="flex m-4">
+                      <TextField
+                        fullWidth
+                        type="number"
+                        name={"DEDNo" + index}
+                        label={`DEDNo`}
+                        id={"DEDNo" + index}
+                        onChange={(e) => {
+                          handleUnitsChange(e, "DEDNo", index);
+                        }}
+                        value={item.DEDNo}
+                        variant="outlined"
+                        size="medium"
+                        required
+                        error={Boolean(errors?.DEDNo)}
+                        helperText={errors?.DEDNo}
+                      />
+                    </div>
+                    <div className="flex m-4">
+                      <TextField
+                        fullWidth
+                        type="number"
+                        name={"PermitNumber" + index}
+                        label={`Permit Number`}
+                        id={"PermitNumber" + index}
+                        onChange={(e) => {
+                          handleUnitsChange(e, "PermitNumber", index);
+                        }}
+                        value={item.PermitNumber}
+                        variant="outlined"
+                        size="medium"
+                        required
+                        error={Boolean(errors?.PermitNumber)}
+                        helperText={errors?.PermitNumber}
+                      />
+                    </div>
+                    <div className="flex m-4">
+                      <TextField
+                        fullWidth
+                        type="number"
+                        name={"Price" + index}
+                        label={`Price`}
+                        id={"Price" + index}
+                        onChange={(e) => {
+                          handleUnitsChange(e, "Price", index);
+                        }}
+                        value={item.Price}
+                        variant="outlined"
+                        size="medium"
+                        required
+                        error={Boolean(errors?.Price)}
+                        helperText={errors?.Price}
+                      />
+                    </div>
+                    <div className="flex m-4">
+                      <TextField
+                        fullWidth
+                        type="number"
+                        name={"PricePerSQFT" + index}
+                        label={`Price Per SQFT`}
+                        id={"PricePerSQFT" + index}
+                        onChange={(e) => {
+                          handleUnitsChange(e, "PricePerSQFT", index);
+                        }}
+                        value={values.item}
+                        variant="outlined"
+                        size="medium"
+                        required
+                        error={Boolean(errors?.PricePerSQFT)}
+                        helperText={errors?.PricePerSQFT}
+                      />
+                    </div>
+                    <div className="flex m-4">
+                      <TextField
+                        fullWidth
+                        type="number"
+                        name={"Size" + index}
+                        label={`Size`}
+                        id={"Size" + index}
+                        onChange={(e) => {
+                          handleUnitsChange(e, "Size", index);
+                        }}
+                        value={item.Size}
+                        variant="outlined"
+                        size="medium"
+                        required
+                        error={Boolean(errors?.Size)}
+                        helperText={errors?.Size}
+                      />
+                    </div>
+                    <div className="flex m-4">
+                      <TextField
+                        fullWidth
+                        type="number"
+                        name={"Bedrooms" + index}
+                        label={`Bedrooms`}
+                        id={"Bedrooms" + index}
+                        onChange={(e) => {
+                          handleUnitsChange(e, "Bedrooms", index);
+                        }}
+                        value={values.Bedrooms}
+                        variant="outlined"
+                        size="medium"
+                        required
+                        error={Boolean(errors?.Bedrooms)}
+                        helperText={errors?.Bedrooms}
+                      />
+                    </div>
+
+                    <div className="flex m-4">
+                      <FormGroup>
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              onChange={(e) => {
+                                handleUnitsChange(e, "Bacloney", index);
+                              }}
+                              name={"Bacloney" + index}
+                              value={item.Bacloney}
+                              checked={item.Bacloney}
+                            />
+                          }
+                          label={item.Bacloney ? "Balcony" : "No Balcony"}
+                        />
+                      </FormGroup>
+                    </div>
+                    <div
+                      className={`flex m-4 transition-all duration-200 ${
+                        item.Bacloney ? "scale-100" : "scale-0"
+                      }`}
+                    >
+                      <TextField
+                        fullWidth
+                        type="number"
+                        name={`BalconySize` + index}
+                        label={`Balcony Size`}
+                        id={"BalconySize" + index}
+                        onChange={(e) => {
+                          handleUnitsChange(e, "BalconySize", index);
+                        }}
+                        value={item.BalconySize}
+                        variant="outlined"
+                        size="medium"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
           <div className="bg-secondary/10 p-4 space-y-4 rounded-lg mt-8 shadow-lg">
             <p className="font-bold tex-2xl m-4">Location Details</p>
@@ -1235,8 +1338,198 @@ const PropertyBuyDrawer = ({
               </div>
             </div>
           </div>
+          {Object.keys(paymentPlan).length !== 0 && drawerID !== "" && (
+            <div className="bg-secondary/10 p-4 space-y-4 rounded-lg mt-8 shadow-lg">
+              <p className="font-bold tex-2xl m-4">Payment Plan</p>
+              <div className="grid grid-cols-2">
+                <div className="flex m-4">
+                  <TextField
+                    fullWidth
+                    type="text"
+                    name="DownPayemnt"
+                    label={`Down Payemnt`}
+                    id="DownPayemnt"
+                    value={paymentPlan.DownPayemnt}
+                    variant="outlined"
+                    size="medium"
+                    disabled
+                  />
+                </div>
+                <div className="flex m-4">
+                  <TextField
+                    fullWidth
+                    type="text"
+                    name="DuringConstructionMonths"
+                    label={`During Construction Months`}
+                    id="DuringConstructionMonths"
+                    value={paymentPlan.DuringConstructionMonths}
+                    variant="outlined"
+                    size="medium"
+                    disabled
+                  />
+                </div>
+                <div className="flex m-4">
+                  <TextField
+                    fullWidth
+                    type="text"
+                    name="DuringConstructionMonths"
+                    label={`During Construction Months`}
+                    id="DuringConstructionMonths"
+                    value={paymentPlan.DuringConstructionMonths}
+                    variant="outlined"
+                    size="medium"
+                    disabled
+                  />
+                </div>
+                <div className="flex m-4">
+                  <TextField
+                    fullWidth
+                    type="text"
+                    name="DuringConstructionPercentage"
+                    label={`During Construction Percentage`}
+                    id="DuringConstructionPercentage"
+                    value={paymentPlan.DuringConstructionPercentage}
+                    variant="outlined"
+                    size="medium"
+                    disabled
+                  />
+                </div>
+                <div className="flex m-4">
+                  <TextField
+                    fullWidth
+                    type="text"
+                    name="HandoverDate"
+                    label={`Handover Date`}
+                    id="HandoverDate"
+                    value={paymentPlan.HandoverDate.split("T")[0]}
+                    variant="outlined"
+                    size="medium"
+                    disabled
+                  />
+                </div>
+
+                <div className="flex m-4">
+                  <TextField
+                    fullWidth
+                    type="text"
+                    name="OnHandoverPercentage"
+                    label={`On Handover Percentage`}
+                    id="OnHandoverPercentage"
+                    value={paymentPlan.OnHandoverPercentage}
+                    variant="outlined"
+                    size="medium"
+                    disabled
+                  />
+                </div>
+                <div className="flex m-4">
+                  <TextField
+                    fullWidth
+                    type="text"
+                    name="Posthandover"
+                    label={`Posthandover`}
+                    id="Posthandover"
+                    value={paymentPlan.Posthandover ? "YES" : "NO"}
+                    variant="outlined"
+                    size="medium"
+                    disabled
+                  />
+                </div>
+                {paymentPlan?.Posthandover && (
+                  <div className="flex m-4">
+                    <TextField
+                      fullWidth
+                      type="text"
+                      name="NoOfPosthandoverMonths"
+                      label={`Number Of Posthandover Months`}
+                      id="NoOfPosthandoverMonths"
+                      value={paymentPlan.NoOfPosthandoverMonths}
+                      variant="outlined"
+                      size="medium"
+                      disabled
+                    />
+                  </div>
+                )}
+                {paymentPlan?.Posthandover && (
+                  <div className="flex m-4">
+                    <TextField
+                      fullWidth
+                      type="text"
+                      name="PosthandoverPercentage"
+                      label={`Posthandover Percentage`}
+                      id="PosthandoverPercentage"
+                      value={paymentPlan.PosthandoverPercentage}
+                      variant="outlined"
+                      size="medium"
+                      disabled
+                    />
+                  </div>
+                )}
+                <div className="flex m-4">
+                  <TextField
+                    fullWidth
+                    type="text"
+                    name="TotalMonths"
+                    label={`Total Months`}
+                    id="TotalMonths"
+                    value={paymentPlan.TotalMonths}
+                    variant="outlined"
+                    size="medium"
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+          {Object.keys(paymentPlan).length !== 0 && drawerID !== "" && (
+            <div className="bg-secondary/10 p-4 space-y-4 rounded-lg mt-8 shadow-lg">
+              <p className="font-bold tex-2xl m-4">Installments</p>
+              <table className="w-full border-2 border-black/30">
+                <tbody>
+                  <tr className="border-black/30 border-2 text-tiny md:text-smaller text-center">
+                    <th className="p-2 border-black/30 border-2">Number</th>
+                    <th className="p-2 border-black/30 border-2">
+                      Description
+                    </th>
+                    <th className="p-2 border-black/30 border-2">
+                      Percentage Of Payment
+                    </th>
+                    <th className="p-2 border-black/30 border-2">Amount</th>
+                    <th className="p-2 border-black/30 border-2">Date</th>
+                  </tr>
+                  {paymentPlan?.Installments?.map((item, index) => {
+                    return (
+                      <tr
+                        key={index}
+                        className="border-black/30 border-2 text-tiny md:text-smaller text-center"
+                      >
+                        <td className="p-2 border-black/30 border-2 font-bold text-start">
+                          {item.Number}
+                        </td>
+                        <td className={`p-2 border-black/30 border-2`}>
+                          {
+                            item.Installments_Translation.find(
+                              (x) => x.Language.Code == "En"
+                            ).Description
+                          }
+                        </td>
+                        <td className={`p-2 border-black/30 border-2`}>
+                          {item.PercentageOfPayment}
+                        </td>
+                        <td className={`p-2 border-black/30 border-2`}>
+                          {item.Amount}
+                        </td>
+                        <td className={`p-2 border-black/30 border-2`}>
+                          {item.Date.split("T")[0]}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
-      </values>
+      </form>
     );
   };
   return (

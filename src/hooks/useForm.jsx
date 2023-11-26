@@ -2,7 +2,14 @@ import { useEffect, useState } from "react";
 import { omit } from "lodash";
 import { useDispatch } from "react-redux";
 import { showMessage } from "../redux/messageAction.slice";
-const useForm = (callback, defaultValues, translation, setTranslation) => {
+const useForm = (
+  callback,
+  defaultValues,
+  translation,
+  setTranslation,
+  units,
+  setUnits
+) => {
   const [values, setValues] = useState(defaultValues);
   const [errors, setErrors] = useState({});
   const [disabled, setDisabled] = useState(false);
@@ -115,7 +122,7 @@ const useForm = (callback, defaultValues, translation, setTranslation) => {
     let name = event.target.name;
     let val;
 
-    if (name == "DOB") {
+    if (name == "DOB" || name == "HandoverDate") {
       val = event.target.value + "T00:00:00.000Z";
     } else if (event.target.type == "checkbox") {
       val = event.target.checked;
@@ -144,6 +151,35 @@ const useForm = (callback, defaultValues, translation, setTranslation) => {
     setTranslation((current) =>
       current.map((obj) => {
         if (obj.Language.Code == item.Language.Code) {
+          return {
+            ...obj,
+            [type]: val,
+          };
+        }
+        return obj;
+      })
+    );
+  }
+  function handleUnitsChange(e, type, index) {
+    let val;
+    if (e.target.type == "checkbox") {
+      val = e.target.checked;
+    } else {
+      val = e.target.value;
+    }
+
+    if (val.length == 0) {
+      setErrors({
+        ...errors,
+        [type + (index + 1)]: "this field is required",
+      });
+    } else {
+      let newObj = omit(errors, `${type + (index + 1)}`);
+      setErrors(newObj);
+    }
+    setUnits((current) =>
+      current.map((obj, i) => {
+        if (i == index) {
           return {
             ...obj,
             [type]: val,
@@ -219,6 +255,7 @@ const useForm = (callback, defaultValues, translation, setTranslation) => {
     handleChange,
     handleSubmit,
     handleTranslationChange,
+    handleUnitsChange,
     setErrors,
   };
 };

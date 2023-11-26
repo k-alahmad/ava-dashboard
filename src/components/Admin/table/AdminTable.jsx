@@ -205,14 +205,14 @@ const AdminTable = ({
                           setCellName(cell.column.id);
                           if (cell.column.hover) {
                             setRowId(row.id);
-                            onMouseChange(true);
+                            // onMouseChange(true);
                           }
                         }}
                         onMouseLeave={() => {
                           setCellName();
                           if (cell.column.hover) {
                             setRowId("");
-                            onMouseChange(false);
+                            // onMouseChange(false);
                           }
                         }}
                       >
@@ -233,7 +233,7 @@ const AdminTable = ({
                               : "scale-0"
                           } z-50 transition-all duration-200 origin-top-left ease-out bg-primary absolute top-0 left-0 p-3 rounded-md text-secondary m-auto text-[20px] h-full`}
                         >
-                          <Typography className="w-[250px] inline !font-semibold text-[20px]">
+                          <Typography className="w-[250px] inline !font-semibold !text-[20px]">
                             {cell.render("Cell")}
                           </Typography>
                         </div>

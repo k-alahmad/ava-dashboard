@@ -25,10 +25,26 @@ import feedback from "../assets/icons/feedback.svg";
 import listing from "../assets/icons/listings-icon.svg";
 import forms from "../assets/icons/forms.svg";
 import userInfo from "../assets/icons/user-info.svg";
+import paymentplan from "../assets/icons/paymentplan.svg";
 
 export const data = [
   { icon: dashboard, name: "Dashboard", link: "/" },
-  { icon: property, name: "Properties", link: "/property" },
+  {
+    icon: property,
+    name: "Properties Management",
+    childs: [
+      {
+        icon: property,
+        name: "Properties",
+        link: "/property",
+      },
+      {
+        icon: paymentplan,
+        name: "Payment Plans",
+        link: "/payment-plan",
+      },
+    ],
+  },
   {
     icon: access,
     name: "Access",

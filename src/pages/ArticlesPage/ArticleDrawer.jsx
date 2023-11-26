@@ -210,7 +210,7 @@ const ArticleDrawer = ({
       if (drawerID !== "") {
         if (
           profile.Role.Role_Resources.find((x) => x.resource.Name == "Article")
-            .Update == false
+            .Update == true
         ) {
           setDisableField(false);
         } else {

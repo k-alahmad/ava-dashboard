@@ -47,12 +47,6 @@ const PageLayout = ({ children }) => {
                 {isSuccess && !isLoading && user.Title}
               </p>
             </div>
-            {/* <MdClose
-                className="text-primary !text-[30px] mx-2"
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              /> */}
           </header>
 
           <div className="h-[500px] w-[500px] rounded-full bg-primary/50 blur-[120px] absolute -top-[25%] -left-[50%]" />
@@ -79,7 +73,6 @@ const PageLayout = ({ children }) => {
                 <div className="w-full" key={i}>
                   <div
                     onClick={() => {
-                      // setIsOpen(true);
                       setExpand({
                         status: expand.key == i ? !expand.status : true,
                         key: i,

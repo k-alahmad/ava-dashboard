@@ -542,7 +542,6 @@ const PropertyBuyDrawer = ({
                         value={item.Name}
                         variant="outlined"
                         size="medium"
-                        required
                         error={Boolean(
                           Object.keys(errors).find(
                             (x) => x == "Name" + item.Language.Code
@@ -611,7 +610,6 @@ const PropertyBuyDrawer = ({
                   value={values.Handover}
                   variant="outlined"
                   size="medium"
-                  required
                   error={Boolean(errors?.Handover)}
                   helperText={errors?.Handover}
                   disabled={disableField}
@@ -982,7 +980,8 @@ const PropertyBuyDrawer = ({
           <div className="relative">
             <button
               disabled={disableField}
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 setUnits([
                   ...units,
                   {
@@ -1006,12 +1005,15 @@ const PropertyBuyDrawer = ({
             {units.map((item, index) => {
               return (
                 <div
-                  className="bg-secondary/10 p-4 space-y-4 rounded-lg mt-8 shadow-lg relative"
+                  className="bg-secondary/10 p-4 space-y-4 rounded-lg mt-8 shadow-lg relative transition-all duration-700  animate-slideIn"
                   key={index}
+                  // style={{ "--delay": index * 0.25 + "s" }}
+                  style={{ "--delay": "0.000001s" }}
                 >
                   <button
                     disabled={disableField}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
                       if (units.length > 1) {
                         let tempUnits = [...units];
                         let idx = tempUnits.indexOf(item);
@@ -1050,7 +1052,6 @@ const PropertyBuyDrawer = ({
                         value={item.Bathrooms}
                         variant="outlined"
                         size="medium"
-                        required
                         error={Boolean(errors?.Bathrooms)}
                         helperText={errors?.Bathrooms}
                         disabled={disableField}
@@ -1069,7 +1070,6 @@ const PropertyBuyDrawer = ({
                         value={item.DEDNo}
                         variant="outlined"
                         size="medium"
-                        required
                         error={Boolean(errors?.DEDNo)}
                         helperText={errors?.DEDNo}
                         disabled={disableField}
@@ -1088,7 +1088,6 @@ const PropertyBuyDrawer = ({
                         value={item.PermitNumber}
                         variant="outlined"
                         size="medium"
-                        required
                         error={Boolean(errors?.PermitNumber)}
                         helperText={errors?.PermitNumber}
                         disabled={disableField}
@@ -1107,7 +1106,6 @@ const PropertyBuyDrawer = ({
                         value={item.Price}
                         variant="outlined"
                         size="medium"
-                        required
                         error={Boolean(errors?.Price)}
                         helperText={errors?.Price}
                         disabled={disableField}
@@ -1126,7 +1124,6 @@ const PropertyBuyDrawer = ({
                         value={values.item}
                         variant="outlined"
                         size="medium"
-                        required
                         error={Boolean(errors?.PricePerSQFT)}
                         helperText={errors?.PricePerSQFT}
                         disabled={disableField}
@@ -1145,7 +1142,6 @@ const PropertyBuyDrawer = ({
                         value={item.Size}
                         variant="outlined"
                         size="medium"
-                        required
                         error={Boolean(errors?.Size)}
                         helperText={errors?.Size}
                         disabled={disableField}
@@ -1164,7 +1160,6 @@ const PropertyBuyDrawer = ({
                         value={values.Bedrooms}
                         variant="outlined"
                         size="medium"
-                        required
                         error={Boolean(errors?.Bedrooms)}
                         helperText={errors?.Bedrooms}
                         disabled={disableField}
@@ -1206,7 +1201,6 @@ const PropertyBuyDrawer = ({
                         value={item.BalconySize}
                         variant="outlined"
                         size="medium"
-                        required
                         disabled={disableField}
                       />
                     </div>
@@ -1229,7 +1223,6 @@ const PropertyBuyDrawer = ({
                   value={values.Longitude}
                   variant="outlined"
                   size="medium"
-                  required
                   disabled={disableField}
                 />
               </div>
@@ -1244,7 +1237,6 @@ const PropertyBuyDrawer = ({
                   value={values.Latitude}
                   variant="outlined"
                   size="medium"
-                  required
                   disabled={disableField}
                 />
               </div>
@@ -1344,7 +1336,6 @@ const PropertyBuyDrawer = ({
                   value={values.ReraNo}
                   variant="outlined"
                   size="medium"
-                  required
                   error={Boolean(errors?.ReraNo)}
                   helperText={errors?.ReraNo}
                   disabled={disableField}
@@ -1361,7 +1352,6 @@ const PropertyBuyDrawer = ({
                   value={values.BRNNo}
                   variant="outlined"
                   size="medium"
-                  required
                   error={Boolean(errors?.BRNNo)}
                   helperText={errors?.BRNNo}
                   disabled={disableField}

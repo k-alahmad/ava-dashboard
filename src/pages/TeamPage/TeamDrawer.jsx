@@ -129,7 +129,7 @@ const TeamDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
         }
       }
     }
-  }, [profileIsSuccess, profile]);
+  }, [profileIsSuccess, profile, drawerID]);
   const formElements = () => (
     <form ref={formRef} className="flex flex-col justify-center">
       <div className="py-8 md:mx-12">

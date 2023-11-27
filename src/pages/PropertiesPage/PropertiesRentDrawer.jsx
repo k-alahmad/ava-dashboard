@@ -42,6 +42,8 @@ import {
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import useForm from "../../hooks/useForm";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+
 const defaultFormState = {
   id: "",
   RentMin: "",
@@ -99,6 +101,8 @@ const PropertyRentDrawer = ({
     properties_Translation,
     setProperties_Translation
   );
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+  const [disableField, setDisableField] = useState(false);
   const [image, setImage] = useState([]);
   const [oldImage, setOldImage] = useState();
   const [imageURL, setImageURL] = useState([]);
@@ -331,31 +335,49 @@ const PropertyRentDrawer = ({
     sliderRef.current?.slickGoTo(currentSlide);
   }, [isSuccess, properties_Translation, sliderRef]);
 
+  useEffect(() => {
+    if (profileIsSuccess) {
+      if (drawerID !== "") {
+        if (
+          profile.Role.Role_Resources.find((x) => x.resource.Name == "Property")
+            .Update == false
+        ) {
+          setDisableField(false);
+        } else {
+          setDisableField(true);
+        }
+      }
+    }
+  }, [profileIsSuccess, profile, drawerID]);
+
   const formElements = () => {
     return (
       <values ref={formRef} className="">
         <div className="flex flex-col items-center justify-start mx-8">
-          <div className="flex flex-col m-4">
-            <Button
-              textColor={"white"}
-              text={"Upload Image"}
-              bgColor={"bg-primary"}
-              customStyle={"py-2 px-4"}
-              onClick={(e) => {
-                e.preventDefault();
-                hiddenFileInput.current.click();
-              }}
-            />
-            <input
-              type="file"
-              accept="image/png, image/jpeg, image/jpg"
-              multiple
-              name="images"
-              onChange={onImageChange}
-              style={{ display: "none" }}
-              ref={hiddenFileInput}
-            />
-          </div>
+          {!disableField && (
+            <div className="flex flex-col m-4">
+              <Button
+                textColor={"white"}
+                text={"Upload Image"}
+                bgColor={"bg-primary"}
+                customStyle={"py-2 px-4"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  hiddenFileInput.current.click();
+                }}
+              />
+              <input
+                type="file"
+                accept="image/png, image/jpeg, image/jpg"
+                multiple
+                name="images"
+                onChange={onImageChange}
+                style={{ display: "none" }}
+                ref={hiddenFileInput}
+              />
+            </div>
+          )}
+
           {imageURL.length !== 0 && (
             <div className=" bg-secondary/10 backdrop-blur-[21px] rounded-lg shadow-lg p-4 space-y-4 w-full">
               <div className="flex justify-between items-center">
@@ -514,12 +536,14 @@ const PropertyRentDrawer = ({
                             )
                           ]
                         }
+                        disabled={disableField}
                       />
                     </div>
                     <div>
                       <RichTextBox
                         label={`${item.Language.Name} Description`}
                         value={item.Description}
+                        disabled={disableField}
                         error={Boolean(
                           Object.keys(errors).find(
                             (x) => x == "Description" + item.Language.Code
@@ -558,6 +582,7 @@ const PropertyRentDrawer = ({
                   required
                   error={Boolean(errors?.FurnishingStatus)}
                   helperText={errors?.FurnishingStatus}
+                  disabled={disableField}
                 />
               </div>
               <div className="flex m-4">
@@ -574,6 +599,7 @@ const PropertyRentDrawer = ({
                   required
                   error={Boolean(errors?.VacantStatus)}
                   helperText={errors?.VacantStatus}
+                  disabled={disableField}
                 />
               </div>
               {developersisSuccess && (
@@ -598,6 +624,7 @@ const PropertyRentDrawer = ({
                       onClose={() => setSelectSearchTerm("")}
                       onAnimationEnd={() => selectSearchInput.current?.focus()}
                       error={Boolean(errors?.DeveloperID)}
+                      disabled={disableField}
                     >
                       <ListSubheader>
                         <TextField
@@ -706,6 +733,7 @@ const PropertyRentDrawer = ({
                           ))}
                         </div>
                       )}
+                      disabled={disableField}
                     >
                       <ListSubheader>
                         <TextField
@@ -784,6 +812,7 @@ const PropertyRentDrawer = ({
                       onClose={() => setSelectSearchTerm("")}
                       onAnimationEnd={() => selectSearchInput.current?.focus()}
                       error={Boolean(errors?.CategoryID)}
+                      disabled={disableField}
                     >
                       <ListSubheader>
                         <TextField
@@ -859,6 +888,7 @@ const PropertyRentDrawer = ({
                   required
                   error={Boolean(errors?.RentMin)}
                   helperText={errors?.RentMin}
+                  disabled={disableField}
                 />
               </div>
               <div className="flex m-4">
@@ -875,6 +905,7 @@ const PropertyRentDrawer = ({
                   required
                   error={Boolean(errors?.RentMax)}
                   helperText={errors?.RentMax}
+                  disabled={disableField}
                 />
               </div>
               <div className="flex m-4">
@@ -894,6 +925,7 @@ const PropertyRentDrawer = ({
                         maxHeight: "400px",
                       },
                     }}
+                    disabled={disableField}
                   >
                     {RentFrequency?.map((item, j) => {
                       return (
@@ -924,6 +956,7 @@ const PropertyRentDrawer = ({
                   required
                   error={Boolean(errors?.Bathrooms)}
                   helperText={errors?.Bathrooms}
+                  disabled={disableField}
                 />
               </div>
               <div className="flex m-4">
@@ -940,6 +973,7 @@ const PropertyRentDrawer = ({
                   required
                   error={Boolean(errors?.DEDNo)}
                   helperText={errors?.DEDNo}
+                  disabled={disableField}
                 />
               </div>
               <div className="flex m-4">
@@ -956,6 +990,7 @@ const PropertyRentDrawer = ({
                   required
                   error={Boolean(errors?.EstimatedRent)}
                   helperText={errors?.EstimatedRent}
+                  disabled={disableField}
                 />
               </div>
               <div className="flex m-4">
@@ -972,6 +1007,7 @@ const PropertyRentDrawer = ({
                   required
                   error={Boolean(errors?.PermitNumber)}
                   helperText={errors?.PermitNumber}
+                  disabled={disableField}
                 />
               </div>
               <div className="flex m-4">
@@ -988,6 +1024,7 @@ const PropertyRentDrawer = ({
                   required
                   error={Boolean(errors?.Price)}
                   helperText={errors?.Price}
+                  disabled={disableField}
                 />
               </div>
               <div className="flex m-4">
@@ -1004,6 +1041,7 @@ const PropertyRentDrawer = ({
                   required
                   error={Boolean(errors?.PricePerSQFT)}
                   helperText={errors?.PricePerSQFT}
+                  disabled={disableField}
                 />
               </div>
               <div className="flex m-4">
@@ -1020,6 +1058,7 @@ const PropertyRentDrawer = ({
                   required
                   error={Boolean(errors?.Size)}
                   helperText={errors?.Size}
+                  disabled={disableField}
                 />
               </div>
               <div className="flex m-4">
@@ -1036,6 +1075,7 @@ const PropertyRentDrawer = ({
                   required
                   error={Boolean(errors?.Bedrooms)}
                   helperText={errors?.Bedrooms}
+                  disabled={disableField}
                 />
               </div>
 
@@ -1048,6 +1088,7 @@ const PropertyRentDrawer = ({
                         name="Bacloney"
                         value={values.Bacloney}
                         checked={values.Bacloney}
+                        disabled={disableField}
                       />
                     }
                     label={values.Bacloney ? "Balcony" : "No Balcony"}
@@ -1070,6 +1111,7 @@ const PropertyRentDrawer = ({
                   variant="outlined"
                   size="medium"
                   required
+                  disabled={disableField}
                 />
               </div>
             </div>
@@ -1089,6 +1131,7 @@ const PropertyRentDrawer = ({
                   variant="outlined"
                   size="medium"
                   required
+                  disabled={disableField}
                 />
               </div>
               <div className="flex m-4">
@@ -1103,6 +1146,7 @@ const PropertyRentDrawer = ({
                   variant="outlined"
                   size="medium"
                   required
+                  disabled={disableField}
                 />
               </div>
 
@@ -1128,6 +1172,7 @@ const PropertyRentDrawer = ({
                       onClose={() => setSelectSearchTerm("")}
                       onAnimationEnd={() => selectSearchInput.current?.focus()}
                       error={Boolean(errors?.AddressID)}
+                      disabled={disableField}
                     >
                       <ListSubheader>
                         <TextField
@@ -1203,6 +1248,7 @@ const PropertyRentDrawer = ({
                   required
                   error={Boolean(errors?.ReraNo)}
                   helperText={errors?.ReraNo}
+                  disabled={disableField}
                 />
               </div>
               <div className="flex m-4">
@@ -1219,6 +1265,7 @@ const PropertyRentDrawer = ({
                   required
                   error={Boolean(errors?.BRNNo)}
                   helperText={errors?.BRNNo}
+                  disabled={disableField}
                 />
               </div>
 
@@ -1231,6 +1278,7 @@ const PropertyRentDrawer = ({
                         name="ActiveStatus"
                         value={values.ActiveStatus}
                         checked={values.ActiveStatus}
+                        disabled={disableField}
                       />
                     }
                     label={values.ActiveStatus ? "Active" : "InActive"}

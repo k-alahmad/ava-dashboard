@@ -166,7 +166,7 @@ const CurrenciesDrawer = ({
         }
       }
     }
-  }, [profileIsSuccess, profile]);
+  }, [profileIsSuccess, profile, drawerID]);
   const formElements = () => {
     return (
       <form ref={formRef} className="flex flex-col justify-center">

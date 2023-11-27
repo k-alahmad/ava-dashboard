@@ -141,7 +141,7 @@ const RoleDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
         }
       }
     }
-  }, [profileIsSuccess, profile]);
+  }, [profileIsSuccess, profile, drawerID]);
   const formElements = () => (
     <form ref={formRef} className="flex flex-col justify-cente">
       <div className="py-8 md:mx-12 ">

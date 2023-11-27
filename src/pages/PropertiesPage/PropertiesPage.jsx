@@ -28,6 +28,7 @@ import PropertyRentDrawer from "./PropertiesRentDrawer";
 import { Add } from "@mui/icons-material";
 import Slider from "react-slick";
 import PropertyBuyDrawer from "./PropertiesBuyDrawer";
+import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
 const PropertyPage = () => {
   const {
     data: properties,
@@ -58,6 +59,8 @@ const PropertyPage = () => {
   const [drawerBuyID, setDrawerBuyID] = useState("");
   const sliderRef = useRef();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+
   const onDelete = (event, model) => {
     event.preventDefault();
     event.stopPropagation();
@@ -171,7 +174,10 @@ const PropertyPage = () => {
               searchText={searchText}
               handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
               PrimaryButtonlabel={
-                currentSlide !== 0 && <Add fontSize="large" />
+                currentSlide !== 0 &&
+                profile.Role.Role_Resources.find(
+                  (x) => x.resource.Name == "Property"
+                ).Create == true && <Add fontSize="large" />
               }
               onClickPrimaryBtn={(ev) => {
                 if (currentSlide == 1) {

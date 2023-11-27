@@ -120,7 +120,7 @@ const PaymentPlanDrawer = ({
       if (drawerID !== "") {
         getPaymentPlanById({ id: drawerID });
         if (isSuccess) {
-          setValues(data);
+          setValues({ ...data, propertyID: data.propertyUnits[0].propertyId });
           setInstallments(data.Installments);
         }
       } else {
@@ -152,6 +152,7 @@ const PaymentPlanDrawer = ({
     setDrawerOpen(false);
     setValues(defaultFormState);
     setErrors({});
+    setGenerateInstallments(false);
   };
   function submit(event) {
     if (drawerID == "") {
@@ -547,15 +548,23 @@ const PaymentPlanDrawer = ({
                             {values.propertyID
                               ? properties.entities[
                                   values.propertyID
-                                ].propertyUnits.map((item, index) => {
+                                ].propertyUnits.map((unit, index) => {
                                   if (
                                     index !==
                                     properties.entities[values.propertyID]
                                       .propertyUnits.length -
                                       1
-                                  )
-                                    return item.Price + " | ";
-                                  else return item.Price;
+                                  ) {
+                                    return (
+                                      (unit.Price / 100) *
+                                        item.PercentageOfPayment +
+                                      " | "
+                                    );
+                                  } else
+                                    return (
+                                      (unit.Price / 100) *
+                                      item.PercentageOfPayment
+                                    );
                                 })
                               : "Choose A Property"}
                           </p>

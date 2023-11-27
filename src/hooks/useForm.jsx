@@ -8,7 +8,9 @@ const useForm = (
   translation,
   setTranslation,
   units,
-  setUnits
+  setUnits,
+  installments,
+  setInstallments
 ) => {
   const [values, setValues] = useState(defaultValues);
   const [errors, setErrors] = useState({});
@@ -160,6 +162,47 @@ const useForm = (
       })
     );
   }
+  function handleInstallmentChange(e, type, index, insideTranslation) {
+    let val;
+    if (e.target.type == "checkbox") {
+      val = e.target.checked;
+    } else {
+      val = e.target.value;
+    }
+
+    if (val.length == 0) {
+      setErrors({
+        ...errors,
+        [type]: "this field is required",
+      });
+    } else {
+      let newObj = omit(errors, `${type}`);
+      setErrors(newObj);
+    }
+    setInstallments((current) =>
+      current.map((obj, i) => {
+        if (i == index) {
+          if (insideTranslation) {
+            let it = obj.Installments_Translation;
+            let filteredIT = [...it.filter((x) => x.Language.Code !== "En")];
+            let ENOBJ = { ...it.find((x) => x.Language.Code == "En") };
+            ENOBJ.Description = val;
+
+            return {
+              ...obj,
+              Installments_Translation: [...filteredIT, ENOBJ],
+            };
+          } else {
+            return {
+              ...obj,
+              [type]: val,
+            };
+          }
+        }
+        return obj;
+      })
+    );
+  }
   function handleUnitsChange(e, type, index) {
     let val;
     if (e.target.type == "checkbox") {
@@ -171,10 +214,10 @@ const useForm = (
     if (val.length == 0) {
       setErrors({
         ...errors,
-        [type + (index + 1)]: "this field is required",
+        [type]: "this field is required",
       });
     } else {
-      let newObj = omit(errors, `${type + (index + 1)}`);
+      let newObj = omit(errors, `${type}`);
       setErrors(newObj);
     }
     setUnits((current) =>
@@ -232,6 +275,7 @@ const useForm = (
     ) {
       callback();
     } else {
+      console.log(errors);
       dispatch(
         showMessage({
           message: "Please fill the required fields",
@@ -256,6 +300,7 @@ const useForm = (
     handleSubmit,
     handleTranslationChange,
     handleUnitsChange,
+    handleInstallmentChange,
     setErrors,
   };
 };

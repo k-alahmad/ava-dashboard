@@ -1043,9 +1043,9 @@ const PropertyBuyDrawer = ({
                       <TextField
                         fullWidth
                         type="number"
-                        name={"Bathrooms" + index}
+                        name={"Bathrooms"}
                         label={`Bathrooms`}
-                        id={"Bathrooms" + index}
+                        id={"Bathrooms"}
                         onChange={(e) => {
                           handleUnitsChange(e, "Bathrooms", index);
                         }}
@@ -1061,9 +1061,9 @@ const PropertyBuyDrawer = ({
                       <TextField
                         fullWidth
                         type="number"
-                        name={"DEDNo" + index}
+                        name={"DEDNo"}
                         label={`DEDNo`}
-                        id={"DEDNo" + index}
+                        id={"DEDNo"}
                         onChange={(e) => {
                           handleUnitsChange(e, "DEDNo", index);
                         }}
@@ -1097,9 +1097,9 @@ const PropertyBuyDrawer = ({
                       <TextField
                         fullWidth
                         type="number"
-                        name={"Price" + index}
+                        name={"Price"}
                         label={`Price`}
-                        id={"Price" + index}
+                        id={"Price"}
                         onChange={(e) => {
                           handleUnitsChange(e, "Price", index);
                         }}
@@ -1115,9 +1115,9 @@ const PropertyBuyDrawer = ({
                       <TextField
                         fullWidth
                         type="number"
-                        name={"PricePerSQFT" + index}
+                        name={"PricePerSQFT"}
                         label={`Price Per SQFT`}
-                        id={"PricePerSQFT" + index}
+                        id={"PricePerSQFT"}
                         onChange={(e) => {
                           handleUnitsChange(e, "PricePerSQFT", index);
                         }}
@@ -1133,9 +1133,9 @@ const PropertyBuyDrawer = ({
                       <TextField
                         fullWidth
                         type="number"
-                        name={"Size" + index}
+                        name={"Size"}
                         label={`Size`}
-                        id={"Size" + index}
+                        id={"Size"}
                         onChange={(e) => {
                           handleUnitsChange(e, "Size", index);
                         }}
@@ -1151,9 +1151,9 @@ const PropertyBuyDrawer = ({
                       <TextField
                         fullWidth
                         type="number"
-                        name={"Bedrooms" + index}
+                        name={"Bedrooms"}
                         label={`Bedrooms`}
-                        id={"Bedrooms" + index}
+                        id={"Bedrooms"}
                         onChange={(e) => {
                           handleUnitsChange(e, "Bedrooms", index);
                         }}
@@ -1174,7 +1174,7 @@ const PropertyBuyDrawer = ({
                               onChange={(e) => {
                                 handleUnitsChange(e, "Bacloney", index);
                               }}
-                              name={"Bacloney" + index}
+                              name={"Bacloney"}
                               value={item.Bacloney}
                               checked={item.Bacloney}
                               disabled={disableField}
@@ -1192,7 +1192,7 @@ const PropertyBuyDrawer = ({
                       <TextField
                         fullWidth
                         type="number"
-                        name={`BalconySize` + index}
+                        name={`BalconySize`}
                         label={`Balcony Size`}
                         id={"BalconySize" + index}
                         onChange={(e) => {

@@ -5,13 +5,22 @@ import {
   useLazyGetPaymentPlanByIdQuery,
   useUpdatePaymentPlanMutation,
 } from "../../redux/paymentPlans/paymentPlansSlice";
+import { useGetActivePropertiesQuery } from "../../redux/properties/propertiesSlice";
 import {
   CircularProgress,
   TextField,
   FormGroup,
   FormControlLabel,
   Switch,
+  InputLabel,
+  FormControl,
+  Select,
+  ListSubheader,
+  InputAdornment,
+  MenuItem,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+
 import useForm from "../../hooks/useForm";
 import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
 const defaultFormState = {
@@ -24,6 +33,7 @@ const defaultFormState = {
   Posthandover: false,
   PosthandoverPercentage: "",
   TotalMonths: "",
+  propertyID: "",
   Installments: [],
 };
 
@@ -33,6 +43,7 @@ const PaymentPlanDrawer = ({
   drawerID,
   setDrawerID,
 }) => {
+  const [installments, setInstallments] = useState([]);
   const {
     disabled,
     setErrors,
@@ -41,14 +52,33 @@ const PaymentPlanDrawer = ({
     values,
     handleChange,
     handleSubmit,
-  } = useForm(submit, defaultFormState);
+    handleInstallmentChange,
+    handleTranslationChange,
+  } = useForm(
+    submit,
+    defaultFormState,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    installments,
+    setInstallments
+  );
   const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
   const [disableField, setDisableField] = useState(false);
-  const [installments, setInstallments] = useState([]);
+  const [selectSearchTerm, setSelectSearchTerm] = useState("");
+  var selectSearchInput = useRef(undefined);
+
   const [
     getPaymentPlanById,
     { data, isLoading, isFetching, isError, error, isSuccess },
   ] = useLazyGetPaymentPlanByIdQuery();
+  const {
+    data: properties,
+    isLoading: propertiesIsLoading,
+    isFetching: propertiesIsFetching,
+    isSuccess: propertiesIsSuccess,
+  } = useGetActivePropertiesQuery();
   const [
     addPaymentPlan,
     {
@@ -97,10 +127,14 @@ const PaymentPlanDrawer = ({
   function submit(event) {
     if (drawerID == "") {
       //add
-      addPaymentPlan({ formData: {} });
+      addPaymentPlan({ formData: values });
     } else {
+      console.log({ ...values, Installments: installments });
       //update
-      updatePaymentPlan({ id: drawerID, formData: {} });
+      updatePaymentPlan({
+        id: drawerID,
+        formData: { ...values, Installments: installments },
+      });
     }
   }
   const formRef = useRef(null);
@@ -209,6 +243,82 @@ const PaymentPlanDrawer = ({
                 disabled={disableField}
               />
             </div>
+
+            {propertiesIsSuccess && (
+              <div className="flex m-4">
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Property
+                  </InputLabel>
+                  <Select
+                    labelId="propertyID"
+                    name="propertyID"
+                    id="propertyID"
+                    value={values.propertyID}
+                    label="Property"
+                    onChange={handleChange}
+                    MenuProps={{
+                      autoFocus: false,
+                      style: {
+                        maxHeight: "400px",
+                      },
+                    }}
+                    onClose={() => setSelectSearchTerm("")}
+                    onAnimationEnd={() => selectSearchInput.current?.focus()}
+                  >
+                    <ListSubheader>
+                      <TextField
+                        ref={selectSearchInput}
+                        fullWidth
+                        type="text"
+                        name="SelectSearchTerm"
+                        placeholder="Search for Category"
+                        id="SelectSearchTerm"
+                        onChange={(e) => setSelectSearchTerm(e.target.value)}
+                        value={selectSearchTerm}
+                        variant="outlined"
+                        size="small"
+                        autoFocus
+                        onKeyDown={(e) => {
+                          if (e.key !== "Escape") {
+                            e.stopPropagation();
+                          }
+                        }}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <SearchIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </ListSubheader>
+
+                    {properties.ids?.map((item, j) => {
+                      if (
+                        properties?.entities[item]?.Property_Translation.find(
+                          (x) => x.Language.Code == "En"
+                        )
+                          ?.Name.toLowerCase()
+                          .includes(selectSearchTerm.toLowerCase())
+                      )
+                        return (
+                          <MenuItem key={j} value={item}>
+                            {
+                              properties.entities[
+                                item
+                              ]?.Property_Translation.find(
+                                (x) => x.Language.Code == "En"
+                              )?.Name
+                            }
+                          </MenuItem>
+                        );
+                    })}
+                  </Select>
+                </FormControl>
+              </div>
+            )}
+
             <div className="flex m-4">
               <FormGroup>
                 <FormControlLabel
@@ -224,44 +334,48 @@ const PaymentPlanDrawer = ({
                 />
               </FormGroup>
             </div>
-            {values.Posthandover && (
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="NoOfPosthandoverMonths"
-                  label={`Number Of Posthandover Months`}
-                  id="NoOfPosthandoverMonths"
-                  onChange={handleChange}
-                  value={values.NoOfPosthandoverMonths}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.NoOfPosthandoverMonths)}
-                  helperText={errors?.NoOfPosthandoverMonths}
-                  disabled={disableField}
-                />
-              </div>
-            )}
-            {values.Posthandover && (
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="PosthandoverPercentage"
-                  label={`Posthandover Percentage`}
-                  id="PosthandoverPercentage"
-                  onChange={handleChange}
-                  value={values.PosthandoverPercentage}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.PosthandoverPercentage)}
-                  helperText={errors?.PosthandoverPercentage}
-                  disabled={disableField}
-                />
-              </div>
-            )}
+            <div
+              className={`flex m-4 ${
+                values.Posthandover ? "scale-100" : "scale-0"
+              } transition-all duration-300`}
+            >
+              <TextField
+                fullWidth
+                type="number"
+                name="NoOfPosthandoverMonths"
+                label={`Number Of Posthandover Months`}
+                id="NoOfPosthandoverMonths"
+                onChange={handleChange}
+                value={values.NoOfPosthandoverMonths}
+                variant="outlined"
+                size="medium"
+                required
+                error={Boolean(errors?.NoOfPosthandoverMonths)}
+                helperText={errors?.NoOfPosthandoverMonths}
+                disabled={disableField}
+              />
+            </div>
+            <div
+              className={`flex m-4 ${
+                values.Posthandover ? "scale-100" : "scale-0"
+              } transition-all duration-300`}
+            >
+              <TextField
+                fullWidth
+                type="number"
+                name="PosthandoverPercentage"
+                label={`Posthandover Percentage`}
+                id="PosthandoverPercentage"
+                onChange={handleChange}
+                value={values.PosthandoverPercentage}
+                variant="outlined"
+                size="medium"
+                required
+                error={Boolean(errors?.PosthandoverPercentage)}
+                helperText={errors?.PosthandoverPercentage}
+                disabled={disableField}
+              />
+            </div>
             <div className="flex m-4">
               <TextField
                 fullWidth
@@ -306,20 +420,49 @@ const PaymentPlanDrawer = ({
                           {item.Number}
                         </td>
                         <td className={`p-2 border-black/30 border-2`}>
-                          {
-                            item.Installments_Translation.find(
-                              (x) => x.Language.Code == "En"
-                            ).Description
-                          }
+                          <TextField
+                            fullWidth
+                            type="text"
+                            name={"DescriptionEn"}
+                            label={`English Description`}
+                            id={"DescriptionEn"}
+                            onChange={(e) =>
+                              handleInstallmentChange(
+                                e,
+                                "Description",
+                                index,
+                                true
+                              )
+                            }
+                            value={
+                              item.Installments_Translation.find(
+                                (x) => x.Language.Code == "En"
+                              )?.Description
+                            }
+                            variant="outlined"
+                            size="medium"
+                            required
+                            // error={Boolean(errors?.Description)}
+                            // helperText={errors?.Description}
+                            disabled={disableField}
+                            error={Boolean(errors?.Description)}
+                            helperText={errors?.Description}
+                          />
                         </td>
                         <td className={`p-2 border-black/30 border-2`}>
                           <TextField
                             fullWidth
                             type="number"
-                            name="PercentageOfPayment"
+                            name={"PercentageOfPayment"}
                             label={`Percentage Of Payment`}
-                            id="PercentageOfPayment"
-                            onChange={handleChange}
+                            id={"PercentageOfPayment"}
+                            onChange={(e) =>
+                              handleInstallmentChange(
+                                e,
+                                "PercentageOfPayment",
+                                index
+                              )
+                            }
                             value={item.PercentageOfPayment}
                             variant="outlined"
                             size="medium"
@@ -333,10 +476,12 @@ const PaymentPlanDrawer = ({
                           <TextField
                             fullWidth
                             type="number"
-                            name="Amount"
+                            name={"Amount"}
                             label={`Amount`}
-                            id="Amount"
-                            onChange={handleChange}
+                            id={"Amount"}
+                            onChange={(e) =>
+                              handleInstallmentChange(e, "Amount", index)
+                            }
                             value={item.Amount}
                             variant="outlined"
                             size="medium"
@@ -350,10 +495,12 @@ const PaymentPlanDrawer = ({
                           <TextField
                             fullWidth
                             type="date"
-                            name="Date"
+                            name={"Date"}
                             label={`Date`}
-                            id="Date"
-                            onChange={handleChange}
+                            id={"Date"}
+                            onChange={(e) =>
+                              handleInstallmentChange(e, "Date", index)
+                            }
                             value={item.Date.split("T")[0]}
                             variant="outlined"
                             size="medium"
@@ -384,7 +531,12 @@ const PaymentPlanDrawer = ({
       onSaveClick={handleSubmit}
       disabled={disabled}
       children={
-        isLoading || addLoading || updateLoading || isFetching ? (
+        isLoading ||
+        addLoading ||
+        updateLoading ||
+        isFetching ||
+        propertiesIsFetching ||
+        propertiesIsLoading ? (
           <div className="flex flex-row justify-center items-center h-full w-full">
             <CircularProgress color="primary" />
           </div>

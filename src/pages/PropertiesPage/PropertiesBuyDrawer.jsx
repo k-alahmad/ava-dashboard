@@ -399,16 +399,17 @@ const PropertyBuyDrawer = ({
             <div className=" bg-secondary/10 backdrop-blur-[21px] rounded-lg shadow-lg p-4 space-y-4 w-full">
               <div className="flex justify-between items-center">
                 <p className="text-2xl font-bold">New Images</p>
-                <div
+                <button
+                  disabled={disableField}
                   onClick={() => {
                     setImage([]);
                     setImageURL([]);
                   }}
-                  className="text-center cursor-pointer flex items-center gap-x-2 bg-primary rounded-lg p-1"
+                  className="disabled:bg-gray-500 disabled:opacity-50 text-center cursor-pointer flex items-center gap-x-2 bg-primary rounded-lg p-1"
                 >
                   <DeleteSweepOutlinedIcon fontSize="large" color="error" />
                   <p className="text-red-600">Delete All</p>
-                </div>
+                </button>
               </div>
               <div className="grid grid-cols-3 gap-4 max-h-[640px] overflow-y-scroll place-items-center">
                 {imageURL?.map((imageSrc, i) => {
@@ -420,8 +421,9 @@ const PropertyBuyDrawer = ({
                         src={imageSrc}
                         alt=""
                       />
-                      <div
-                        className="text-center cursor-pointer absolute left-0 top-0 bg-primary rounded-br-lg rounded-tl-md pb-1 shadow-lg"
+                      <button
+                        disabled={disableField}
+                        className="disabled:bg-gray-500 disabled:opacity-50 text-center cursor-pointer absolute left-0 top-0 bg-primary rounded-br-lg rounded-tl-md pb-1 shadow-lg"
                         onClick={() => {
                           let tempUrls = imageURL;
                           let newTempUrls = tempUrls.filter(
@@ -437,7 +439,7 @@ const PropertyBuyDrawer = ({
                         }}
                       >
                         <DeleteOutlinedIcon fontSize="large" color="error" />
-                      </div>
+                      </button>
                     </div>
                   );
                 })}

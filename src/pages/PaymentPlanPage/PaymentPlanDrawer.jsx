@@ -20,14 +20,23 @@ import {
   MenuItem,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-
 import useForm from "../../hooks/useForm";
 import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+import {
+  ArrowCircleLeft,
+  ArrowCircleRight,
+  RemoveCircle,
+} from "@mui/icons-material";
+import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
 const defaultFormState = {
   DownPayemnt: "",
   DuringConstructionMonths: "",
   DuringConstructionPercentage: "",
-  HandoverDate: "",
+  HandoverDate: new Date()
+    .toLocaleDateString("en-GB")
+    .split("/")
+    .reverse()
+    .join("-"),
   NoOfPosthandoverMonths: "",
   OnHandoverPercentage: "",
   Posthandover: false,
@@ -44,6 +53,8 @@ const PaymentPlanDrawer = ({
   setDrawerID,
 }) => {
   const [installments, setInstallments] = useState([]);
+  const [generateInstallments, setGenerateInstallments] = useState(false);
+  const [generatedTranslation, setGeneratedTranslation] = useState([]);
   const {
     disabled,
     setErrors,
@@ -53,7 +64,6 @@ const PaymentPlanDrawer = ({
     handleChange,
     handleSubmit,
     handleInstallmentChange,
-    handleTranslationChange,
   } = useForm(
     submit,
     defaultFormState,
@@ -68,7 +78,14 @@ const PaymentPlanDrawer = ({
   const [disableField, setDisableField] = useState(false);
   const [selectSearchTerm, setSelectSearchTerm] = useState("");
   var selectSearchInput = useRef(undefined);
-
+  const {
+    data: lngs,
+    isLoading: lngIsLoading,
+    isFetching: lngIsFethcing,
+    isSuccess: lngisSuccess,
+    isError: lngIsError,
+    error: lngError,
+  } = useGetLNGQuery();
   const [
     getPaymentPlanById,
     { data, isLoading, isFetching, isError, error, isSuccess },
@@ -107,6 +124,19 @@ const PaymentPlanDrawer = ({
           setInstallments(data.Installments);
         }
       } else {
+        let newInst = [];
+        newInst.push({
+          Date: new Date()
+            .toLocaleDateString("en-GB")
+            .split("/")
+            .reverse()
+            .join("-"),
+          Installments_Translation: generatedTranslation,
+          Number: 0,
+          PercentageOfPayment: 0,
+        });
+        console.log(newInst);
+        setInstallments(newInst);
         setValues(defaultFormState);
       }
     }
@@ -153,6 +183,23 @@ const PaymentPlanDrawer = ({
       }
     }
   }, [profileIsSuccess, profile, drawerID]);
+  useEffect(() => {
+    if (lngisSuccess) {
+      let translations = [];
+      lngs.normalData.map((item) => {
+        translations.push({
+          languagesID: item.id,
+          Language: {
+            Name: item.Name,
+            Code: item.Code,
+          },
+          Name: "",
+          Description: "",
+        });
+      });
+      setGeneratedTranslation(translations);
+    }
+  }, [lngs, lngisSuccess]);
   const formElements = () => {
     return (
       <form ref={formRef} className="flex flex-col justify-center">
@@ -218,6 +265,7 @@ const PaymentPlanDrawer = ({
                 id="HandoverDate"
                 onChange={handleChange}
                 value={values.HandoverDate.split("T")[0]}
+                // defaultValue={}
                 variant="outlined"
                 size="medium"
                 required
@@ -376,25 +424,50 @@ const PaymentPlanDrawer = ({
                 disabled={disableField}
               />
             </div>
+            {/* <div className="flex m-4 gap-x-2">
+              Total Installments:
+              <div className="border-2 px-1.5 border-gray-300 font-bold">
+                {installments.length}
+              </div>
+           
+            </div> */}
             <div className="flex m-4">
-              <TextField
-                fullWidth
-                type="number"
-                name="TotalMonths"
-                label={`Total Months`}
-                id="TotalMonths"
-                onChange={handleChange}
-                value={values.TotalMonths}
-                variant="outlined"
-                size="medium"
-                required
-                error={Boolean(errors?.TotalMonths)}
-                helperText={errors?.TotalMonths}
-                disabled={disableField}
-              />
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      onChange={() => {
+                        if (!generateInstallments) {
+                          setGenerateInstallments(true);
+                          setInstallments([]);
+                        } else {
+                          setGenerateInstallments(false);
+                          let newInst = [];
+                          newInst.push({
+                            Date: new Date()
+                              .toLocaleDateString("en-GB")
+                              .split("/")
+                              .reverse()
+                              .join("-"),
+                            Installments_Translation: generatedTranslation,
+                            Number: 0,
+                            PercentageOfPayment: 0,
+                          });
+                          console.log(newInst);
+                          setInstallments(newInst);
+                        }
+                      }}
+                      name="manualInstallments"
+                      value={generateInstallments}
+                      checked={generateInstallments}
+                    />
+                  }
+                  label={"Generate Installment While Creating Payment Plan"}
+                />
+              </FormGroup>
             </div>
           </div>
-          {installments.length !== 0 && (
+          {installments.length !== 0 && !generateInstallments && (
             <div className="p-4 space-y-4 mt-8">
               <p className="font-bold tex-2xl m-4">Installments</p>
               <table className="w-full border-2 border-black/30">
@@ -409,22 +482,24 @@ const PaymentPlanDrawer = ({
                     </th>
                     <th className="p-2 border-black/30 border-2">Amount</th>
                     <th className="p-2 border-black/30 border-2">Date</th>
+                    <th className="p-2 border-black/30 border-2">Action</th>
                   </tr>
                   {installments?.map((item, index) => {
                     return (
                       <tr
                         key={index}
-                        className="border-black/30 border-2 text-tiny md:text-smaller text-center"
+                        className="border-black/30 border-2 text-tiny md:text-smaller text-center transition-all duration-300"
+                        // style={{ "--delay": "0.000001s" }}
                       >
-                        <td className="p-2 border-black/30 border-2 font-bold text-start">
-                          {item.Number}
+                        <td className="p-2 border-black/30 border-2 font-bold text-center">
+                          {index + 1}
                         </td>
                         <td className={`p-2 border-black/30 border-2`}>
                           <TextField
                             fullWidth
                             type="text"
                             name={"DescriptionEn"}
-                            label={`English Description`}
+                            label={`Description`}
                             id={"DescriptionEn"}
                             onChange={(e) =>
                               handleInstallmentChange(
@@ -442,8 +517,6 @@ const PaymentPlanDrawer = ({
                             variant="outlined"
                             size="medium"
                             required
-                            // error={Boolean(errors?.Description)}
-                            // helperText={errors?.Description}
                             disabled={disableField}
                             error={Boolean(errors?.Description)}
                             helperText={errors?.Description}
@@ -473,23 +546,22 @@ const PaymentPlanDrawer = ({
                           />
                         </td>
                         <td className={`p-2 border-black/30 border-2`}>
-                          <TextField
-                            fullWidth
-                            type="number"
-                            name={"Amount"}
-                            label={`Amount`}
-                            id={"Amount"}
-                            onChange={(e) =>
-                              handleInstallmentChange(e, "Amount", index)
-                            }
-                            value={item.Amount}
-                            variant="outlined"
-                            size="medium"
-                            required
-                            error={Boolean(errors?.Amount)}
-                            helperText={errors?.Amount}
-                            disabled={disableField}
-                          />
+                          <p>
+                            {values.propertyID
+                              ? properties.entities[
+                                  values.propertyID
+                                ].propertyUnits.map((item, index) => {
+                                  if (
+                                    index !==
+                                    properties.entities[values.propertyID]
+                                      .propertyUnits.length -
+                                      1
+                                  )
+                                    return item.Price + " | ";
+                                  else return item.Price;
+                                })
+                              : "Choose A Property"}
+                          </p>
                         </td>
                         <td className={`p-2 border-black/30 border-2`}>
                           <TextField
@@ -509,6 +581,78 @@ const PaymentPlanDrawer = ({
                             helperText={errors?.Date}
                             disabled={disableField}
                           />
+                        </td>
+                        <td
+                          className={`p-2 border-black/30 border-2 space-x-3`}
+                        >
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              // const date = new Date("1995-12-17T03:24:00");
+
+                              let inst = [...installments];
+
+                              inst.splice(index, 0, {
+                                Date: new Date()
+                                  .toLocaleDateString("en-GB")
+                                  .split("/")
+                                  .reverse()
+                                  .join("-"),
+                                Installments_Translation: generatedTranslation,
+                                Number: 0,
+                                PercentageOfPayment: 0,
+                              });
+                              setInstallments(inst);
+                            }}
+                          >
+                            <ArrowCircleLeft
+                              className="!text-primary rotate-90"
+                              fontSize="large"
+                            />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              let inst = [...installments];
+                              inst.splice(index + 1, 0, {
+                                Date: new Date()
+                                  .toLocaleDateString("en-GB")
+                                  .split("/")
+                                  .reverse()
+                                  .join("-"),
+                                Installments_Translation: generatedTranslation,
+                                Number: 0,
+                                PercentageOfPayment: 0,
+                              });
+                              setInstallments(inst);
+                            }}
+                          >
+                            <ArrowCircleRight
+                              className="!text-primary rotate-90"
+                              fontSize="large"
+                            />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (installments.length > 1) {
+                                let tempInstallments = [...installments];
+                                let idx = tempInstallments.indexOf(item);
+                                if (idx > -1) {
+                                  tempInstallments.splice(idx, 1);
+                                  setInstallments(tempInstallments);
+                                }
+                              } else {
+                                setGenerateInstallments(true);
+                                setInstallments([]);
+                              }
+                            }}
+                          >
+                            <RemoveCircle
+                              className="!text-primary"
+                              fontSize="large"
+                            />
+                          </button>
                         </td>
                       </tr>
                     );

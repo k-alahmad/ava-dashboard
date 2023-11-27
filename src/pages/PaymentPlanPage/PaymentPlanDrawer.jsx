@@ -135,7 +135,6 @@ const PaymentPlanDrawer = ({
           Number: 0,
           PercentageOfPayment: 0,
         });
-        console.log(newInst);
         setInstallments(newInst);
         setValues(defaultFormState);
       }
@@ -159,7 +158,6 @@ const PaymentPlanDrawer = ({
       //add
       addPaymentPlan({ formData: values });
     } else {
-      console.log({ ...values, Installments: installments });
       //update
       updatePaymentPlan({
         id: drawerID,
@@ -453,7 +451,6 @@ const PaymentPlanDrawer = ({
                             Number: 0,
                             PercentageOfPayment: 0,
                           });
-                          console.log(newInst);
                           setInstallments(newInst);
                         }
                       }}

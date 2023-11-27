@@ -51,8 +51,7 @@ const PropertyPage = () => {
   const pageLayout = useRef(null);
   const [deletedName, setDeletedName] = useState("");
   const [searchText, setSearchText] = useState("");
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [drawerID, setDrawerID] = useState("");
+
   const [drawerRentOpen, setDrawerRentOpen] = useState(false);
   const [drawerRentID, setDrawerRentID] = useState("");
   const [drawerBuyOpen, setDrawerBuyOpen] = useState(false);

@@ -28,6 +28,7 @@ import {
   RemoveCircle,
 } from "@mui/icons-material";
 import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
+import Button from "../../components/UI/Button";
 const defaultFormState = {
   DownPayemnt: "",
   DuringConstructionMonths: "",
@@ -157,12 +158,26 @@ const PaymentPlanDrawer = ({
   function submit(event) {
     if (drawerID == "") {
       //add
-      addPaymentPlan({ formData: values });
+      addPaymentPlan({
+        formData: {
+          ...values,
+          Installments: installments,
+          TotalMonths: generateInstallments
+            ? values.TotalMonths
+            : installments.length,
+        },
+      });
     } else {
       //update
       updatePaymentPlan({
         id: drawerID,
-        formData: { ...values, Installments: installments },
+        formData: {
+          ...values,
+          Installments: installments,
+          TotalMonths: generateInstallments
+            ? values.TotalMonths
+            : installments.length,
+        },
       });
     }
   }
@@ -423,13 +438,7 @@ const PaymentPlanDrawer = ({
                 disabled={disableField}
               />
             </div>
-            {/* <div className="flex m-4 gap-x-2">
-              Total Installments:
-              <div className="border-2 px-1.5 border-gray-300 font-bold">
-                {installments.length}
-              </div>
-           
-            </div> */}
+
             <div className="flex m-4">
               <FormGroup>
                 <FormControlLabel
@@ -464,6 +473,46 @@ const PaymentPlanDrawer = ({
                 />
               </FormGroup>
             </div>
+            <div className="flex m-4 gap-x-2">
+              {generateInstallments ? (
+                <TextField
+                  fullWidth
+                  type="number"
+                  name="TotalMonths"
+                  label={`Total Installments`}
+                  id="TotalMonths"
+                  onChange={handleChange}
+                  value={values.TotalMonths}
+                  variant="outlined"
+                  size="medium"
+                  required
+                  error={Boolean(errors?.TotalMonths)}
+                  helperText={errors?.TotalMonths}
+                  disabled={disableField}
+                />
+              ) : (
+                <>
+                  <p>Total Installments:</p>
+                  <div className="border-2 px-2 border-gray-300 font-bold">
+                    {installments.length}
+                  </div>
+                </>
+              )}
+            </div>
+            {drawerID !== "" && generateInstallments && (
+              <div className="flex m-4">
+                <button
+                  className="bg-primary rounded-md p-2 w-full shadow-md"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setGenerateInstallments(false);
+                    setInstallments(data.Installments);
+                  }}
+                >
+                  Restore Previous Saved Installments
+                </button>
+              </div>
+            )}
           </div>
           {installments.length !== 0 && !generateInstallments && (
             <div className="p-4 space-y-4 mt-8">

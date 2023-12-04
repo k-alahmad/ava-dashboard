@@ -56,7 +56,7 @@ const defaultFormState = {
   Latitude: "",
   Handover: "",
   ReraNo: "",
-  BRNNo: "",
+  // BRNNo: "",
   Images: "",
   MetaData: "",
   Aminities: "",
@@ -286,7 +286,7 @@ const PropertyBuyDrawer = ({
     formData.append("Purpose", "Buy");
     formData.append("RentMin", "0");
     formData.append("ReraNo", values.ReraNo);
-    formData.append("BRNNo", values.BRNNo);
+    // formData.append("BRNNo", values.BRNNo);
     formData.append("DeveloperID", values.DeveloperID);
     formData.append("CategoryID", values.CategoryID);
     formData.append("AddressID", values.AddressID);
@@ -1339,7 +1339,7 @@ const PropertyBuyDrawer = ({
                   disabled={disableField}
                 />
               </div>
-              <div className="flex m-4">
+              {/* <div className="flex m-4">
                 <TextField
                   fullWidth
                   type="text"
@@ -1354,7 +1354,7 @@ const PropertyBuyDrawer = ({
                   helperText={errors?.BRNNo}
                   disabled={disableField}
                 />
-              </div>
+              </div> */}
 
               <div className="flex m-4">
                 <FormGroup>

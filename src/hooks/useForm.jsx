@@ -228,10 +228,10 @@ const useForm = (
         setErrors(newObj);
       }
     } else if (name == "Handover") {
-      if (value.length <= 10) {
+      if (value.length <= 1) {
         setErrors({
           ...errors,
-          Handover: "Handover is not valid",
+          Handover: "Handover is Required",
         });
       } else {
         let newObj = omit(errors, "Handover");

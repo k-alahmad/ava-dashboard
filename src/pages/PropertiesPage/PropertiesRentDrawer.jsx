@@ -30,8 +30,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import Button from "../../components/UI/Button";
 import {
   API_BASE_URL,
-  Purpose,
-  CompletionStatus,
+  VacantStatus,
+  FurnishingStatus,
   RentFrequency,
 } from "../../constants";
 import RichTextBox from "../../components/Forms/RichTextBox";
@@ -48,16 +48,13 @@ const defaultFormState = {
   id: "",
   RentMin: "",
   RentMax: "",
-  FurnishingStatus: "",
-  VacantStatus: "",
+  FurnishingStatus: "Furnished",
+  VacantStatus: "No",
   Longitude: "",
   Latitude: "",
   RentFrequency: "Yearly",
   ReraNo: "",
   BRNNo: "",
-  Developer: "",
-  Category: "",
-  Address: "",
   Images: "",
   MetaData: "",
   Aminities: "",
@@ -352,7 +349,7 @@ const PropertyRentDrawer = ({
 
   const formElements = () => {
     return (
-      <values ref={formRef} className="">
+      <form ref={formRef} className="">
         <div className="flex flex-col items-center justify-start mx-8">
           {!disableField && (
             <div className="flex flex-col m-4">
@@ -573,38 +570,62 @@ const PropertyRentDrawer = ({
             </Slider>
             <div className="grid grid-cols-2">
               <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="text"
-                  name="FurnishingStatus"
-                  label={`Furnishing Status`}
-                  id="FurnishingStatus"
-                  onChange={handleChange}
-                  value={values.FurnishingStatus}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.FurnishingStatus)}
-                  helperText={errors?.FurnishingStatus}
-                  disabled={disableField}
-                />
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Furnishing Status
+                  </InputLabel>
+                  <Select
+                    labelId="FurnishingStatus"
+                    name="FurnishingStatus"
+                    id="FurnishingStatus"
+                    value={values.FurnishingStatus}
+                    label="Furnishing Status"
+                    onChange={handleChange}
+                    MenuProps={{
+                      style: {
+                        maxHeight: "400px",
+                      },
+                    }}
+                    disabled={disableField}
+                  >
+                    {FurnishingStatus?.map((item, j) => {
+                      return (
+                        <MenuItem key={j} value={item}>
+                          {item}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
               </div>
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="text"
-                  name="VacantStatus"
-                  label={`Vacant Status`}
-                  id="VacantStatus"
-                  onChange={handleChange}
-                  value={values.VacantStatus}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.VacantStatus)}
-                  helperText={errors?.VacantStatus}
-                  disabled={disableField}
-                />
+              <div className={`flex m-4`}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Vacant Status
+                  </InputLabel>
+                  <Select
+                    labelId="VacantStatus"
+                    name="VacantStatus"
+                    id="VacantStatus"
+                    value={values.VacantStatus}
+                    label="Vacant Status"
+                    onChange={handleChange}
+                    MenuProps={{
+                      style: {
+                        maxHeight: "400px",
+                      },
+                    }}
+                    disabled={disableField}
+                  >
+                    {VacantStatus?.map((item, j) => {
+                      return (
+                        <MenuItem key={j} value={item}>
+                          {item}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
               </div>
               {developersisSuccess && (
                 <div className="flex m-4">
@@ -1292,7 +1313,7 @@ const PropertyRentDrawer = ({
             </div>
           </div>
         </div>
-      </values>
+      </form>
     );
   };
   return (

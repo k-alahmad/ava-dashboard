@@ -1410,19 +1410,6 @@ const PropertyBuyDrawer = ({
                   <TextField
                     fullWidth
                     type="text"
-                    name="DuringConstructionMonths"
-                    label={`During Construction Months`}
-                    id="DuringConstructionMonths"
-                    value={paymentPlan.DuringConstructionMonths}
-                    variant="outlined"
-                    size="medium"
-                    disabled
-                  />
-                </div>
-                <div className="flex m-4">
-                  <TextField
-                    fullWidth
-                    type="text"
                     name="DuringConstructionPercentage"
                     label={`During Construction Percentage`}
                     id="DuringConstructionPercentage"

@@ -47,6 +47,116 @@ const useForm = (
         let newObj = omit(errors, "Code");
         setErrors(newObj);
       }
+    } else if (name == "BRNNo") {
+      if (value.length < 4) {
+        setErrors({
+          ...errors,
+          BRNNo: "BRN Number atleast have 4 letters",
+        });
+      } else {
+        let newObj = omit(errors, "BRNNo");
+        setErrors(newObj);
+      }
+    } else if (name == "ReraNo") {
+      if (value.length < 4) {
+        setErrors({
+          ...errors,
+          ReraNo: "Rera Number atleast have 4 letters",
+        });
+      } else {
+        let newObj = omit(errors, "ReraNo");
+        setErrors(newObj);
+      }
+    } else if (name == "Bedrooms") {
+      if (value.length < 1) {
+        setErrors({
+          ...errors,
+          Bedrooms: "Bedrooms is Required",
+        });
+      } else {
+        let newObj = omit(errors, "Bedrooms");
+        setErrors(newObj);
+      }
+    } else if (name == "Price") {
+      if (value.length < 1) {
+        setErrors({
+          ...errors,
+          Price: "Price is Required",
+        });
+      } else {
+        let newObj = omit(errors, "Price");
+        setErrors(newObj);
+      }
+    } else if (name == "Price") {
+      if (value.length < 1) {
+        setErrors({
+          ...errors,
+          Price: "Price is Required",
+        });
+      } else {
+        let newObj = omit(errors, "Price");
+        setErrors(newObj);
+      }
+    } else if (name == "Size") {
+      if (value.length < 1) {
+        setErrors({
+          ...errors,
+          Size: "Size is Required",
+        });
+      } else {
+        let newObj = omit(errors, "Size");
+        setErrors(newObj);
+      }
+    } else if (name == "PricePerSQFT") {
+      if (value.length < 1) {
+        setErrors({
+          ...errors,
+          PricePerSQFT: "Price Per SQFT is Required",
+        });
+      } else {
+        let newObj = omit(errors, "PricePerSQFT");
+        setErrors(newObj);
+      }
+    } else if (name == "CategoryID") {
+      if (value.length < 1) {
+        setErrors({
+          ...errors,
+          CategoryID: "Category is Required",
+        });
+      } else {
+        let newObj = omit(errors, "CategoryID");
+        setErrors(newObj);
+      }
+    } else if (name == "DEDNo") {
+      if (value.length < 4) {
+        setErrors({
+          ...errors,
+          DEDNo: "DED Number is atleast 4 charecters",
+        });
+      } else {
+        let newObj = omit(errors, "DEDNo");
+        setErrors(newObj);
+      }
+    } else if (name == "DeveloperID") {
+      if (value.length < 4) {
+        setErrors({
+          ...errors,
+          DeveloperID: "Developer is Required",
+        });
+      } else {
+        let newObj = omit(errors, "DeveloperID");
+        setErrors(newObj);
+      }
+    } else if (name == "EstimatedRent") {
+      if (value.length < 1) {
+        setErrors({
+          ...errors,
+          EstimatedRent: "Estimated Rent is Required",
+        });
+      } else {
+        let newObj = omit(errors, "EstimatedRent");
+        setErrors(newObj);
+      }
     } else if (name == "conversionRate") {
       if (value.length < 1) {
         setErrors({
@@ -55,6 +165,46 @@ const useForm = (
         });
       } else {
         let newObj = omit(errors, "conversionRate");
+        setErrors(newObj);
+      }
+    } else if (name == "PermitNumber") {
+      if (value.length < 1) {
+        setErrors({
+          ...errors,
+          PermitNumber: "Permit Number rate is required",
+        });
+      } else {
+        let newObj = omit(errors, "PermitNumber");
+        setErrors(newObj);
+      }
+    } else if (name == "RentMax") {
+      if (value.length < 1) {
+        setErrors({
+          ...errors,
+          RentMax: "Maximum number of checks is required",
+        });
+      } else {
+        let newObj = omit(errors, "RentMax");
+        setErrors(newObj);
+      }
+    } else if (name == "RentMin") {
+      if (value.length < 1) {
+        setErrors({
+          ...errors,
+          RentMin: "Minimum number of checks is required",
+        });
+      } else {
+        let newObj = omit(errors, "RentMin");
+        setErrors(newObj);
+      }
+    } else if (name == "Bathrooms") {
+      if (value.length < 1) {
+        setErrors({
+          ...errors,
+          Bathrooms: "Bathrooms is required",
+        });
+      } else {
+        let newObj = omit(errors, "Bathrooms");
         setErrors(newObj);
       }
     } else if (name == "PhoneNo") {

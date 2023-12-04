@@ -445,6 +445,8 @@ const useForm = (
       Object.keys(values).length !== 0 &&
       Object.keys(theErrors).length === 0
     ) {
+      console.log("errors", theErrors);
+      console.log("values", values);
       callback();
     } else {
       console.log(errors);

@@ -97,6 +97,16 @@ const useForm = (
         let newObj = omit(errors, "Price");
         setErrors(newObj);
       }
+    } else if (name == "BalconySize" && values.Bacloney == true) {
+      if (value.length < 1) {
+        setErrors({
+          ...errors,
+          BalconySize: "Balcony Size is Required",
+        });
+      } else {
+        let newObj = omit(errors, "BalconySize");
+        setErrors(newObj);
+      }
     } else if (name == "Size") {
       if (value.length < 1) {
         setErrors({

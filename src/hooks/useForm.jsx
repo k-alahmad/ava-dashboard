@@ -227,7 +227,7 @@ const useForm = (
         let newObj = omit(errors, "Bathrooms");
         setErrors(newObj);
       }
-    } else if (name == "Handover") {
+    } else if (name == "Handover" && values.CompletionStatus == "OffPlan") {
       if (value.length <= 1) {
         setErrors({
           ...errors,

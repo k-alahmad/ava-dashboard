@@ -264,6 +264,7 @@ const PropertyRentDrawer = ({
     setOldImage(null);
     setProperties_Translation([]);
     setCurrentSlide(0);
+    setErrors({});
   };
   function submit(event) {
     // event.preventDefault();

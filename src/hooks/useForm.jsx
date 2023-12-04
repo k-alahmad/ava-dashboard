@@ -217,14 +217,24 @@ const useForm = (
         let newObj = omit(errors, "Bathrooms");
         setErrors(newObj);
       }
-    } else if (name == "PhoneNo") {
+    } else if (name == "Bathrooms") {
+      if (value.length < 1) {
+        setErrors({
+          ...errors,
+          Bathrooms: "Bathrooms is required",
+        });
+      } else {
+        let newObj = omit(errors, "Bathrooms");
+        setErrors(newObj);
+      }
+    } else if (name == "Handover") {
       if (value.length <= 10) {
         setErrors({
           ...errors,
-          PhoneNo: "Phone number is not valid",
+          Handover: "Handover is not valid",
         });
       } else {
-        let newObj = omit(errors, "PhoneNo");
+        let newObj = omit(errors, "Handover");
         setErrors(newObj);
       }
     } else if (name == "Latitude") {

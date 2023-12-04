@@ -422,7 +422,9 @@ const useForm = (
         values[item].length == 0 &&
         item !== "id" &&
         item !== "Image" &&
-        item !== "AddressID"
+        item !== "AddressID" &&
+        item !== "MetaData" &&
+        item !== "Images"
       ) {
         theErrors = { ...theErrors, [item]: item + " is required" };
       }

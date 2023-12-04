@@ -274,7 +274,7 @@ const PropertyBuyDrawer = ({
     setUnits([]);
   };
   function submit(event) {
-    event.preventDefault();
+    // event.preventDefault();
     const formData = new FormData();
 
     formData.append("Handover", values.Handover);

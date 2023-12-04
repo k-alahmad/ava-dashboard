@@ -266,7 +266,7 @@ const PropertyRentDrawer = ({
     setCurrentSlide(0);
   };
   function submit(event) {
-    event.preventDefault();
+    // event.preventDefault();
     const formData = new FormData();
     formData.append("RentMin", values.RentMin);
     formData.append("RentMax", values.RentMax);

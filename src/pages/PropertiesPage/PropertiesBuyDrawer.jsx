@@ -333,7 +333,7 @@ const PropertyBuyDrawer = ({
       formData.append(`propertyUnits[${i}][Price]`, units[i].Price);
       formData.append(
         `propertyUnits[${i}][PricePerSQFT]`,
-        units[i].PricePerSQFT
+        parseFloat(units[i].Price / units[i].Size).toFixed(3)
       );
       formData.append(`propertyUnits[${i}][Size]`, units[i].Size);
     }
@@ -1109,24 +1109,7 @@ const PropertyBuyDrawer = ({
                         disabled={disableField}
                       />
                     </div>
-                    <div className="flex m-4">
-                      <TextField
-                        fullWidth
-                        type="number"
-                        name={"PricePerSQFT"}
-                        label={`Price Per SQFT`}
-                        id={"PricePerSQFT"}
-                        onChange={(e) => {
-                          handleUnitsChange(e, "PricePerSQFT", index);
-                        }}
-                        value={values.item}
-                        variant="outlined"
-                        size="medium"
-                        error={Boolean(errors?.PricePerSQFT)}
-                        helperText={errors?.PricePerSQFT}
-                        disabled={disableField}
-                      />
-                    </div>
+
                     <div className="flex m-4">
                       <TextField
                         fullWidth
@@ -1143,6 +1126,24 @@ const PropertyBuyDrawer = ({
                         error={Boolean(errors?.Size)}
                         helperText={errors?.Size}
                         disabled={disableField}
+                      />
+                    </div>
+                    <div className="flex m-4">
+                      <TextField
+                        fullWidth
+                        type="number"
+                        name={"PricePerSQFT"}
+                        label={`Price Per SQFT`}
+                        id={"PricePerSQFT"}
+                        // onChange={(e) => {
+                        //   handleUnitsChange(e, "PricePerSQFT", index);
+                        // }}
+                        value={parseFloat(item.Price / item.Size).toFixed(3)}
+                        variant="outlined"
+                        size="medium"
+                        error={Boolean(errors?.PricePerSQFT)}
+                        helperText={errors?.PricePerSQFT}
+                        disabled
                       />
                     </div>
                     <div className="flex m-4">

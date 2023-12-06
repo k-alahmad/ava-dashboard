@@ -316,7 +316,10 @@ const PropertyRentDrawer = ({
     formData.append(`propertyUnits[0][EstimatedRent]`, values.EstimatedRent);
     formData.append(`propertyUnits[0][PermitNumber]`, values.PermitNumber);
     formData.append(`propertyUnits[0][Price]`, values.Price);
-    formData.append(`propertyUnits[0][PricePerSQFT]`, values.PricePerSQFT);
+    formData.append(
+      `propertyUnits[0][PricePerSQFT]`,
+      parseFloat(values.Price / values.Size).toFixed(3)
+    );
     formData.append(`propertyUnits[0][Size]`, values.Size);
 
     if (drawerID == "") {
@@ -1053,23 +1056,7 @@ const PropertyRentDrawer = ({
                   disabled={disableField}
                 />
               </div>
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="PricePerSQFT"
-                  label={`Price Per SQFT`}
-                  id="PricePerSQFT"
-                  onChange={handleChange}
-                  value={values.PricePerSQFT}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.PricePerSQFT)}
-                  helperText={errors?.PricePerSQFT}
-                  disabled={disableField}
-                />
-              </div>
+
               <div className="flex m-4">
                 <TextField
                   fullWidth
@@ -1085,6 +1072,23 @@ const PropertyRentDrawer = ({
                   error={Boolean(errors?.Size)}
                   helperText={errors?.Size}
                   disabled={disableField}
+                />
+              </div>
+              <div className="flex m-4">
+                <TextField
+                  fullWidth
+                  type="number"
+                  name="PricePerSQFT"
+                  label={`Price Per SQFT`}
+                  id="PricePerSQFT"
+                  // onChange={handleChange}
+                  value={parseFloat(values.Price / values.Size).toFixed(3)}
+                  variant="outlined"
+                  size="medium"
+                  required
+                  error={Boolean(errors?.PricePerSQFT)}
+                  helperText={errors?.PricePerSQFT}
+                  disabled
                 />
               </div>
               <div className="flex m-4">

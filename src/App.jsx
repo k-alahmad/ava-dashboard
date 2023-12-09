@@ -69,8 +69,8 @@ const App = () => {
             <Route
               path="/roles"
               element={
-                data.Role.Role_Resources.find((x) => x.resource.Name == "Role")
-                  .Read == true ? (
+                data.Role.Role_Resources.find((x) => x.resource?.Name == "Role")
+                  ?.Read == true ? (
                   <RolePage />
                 ) : (
                   <PermissionDenied />
@@ -80,8 +80,9 @@ const App = () => {
             <Route
               path="/users"
               element={
-                data.Role.Role_Resources.find((x) => x.resource.Name == "Users")
-                  .Read == true ? (
+                data.Role.Role_Resources.find(
+                  (x) => x.resource?.Name == "Users"
+                )?.Read == true ? (
                   <UserPage />
                 ) : (
                   <PermissionDenied />
@@ -91,8 +92,8 @@ const App = () => {
             <Route
               path="/teams"
               element={
-                data.Role.Role_Resources.find((x) => x.resource.Name == "Team")
-                  .Read == true ? (
+                data.Role.Role_Resources.find((x) => x.resource?.Name == "Team")
+                  ?.Read == true ? (
                   <TeamPage />
                 ) : (
                   <PermissionDenied />
@@ -103,8 +104,8 @@ const App = () => {
               path="/address"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "Address"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "Address"
+                )?.Read == true ? (
                   <AddressPage />
                 ) : (
                   <PermissionDenied />
@@ -115,8 +116,8 @@ const App = () => {
               path="/lngs"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "Language"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "Language"
+                )?.Read == true ? (
                   <LNGPage />
                 ) : (
                   <PermissionDenied />
@@ -127,8 +128,8 @@ const App = () => {
               path="/articles"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "Article"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "Article"
+                )?.Read == true ? (
                   <ArticlePage />
                 ) : (
                   <PermissionDenied />
@@ -139,8 +140,8 @@ const App = () => {
               path="/payment-plan"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "PaymentPlan"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "PaymentPlan"
+                )?.Read == true ? (
                   <PaymentPlanPage />
                 ) : (
                   <PermissionDenied />
@@ -151,8 +152,8 @@ const App = () => {
               path="/currency"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "Currency"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "Currency"
+                )?.Read == true ? (
                   <CurrenciesPage />
                 ) : (
                   <PermissionDenied />
@@ -162,8 +163,8 @@ const App = () => {
             <Route
               path="/unit"
               element={
-                data.Role.Role_Resources.find((x) => x.resource.Name == "Unit")
-                  .Read == true ? (
+                data.Role.Role_Resources.find((x) => x.resource?.Name == "Unit")
+                  ?.Read == true ? (
                   <UnitsPage />
                 ) : (
                   <PermissionDenied />
@@ -174,8 +175,8 @@ const App = () => {
               path="/developers"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "Developer"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "Developer"
+                )?.Read == true ? (
                   <DeveloperPage />
                 ) : (
                   <PermissionDenied />
@@ -186,8 +187,8 @@ const App = () => {
               path="/category"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "Category"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "Category"
+                )?.Read == true ? (
                   <CategoryPage />
                 ) : (
                   <PermissionDenied />
@@ -198,8 +199,8 @@ const App = () => {
               path="/amenities"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "Aminities"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "Aminities"
+                )?.Read == true ? (
                   <AmenityPage />
                 ) : (
                   <PermissionDenied />
@@ -210,8 +211,8 @@ const App = () => {
               path="/announcements"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "Announcement"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "Announcement"
+                )?.Read == true ? (
                   <AnnouncementPage />
                 ) : (
                   <PermissionDenied />
@@ -223,8 +224,8 @@ const App = () => {
               path="/property"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "Property"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "Property"
+                )?.Read == true ? (
                   <PropertyPage />
                 ) : (
                   <PermissionDenied />
@@ -236,8 +237,8 @@ const App = () => {
               path="/guest-info"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "Guest-info"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "Guest-info"
+                )?.Read == true ? (
                   <GuestsPage />
                 ) : (
                   <PermissionDenied />
@@ -249,8 +250,8 @@ const App = () => {
               path="/feedback"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "Feedback"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "Feedback"
+                )?.Read == true ? (
                   <FeedbackPage />
                 ) : (
                   <PermissionDenied />
@@ -261,8 +262,8 @@ const App = () => {
               path="/enquiry"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "Enquiry"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "Enquiry"
+                )?.Read == true ? (
                   <EnquiryPage />
                 ) : (
                   <PermissionDenied />
@@ -273,8 +274,8 @@ const App = () => {
               path="/meta-data"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "meta-Data"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "meta-Data"
+                )?.Read == true ? (
                   <MetaDataPage />
                 ) : (
                   <PermissionDenied />
@@ -284,8 +285,8 @@ const App = () => {
             <Route
               path="/jobs"
               element={
-                data.Role.Role_Resources.find((x) => x.resource.Name == "Job")
-                  .Read == true ? (
+                data.Role.Role_Resources.find((x) => x.resource?.Name == "Job")
+                  ?.Read == true ? (
                   <JobsPage />
                 ) : (
                   <PermissionDenied />
@@ -296,8 +297,8 @@ const App = () => {
               path="/applicants"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "Applicant"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "Applicant"
+                )?.Read == true ? (
                   <ApplicationPage />
                 ) : (
                   <PermissionDenied />
@@ -308,8 +309,8 @@ const App = () => {
               path="/list-with-us"
               element={
                 data.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "List-with-us"
-                ).Read == true ? (
+                  (x) => x.resource?.Name == "List-with-us"
+                )?.Read == true ? (
                   <ListingPage />
                 ) : (
                   <PermissionDenied />

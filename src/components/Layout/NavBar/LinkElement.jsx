@@ -18,7 +18,7 @@ const LinkElement = ({ name, link, styled, onClick, icon, drawerOpen }) => {
       <div className={`flex justify-start items-center gap-x-1  ${styled}`}>
         {icon && (
           <img
-            className="object-contain w-10 h-10 min-w-10 min-h-10"
+            className="object-contain w-6 h-6 2xl:w-10 2xl:h-10"
             src={icon}
             alt={name}
           />

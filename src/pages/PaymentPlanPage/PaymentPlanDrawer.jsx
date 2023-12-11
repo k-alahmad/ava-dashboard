@@ -42,7 +42,7 @@ const defaultFormState = {
   OnHandoverPercentage: "",
   Posthandover: false,
   PosthandoverPercentage: "",
-  TotalMonths: "",
+  TotalMonths: 10,
   propertyID: "",
   Installments: [],
 };

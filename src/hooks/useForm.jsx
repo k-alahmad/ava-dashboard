@@ -434,7 +434,13 @@ const useForm = (
         item !== "Image" &&
         item !== "AddressID" &&
         item !== "MetaData" &&
-        item !== "Images"
+        item !== "Images" &&
+        item !== "ParentID" &&
+        item !== "PricePerSQFT" &&
+        item !== "PosthandoverPercentage" &&
+        item !== "NoOfPosthandoverMonths" &&
+        item !== "TotalMonths" &&
+        item !== "Password"
       ) {
         theErrors = { ...theErrors, [item]: item + " is required" };
       }
@@ -445,11 +451,9 @@ const useForm = (
       Object.keys(values).length !== 0 &&
       Object.keys(theErrors).length === 0
     ) {
-      console.log("errors", theErrors);
-      console.log("values", values);
       callback();
     } else {
-      console.log(errors);
+      console.log(theErrors);
       dispatch(
         showMessage({
           message: "Please fill the required fields",

@@ -40,7 +40,7 @@ const PageLayout = ({ children }) => {
               className={`!w-20 !h-20 md:!w-28 md:!h-28 rounded-xl bg-secondary transition-all duration-500 `}
             />
             <div>
-              <p className="font-bold text-tiny md:text-smaller xl:text-small text-primary text-center px-1">
+              <p className="font-bold text-tiny md:text-smaller 2xl:text-small text-primary text-center px-1">
                 {isSuccess && !isLoading && user.Name}
               </p>
               <p className="font-semibold text-[14px] md:text-[16px] lg:text-tiny text-white text-center px-2">
@@ -82,12 +82,12 @@ const PageLayout = ({ children }) => {
                       expand.key == i && expand.status
                         ? "text-primary"
                         : "text-white"
-                    } font-semibold text-tiny md:text-smaller 2xl:text-small flex justify-between items-center`}
+                    } font-semibold text-tiny 2xl:text-small flex justify-between items-center`}
                   >
-                    <div className="flex items-center">
+                    <div className="flex items-center flex-1 ">
                       {e.icon && (
                         <img
-                          className="object-contain w-10 h-10 min-w-10 min-h-10"
+                          className="object-contain w-6 h-6 2xl:w-10 2xl:h-10"
                           src={e.icon}
                           alt={e.name}
                         />
@@ -100,9 +100,9 @@ const PageLayout = ({ children }) => {
                     </div>
 
                     {expand.status && expand.key == i ? (
-                      <ExpandLess fontSize="large" />
+                      <ExpandLess fontSize="large" className="flex-1" />
                     ) : (
-                      <ExpandMore fontSize="large" />
+                      <ExpandMore fontSize="large" className="flex-1" />
                     )}
                   </div>
                   <Collapse

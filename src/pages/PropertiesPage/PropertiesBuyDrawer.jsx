@@ -1141,8 +1141,8 @@ const PropertyBuyDrawer = ({
                         value={parseFloat(item.Price / item.Size).toFixed(3)}
                         variant="outlined"
                         size="medium"
-                        error={Boolean(errors?.PricePerSQFT)}
-                        helperText={errors?.PricePerSQFT}
+                        // error={Boolean(errors?.PricePerSQFT)}
+                        // helperText={errors?.PricePerSQFT}
                         disabled
                       />
                     </div>

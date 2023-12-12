@@ -85,7 +85,7 @@ const NavBar = () => {
               />
             </div>
           </div>
-          <p className="text-smaller sm:text-small lg:text-med drop-shadow-2xl text-center font-bold flex-1">
+          <p className="text-smaller sm:text-small lg:text-med drop-shadow-2xl text-center font-bold flex-1 whitespace-nowrap">
             {pathName ?? "Not Found"}
           </p>
           <div className="flex-1 w-full flex items-center justify-end">

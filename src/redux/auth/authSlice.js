@@ -11,7 +11,8 @@ const authSlice = createSlice({
       state.token = sessionStorage.getItem("token");
     },
     logOut: (state, action) => {
-      (state.user = null), (state.token = null);
+      state.user = null;
+      state.token = null;
     },
   },
 });

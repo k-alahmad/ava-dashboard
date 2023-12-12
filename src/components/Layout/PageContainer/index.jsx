@@ -29,7 +29,7 @@ const PageLayout = ({ children }) => {
         <article className="relative w-full pb-10 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden h-full ">
           <header
             className={`absolute w-[90%] backdrop-blur-[100px] p-1 rounded-xl font-bold flex items-center justify-between top-[10%] left-[5%] shadow-xl drop-shadow-xl z-10 transition-all duration-500 ${
-              sideNavOpen ? "!top-[10%]" : "!-top-full"
+              sideNavOpen ? "!top-[15%] 2xl:!top-[10%]" : "!-top-full"
             }`}
           >
             <img
@@ -37,7 +37,7 @@ const PageLayout = ({ children }) => {
                 isSuccess && !isLoading ? API_BASE_URL + user.Image?.URL : ""
               }
               alt={isSuccess && !isLoading ? user.Name : "Profile"}
-              className={`!w-20 !h-20 md:!w-28 md:!h-28 rounded-xl bg-secondary transition-all duration-500 `}
+              className={`!w-20 !h-20 2xl:!w-28 2xl:!h-28 rounded-xl bg-secondary transition-all duration-500 `}
             />
             <div>
               <p className="font-bold text-tiny md:text-smaller 2xl:text-small text-primary text-center px-1">
@@ -100,9 +100,15 @@ const PageLayout = ({ children }) => {
                     </div>
 
                     {expand.status && expand.key == i ? (
-                      <ExpandLess fontSize="large" className="flex-1" />
+                      <ExpandLess
+                        fontSize="large"
+                        className={!sideNavOpen && "flex-1"}
+                      />
                     ) : (
-                      <ExpandMore fontSize="large" className="flex-1" />
+                      <ExpandMore
+                        fontSize="large"
+                        className={!sideNavOpen && "flex-1"}
+                      />
                     )}
                   </div>
                   <Collapse

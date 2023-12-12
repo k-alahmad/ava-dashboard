@@ -37,84 +37,87 @@ const GuestsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     setForm(defaultFormState);
   };
 
-  const formRef = useRef(null);
-
   const formElements = () => {
     return (
-      <form ref={formRef} className="flex flex-col justify-center">
-        <div className="py-1 mx-8">
+      <div className="flex flex-col justify-center">
+        <table className="border-2 border-black/30 py-1 mx-8">
+          <tbody>
+            <tr className="border-black/30 border-2 text-tiny md:text-smaller text-center">
+              <td className="p-2 border-black/30 border-2 font-bold text-start">
+                Full Name
+              </td>
+              <td className="p-2 border-black/30 border-2 font-bold text-start">
+                {form.FullName}
+              </td>
+            </tr>
+            <tr className="border-black/30 border-2 text-tiny md:text-smaller text-center">
+              <td className="p-2 border-black/30 border-2 font-bold text-start">
+                Email
+              </td>
+              <td className="p-2 border-black/30 border-2 font-bold text-start">
+                {form.Email}
+              </td>
+            </tr>
+            <tr className="border-black/30 border-2 text-tiny md:text-smaller text-center">
+              <td className="p-2 border-black/30 border-2 font-bold text-start">
+                Phone Number
+              </td>
+              <td className="p-2 border-black/30 border-2 font-bold text-start">
+                {form.PhoneNo}
+              </td>
+            </tr>
+            <tr className="border-black/30 border-2 text-tiny md:text-smaller text-center">
+              <td className="p-2 border-black/30 border-2 font-bold text-start">
+                Gender
+              </td>
+              <td className="p-2 border-black/30 border-2 font-bold text-start">
+                {form.Gender}
+              </td>
+            </tr>
+            <tr className="border-black/30 border-2 text-tiny md:text-smaller text-center">
+              <td className="p-2 border-black/30 border-2 font-bold text-start">
+                User IP
+              </td>
+              <td className="p-2 border-black/30 border-2 font-bold text-start">
+                {form.IPAddress}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        {/* <div className="py-1 mx-8">
           <div className="flex m-4">
-            <TextField
-              fullWidth
-              type="text"
-              name="FullName"
-              label={`Full Name`}
-              id="FullName"
-              value={form.FullName}
-              variant="outlined"
-              size="small"
-              required
-              disabled
-            />
+            <p>
+              <span className="font-bold">Full Name: </span>
+              {form.FullName}
+            </p>
           </div>
           <div className="flex m-4">
-            <TextField
-              fullWidth
-              type="text"
-              name="Email"
-              label={`Email`}
-              id="Email"
-              value={form.Email}
-              variant="outlined"
-              size="small"
-              required
-              disabled
-            />
+            <p>
+              <span className="font-bold">Email: </span>
+              {form.Email}
+            </p>
           </div>
           <div className="flex m-4">
-            <TextField
-              fullWidth
-              type="text"
-              name="PhoneNo"
-              label={`Phone No`}
-              id="PhoneNo"
-              value={form.PhoneNo}
-              variant="outlined"
-              size="small"
-              required
-              disabled
-            />
+            <p>
+              <span className="font-bold">Phone Number: </span>
+              {form.PhoneNo}
+            </p>
           </div>
           <div className="flex m-4">
-            <TextField
-              fullWidth
-              type="text"
-              name="Gender"
-              label={`Gender`}
-              id="Gender"
-              value={form.Gender}
-              variant="outlined"
-              size="small"
-              required
-              disabled
-            />
+            <p>
+              <span className="font-bold">Gender: </span>
+              {form.Gender}
+            </p>
           </div>
           <div className="flex m-4">
-            <TextField
-              fullWidth
-              type="text"
-              name="IPAddress"
-              label={`IP Address`}
-              id="IPAddress"
-              value={form.IPAddress}
-              variant="outlined"
-              size="small"
-              required
-              disabled
-            />
+            <p>
+              <span className="font-bold">User IP: </span>
+              {form.IPAddress}
+            </p>
           </div>
-        </div>
-      </form>
+        </div> */}
+      </div>
     );
   };
   return (

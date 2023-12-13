@@ -286,6 +286,16 @@ const useForm = (
         let newObj = omit(errors, "Password");
         setErrors(newObj);
       }
+    } else {
+      if (value.length < 1) {
+        setErrors({
+          ...errors,
+          [name]: `${name} is required`,
+        });
+      } else {
+        let newObj = omit(errors, `${name}`);
+        setErrors(newObj);
+      }
     }
   };
   const handleChange = (event) => {

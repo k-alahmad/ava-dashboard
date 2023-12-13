@@ -197,6 +197,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
         <div className="py-1 mx-8">
           <div className="w-full flex justify-center items-center">
             <Slider
+              accessibility={false}
               dots={false}
               arrows={false}
               infinite={false}
@@ -226,6 +227,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             </Slider>
           </div>
           <Slider
+            accessibility={false}
             ref={sliderRef}
             dots={false}
             touchMove={false}

@@ -191,6 +191,7 @@ const CategoryDrawer = ({
       <div className="py-8 md:mx-12">
         <div className="w-full flex justify-center items-center">
           <Slider
+            accessibility={false}
             dots={false}
             arrows={false}
             infinite={false}
@@ -220,6 +221,7 @@ const CategoryDrawer = ({
           </Slider>
         </div>
         <Slider
+          accessibility={false}
           ref={sliderRef}
           dots={false}
           touchMove={false}

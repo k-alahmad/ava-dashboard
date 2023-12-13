@@ -12,6 +12,7 @@ const PageModal = ({
   disabled,
   alertMessage,
   modalWidth,
+  drawerH,
 }) => {
   // const ref = useRef(null);
   // const handleClickOutside = (event) => {
@@ -53,7 +54,11 @@ const PageModal = ({
               </div>
             </header>
             {/*body*/}
-            <div className="flex-1 w-full py-4 min-h-[65vh] max-h-[65vh] transition-all duration-500 overflow-auto">
+            <div
+              className={`flex-1 w-full py-4 ${
+                drawerH ?? "min-h-[65vh] max-h-[65vh]"
+              } transition-all duration-500 overflow-auto`}
+            >
               {children}
             </div>
 

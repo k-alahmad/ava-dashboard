@@ -179,6 +179,7 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
           </div>
           <div className="w-full flex justify-center items-center">
             <Slider
+              accessibility={false}
               dots={false}
               arrows={false}
               infinite={false}
@@ -208,6 +209,7 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
             </Slider>
           </div>
           <Slider
+            accessibility={false}
             ref={sliderRef}
             dots={false}
             touchMove={false}

@@ -431,6 +431,7 @@ const PropertyDrawer = ({
         <div className="py-1 mx-8 col-span-2 grid md:grid-cols-2">
           <div className="w-full flex justify-center items-center col-span-full">
             <Slider
+              accessibility={false}
               dots={false}
               arrows={true}
               infinite={false}
@@ -460,6 +461,7 @@ const PropertyDrawer = ({
             </Slider>
           </div>
           <Slider
+            accessibility={false}
             ref={sliderRef}
             dots={false}
             touchMove={false}

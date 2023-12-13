@@ -235,6 +235,7 @@ const DeveloperDrawer = ({
           </div>
           <div className="w-full flex justify-center items-center">
             <Slider
+              accessibility={false}
               dots={false}
               arrows={false}
               infinite={false}
@@ -264,6 +265,7 @@ const DeveloperDrawer = ({
             </Slider>
           </div>
           <Slider
+            accessibility={false}
             ref={sliderRef}
             dots={false}
             touchMove={false}

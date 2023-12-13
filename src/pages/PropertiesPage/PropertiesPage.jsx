@@ -219,6 +219,7 @@ const PropertyPage = () => {
                   </div>
                 ) : (
                   <Slider
+                    accessibility={false}
                     ref={sliderRef}
                     dots={false}
                     touchMove={false}

@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLazyGetGuestByIdQuery } from "../../redux/guestInfo/guestInfo";
 import PageModal from "../../components/Admin/layout/PageModal";
-import { CircularProgress, TextField } from "@mui/material";
+import { CircularProgress } from "@mui/material";
+import profilePic from "../../assets/profilepic.png";
 const defaultFormState = {
   id: "",
   FullName: "",
@@ -39,84 +40,31 @@ const GuestsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
 
   const formElements = () => {
     return (
-      <div className="flex flex-col justify-center">
-        <table className="border-2 border-black/30 py-1 mx-8">
-          <tbody>
-            <tr className="border-black/30 border-2 text-tiny md:text-smaller text-center">
-              <td className="p-2 border-black/30 border-2 font-bold text-start">
-                Full Name
-              </td>
-              <td className="p-2 border-black/30 border-2 font-bold text-start">
-                {form.FullName}
-              </td>
-            </tr>
-            <tr className="border-black/30 border-2 text-tiny md:text-smaller text-center">
-              <td className="p-2 border-black/30 border-2 font-bold text-start">
-                Email
-              </td>
-              <td className="p-2 border-black/30 border-2 font-bold text-start">
-                {form.Email}
-              </td>
-            </tr>
-            <tr className="border-black/30 border-2 text-tiny md:text-smaller text-center">
-              <td className="p-2 border-black/30 border-2 font-bold text-start">
-                Phone Number
-              </td>
-              <td className="p-2 border-black/30 border-2 font-bold text-start">
-                {form.PhoneNo}
-              </td>
-            </tr>
-            <tr className="border-black/30 border-2 text-tiny md:text-smaller text-center">
-              <td className="p-2 border-black/30 border-2 font-bold text-start">
-                Gender
-              </td>
-              <td className="p-2 border-black/30 border-2 font-bold text-start">
-                {form.Gender}
-              </td>
-            </tr>
-            <tr className="border-black/30 border-2 text-tiny md:text-smaller text-center">
-              <td className="p-2 border-black/30 border-2 font-bold text-start">
-                User IP
-              </td>
-              <td className="p-2 border-black/30 border-2 font-bold text-start">
-                {form.IPAddress}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        {/* <div className="py-1 mx-8">
-          <div className="flex m-4">
-            <p>
-              <span className="font-bold">Full Name: </span>
-              {form.FullName}
-            </p>
+      <div className="grid md:grid-cols-3 place-items-center p-8">
+        <div className="flex flex-col items-center justify-center space-y-2">
+          <div className="p-4 rounded-full bg-primary h-[200px] w-[200px]">
+            <img
+              src={profilePic}
+              alt="profile"
+              className="object-contain object-center "
+            />
           </div>
-          <div className="flex m-4">
-            <p>
-              <span className="font-bold">Email: </span>
-              {form.Email}
-            </p>
-          </div>
-          <div className="flex m-4">
-            <p>
-              <span className="font-bold">Phone Number: </span>
-              {form.PhoneNo}
-            </p>
-          </div>
-          <div className="flex m-4">
-            <p>
-              <span className="font-bold">Gender: </span>
-              {form.Gender}
-            </p>
-          </div>
-          <div className="flex m-4">
-            <p>
-              <span className="font-bold">User IP: </span>
-              {form.IPAddress}
-            </p>
-          </div>
-        </div> */}
+          <p className="font-bold">{form.FullName}</p>
+        </div>
+        <div className="flex flex-col justify-center space-y-1 col-span-2">
+          <p>
+            <span className="font-semibold">Email: </span> {form.Email}
+          </p>
+          <p>
+            <span className="font-semibold">Phone Number: </span> {form.PhoneNo}
+          </p>
+          <p>
+            <span className="font-semibold">Gender: </span> {form.Gender}
+          </p>
+          <p>
+            <span className="font-semibold">User's IP: </span> {form.IPAddress}
+          </p>
+        </div>
       </div>
     );
   };
@@ -128,6 +76,7 @@ const GuestsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
       editable={false}
       onCancelClick={closeDrawer}
       //   onSaveClick={handleSubmit}
+      drawerH={"h-full"}
       disabled={true}
       children={
         isLoading || isFetching ? (

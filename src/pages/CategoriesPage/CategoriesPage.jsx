@@ -139,7 +139,7 @@ const CategoryPage = () => {
                     )}
                   </div>
                   <div className="flex max-sm:flex-col max-sm:gap-y-2 items-center justify-center">
-                    {profile.Role.Role_Resources.find(
+                    {/* {profile.Role.Role_Resources.find(
                       (x) => x.resource.Name == "Category"
                     ).Create == true && (
                       <div
@@ -160,7 +160,7 @@ const CategoryPage = () => {
                       >
                         <Add fontSize="medium" />
                       </div>
-                    )}
+                    )} */}
                     <div
                       className="self-center  font-bold text-xl rounded px-2 py-1 bg-primary hover:bg-primary/80  text-secondary mx-2 pb-2"
                       style={{ transition: "0.3s" }}

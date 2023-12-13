@@ -4,6 +4,8 @@ import { useLazyGetEnquiryByIdQuery } from "../../redux/enquiry/enquirySlice";
 import { CircularProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { showMessage } from "../../redux/messageAction.slice";
+import profilePic from "../../assets/profilepic.png";
+import PageModal from "../../components/Admin/layout/PageModal";
 
 const defaultFormState = {
   id: "",
@@ -56,47 +58,60 @@ const EnquiryDrawer = ({
   };
   const formElements = () => (
     <div className="flex flex-col justify-center items-start py-4">
-      <div className="text-2xl border-4  m-4 p-3 w-[95%]">
-        <span className="text-4xl">FullName: </span> {form.Guest?.FullName}
+      <div className="grid md:grid-cols-3 place-items-center p-8 w-full">
+        <div className="flex flex-col items-center justify-center space-y-4">
+          <div className="p-4 rounded-full bg-primary h-[200px] w-[200px]">
+            <img
+              src={profilePic}
+              alt="profile"
+              className="object-contain object-center "
+            />
+          </div>
+          <p className="font-bold">{form.Guest?.FullName}</p>
+        </div>
+        <div className="flex flex-col justify-center space-y-1 col-span-2">
+          <p>
+            <span className="font-semibold">Email: </span> {form.Guest.Email}
+          </p>
+          <p>
+            <span className="font-semibold">Phone Number: </span>
+            {form.Guest.PhoneNo}
+          </p>
+          <p>
+            <span className="font-semibold">Gender: </span> {form.Guest.Gender}
+          </p>
+          <p>
+            <span className="font-semibold">User's IP: </span>
+            {form.Guest.IPAddress}
+          </p>
+        </div>
       </div>
-      <div className="text-2xl border-4  m-4 p-3 w-[95%]">
-        <span className="text-4xl">Email: </span> {form.Guest.Email}
-      </div>
-      <div className="text-2xl border-4  m-4 p-3 w-[95%]">
-        <span className="text-4xl">Guest IP Address: </span>
-        {form.Guest.IPAddress}
-      </div>
-      <div className="text-2xl border-4  m-4 p-3 w-[95%]">
-        <span className="text-4xl">Guest Phone No: </span>
-        {form.Guest.PhoneNo}
-      </div>
-      <div className="text-2xl border-4  m-4 p-3 w-[95%]">
-        <span className="text-4xl">Guest Gender: </span>
-        {form.Guest.Gender}
-      </div>
-      <div className="text-2xl border-4  m-4 p-3 w-[95%]">
-        <span className="text-4xl">Type: </span> {form.Type}
-      </div>
-      <div className="text-2xl border-4  m-4 p-3 w-[95%]">
-        <span className="text-4xl">Purpose: </span> {form.Purpose}
-      </div>
-      <div className="text-2xl border-4  m-4 p-3 w-[95%]">
-        <span className="text-4xl">Bedrooms: </span> {form.Bedrooms}
-      </div>
-      <div className="text-2xl border-4  m-4 p-3 w-[95%]">
-        <span className="text-4xl">Price Minimum: </span> {form.PriceMin}
-      </div>
-      <div className="text-2xl border-4  m-4 p-3 w-[95%]">
-        <span className="text-4xl">Price Maximum: </span> {form.PriceMax}
-      </div>
-      <div className=" border-4 m-4 p-3 w-[95%]">
-        <div className="text-4xl">Message: </div>
-        <div className="text-2xl">{form.Message}</div>
+      <div className="p-8 grid md:grid-cols-3 w-full gap-5">
+        <p>
+          <span className="font-semibold">Purpose: </span> {form.Purpose}
+        </p>
+        <p>
+          <span className="font-semibold">Type: </span> {form.Type}
+        </p>
+
+        <p>
+          <span className="font-semibold">Bedrooms: </span> {form.Bedrooms}
+        </p>
+        <p>
+          <span className="font-semibold">Minimum Price: </span> {form.PriceMin}
+        </p>
+        <p>
+          <span className="font-semibold">Maximum Price: </span> {form.PriceMax}
+        </p>
+        <div className="col-span-full">
+          <p className="font-semibold">Message: </p>
+          <p className="p-2">{form.Message}</p>
+        </div>
       </div>
     </div>
   );
   return (
-    <PageDrawer
+    <PageModal
       isOpen={drawerOpen}
       title={drawerID == "" ? "" : form.Guest?.FullName}
       newItem={drawerID == "" && true}
@@ -108,7 +123,7 @@ const EnquiryDrawer = ({
             <CircularProgress color="primary" />
           </div>
         ) : (
-          <div className="text-med font-light">{formElements()}</div>
+          <div className="text-med">{formElements()}</div>
         )
       }
     />

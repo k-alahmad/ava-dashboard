@@ -128,6 +128,7 @@ const CurrenciesDrawer = ({
       CT.push({
         languagesID: currency_Translation[i].languagesID,
         Name: currency_Translation[i].Name,
+        Symbol: currency_Translation[i].Symbol,
       });
     }
 
@@ -190,6 +191,7 @@ const CurrenciesDrawer = ({
           </div>
           <div className="m-4 flex">
             <Slider
+              accessibility={false}
               dots={false}
               arrows={false}
               infinite={false}
@@ -219,6 +221,7 @@ const CurrenciesDrawer = ({
             </Slider>
           </div>
           <Slider
+            accessibility={false}
             ref={sliderRef}
             dots={false}
             touchMove={false}
@@ -251,6 +254,34 @@ const CurrenciesDrawer = ({
                         errors[
                           Object.keys(errors).find(
                             (x) => x == "Name" + item.Language.Code
+                          )
+                        ]
+                      }
+                      disabled={disableField}
+                    />
+                  </div>
+                  <div className="flex m-4">
+                    <TextField
+                      fullWidth
+                      type="text"
+                      name={"Symbol" + item.Language.Code}
+                      label={`${item.Language.Name} Symbol`}
+                      id={"Symbol" + item.Language.Code}
+                      onChange={(e) =>
+                        handleTranslationChange(e, item, "Symbol")
+                      }
+                      value={item.Symbol}
+                      variant="outlined"
+                      size="small"
+                      error={Boolean(
+                        Object.keys(errors).find(
+                          (x) => x == "Symbol" + item.Language.Code
+                        )
+                      )}
+                      helperText={
+                        errors[
+                          Object.keys(errors).find(
+                            (x) => x == "Symbol" + item.Language.Code
                           )
                         ]
                       }

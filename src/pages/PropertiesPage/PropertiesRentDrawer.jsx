@@ -69,7 +69,6 @@ const defaultFormState = {
   Bathrooms: "",
   Bedrooms: "",
   DEDNo: "",
-  EstimatedRent: "",
   PermitNumber: "",
   Price: "",
   PricePerSQFT: "",
@@ -205,7 +204,6 @@ const PropertyRentDrawer = ({
             Bathrooms: data.propertyUnits[0].Bathrooms,
             Bedrooms: data.propertyUnits[0].Bedrooms,
             DEDNo: data.propertyUnits[0].DEDNo,
-            EstimatedRent: data.propertyUnits[0].EstimatedRent,
             PermitNumber: data.propertyUnits[0].PermitNumber,
             Price: data.propertyUnits[0].Price,
             PricePerSQFT: data.propertyUnits[0].PricePerSQFT,
@@ -313,7 +311,6 @@ const PropertyRentDrawer = ({
     formData.append(`propertyUnits[0][Bathrooms]`, values.Bathrooms);
     formData.append(`propertyUnits[0][Bedrooms]`, values.Bedrooms);
     formData.append(`propertyUnits[0][DEDNo]`, values.DEDNo);
-    formData.append(`propertyUnits[0][EstimatedRent]`, values.EstimatedRent);
     formData.append(`propertyUnits[0][PermitNumber]`, values.PermitNumber);
     formData.append(`propertyUnits[0][Price]`, values.Price);
     formData.append(
@@ -473,6 +470,7 @@ const PropertyRentDrawer = ({
             <p className="font-bold tex-2xl m-4">Property Details</p>
             <div className="w-full flex justify-center items-center">
               <Slider
+                accessibility={false}
                 dots={false}
                 arrows={true}
                 infinite={false}
@@ -502,6 +500,7 @@ const PropertyRentDrawer = ({
               </Slider>
             </div>
             <Slider
+              accessibility={false}
               ref={sliderRef}
               dots={false}
               touchMove={false}
@@ -1005,23 +1004,7 @@ const PropertyRentDrawer = ({
                   disabled={disableField}
                 />
               </div>
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="EstimatedRent"
-                  label={`Estimated Rent`}
-                  id="EstimatedRent"
-                  onChange={handleChange}
-                  value={values.EstimatedRent}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  error={Boolean(errors?.EstimatedRent)}
-                  helperText={errors?.EstimatedRent}
-                  disabled={disableField}
-                />
-              </div>
+
               <div className="flex m-4">
                 <TextField
                   fullWidth

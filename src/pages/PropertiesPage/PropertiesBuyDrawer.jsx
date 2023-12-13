@@ -203,7 +203,7 @@ const PropertyBuyDrawer = ({
           });
           setProperties_Translation(data.Property_Translation);
           setUnits(data.propertyUnits);
-          setPaymentPlan(data.propertyUnits[0]?.Paymentplan[0]);
+          setPaymentPlan(data.propertyUnits[0]?.Paymentplan[0] ?? []);
         }
       } else {
         setValues(defaultFormState);
@@ -485,6 +485,7 @@ const PropertyBuyDrawer = ({
             <p className="font-bold tex-2xl m-4">Property Details</p>
             <div className="w-full flex justify-center items-center">
               <Slider
+                accessibility={false}
                 dots={false}
                 arrows={true}
                 infinite={false}
@@ -514,6 +515,7 @@ const PropertyBuyDrawer = ({
               </Slider>
             </div>
             <Slider
+              accessibility={false}
               ref={sliderRef}
               dots={false}
               touchMove={false}
@@ -1156,7 +1158,7 @@ const PropertyBuyDrawer = ({
                         onChange={(e) => {
                           handleUnitsChange(e, "Bedrooms", index);
                         }}
-                        value={values.Bedrooms}
+                        value={item.Bedrooms}
                         variant="outlined"
                         size="medium"
                         error={Boolean(errors?.Bedrooms)}
@@ -1164,7 +1166,25 @@ const PropertyBuyDrawer = ({
                         disabled={disableField}
                       />
                     </div>
-
+                    <div className="flex m-4">
+                      <TextField
+                        fullWidth
+                        type="number"
+                        name="EstimatedRent"
+                        label={`Estimated Rent`}
+                        id="EstimatedRent"
+                        onChange={(e) => {
+                          handleUnitsChange(e, "EstimatedRent", index);
+                        }}
+                        value={item.EstimatedRent}
+                        variant="outlined"
+                        size="medium"
+                        required
+                        error={Boolean(errors?.EstimatedRent)}
+                        helperText={errors?.EstimatedRent}
+                        disabled={disableField}
+                      />
+                    </div>
                     <div className="flex m-4">
                       <FormGroup>
                         <FormControlLabel

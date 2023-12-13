@@ -404,6 +404,7 @@ const ListingDrawer = ({
 
           <div className="w-full flex justify-center items-center col-span-full">
             <Slider
+              accessibility={false}
               dots={false}
               arrows={false}
               infinite={false}
@@ -433,6 +434,7 @@ const ListingDrawer = ({
             </Slider>
           </div>
           <Slider
+            accessibility={false}
             ref={sliderRef}
             dots={false}
             touchMove={false}

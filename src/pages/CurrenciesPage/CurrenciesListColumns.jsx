@@ -28,6 +28,17 @@ export const ComposeColumns = (onDelete) => {
       checked: true,
       lockToggle: false,
     },
+    {
+      Header: "Symbol",
+      id: "Symbol",
+      accessor: (d) =>
+        d.Currency_Translation.find((x) => x.Language.Code == "En").Symbol,
+      className: "font-bold",
+      sortable: true,
+      show: false,
+      checked: true,
+      lockToggle: false,
+    },
 
     {
       Header: "Created At",

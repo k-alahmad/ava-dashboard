@@ -291,6 +291,7 @@ const AddressDrawer = ({
         </div>
         <div className="w-full flex justify-center items-center">
           <Slider
+            accessibility={false}
             dots={false}
             arrows={false}
             infinite={false}
@@ -320,6 +321,7 @@ const AddressDrawer = ({
           </Slider>
         </div>
         <Slider
+          accessibility={false}
           ref={sliderRef}
           dots={false}
           touchMove={false}

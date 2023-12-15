@@ -801,12 +801,15 @@ const ListingDrawer = ({
                     },
                   }}
                 >
-                  {categories.ids?.map((item, j) => {
-                    if (categories.entities[item]?.SubCategory.length == 0)
+                  {categories.allNested.ids?.map((item, j) => {
+                    if (
+                      categories.allNested.entities[item]?.SubCategory.length ==
+                      0
+                    )
                       return (
                         <MenuItem key={j} value={item}>
                           {
-                            categories.entities[
+                            categories.allNested.entities[
                               item
                             ]?.Category_Translation?.find(
                               (x) => x.Language.Code == "En"
@@ -870,12 +873,16 @@ const ListingDrawer = ({
                     },
                   }}
                 >
-                  {addresses.ids?.map((item, j) => {
-                    if (addresses.entities[item]?.Addresses.length == 0)
+                  {addresses.allNested.ids?.map((item, j) => {
+                    if (
+                      addresses.allNested.entities[item]?.Addresses.length == 0
+                    )
                       return (
                         <MenuItem key={j} value={item}>
                           {
-                            addresses.entities[item]?.Address_Translation?.find(
+                            addresses.allNested.entities[
+                              item
+                            ]?.Address_Translation?.find(
                               (x) => x.Language.Code == "En"
                             ).Name
                           }

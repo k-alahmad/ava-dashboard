@@ -3,12 +3,17 @@ import { apiSlice } from "../api/apiSlice";
 
 const categoryAdapter = createEntityAdapter();
 const categoryActiveAdapter = createEntityAdapter();
+const categoryNestedAdapter = createEntityAdapter();
 
 const initialState = categoryAdapter.getInitialState({
   count: "",
   normalData: [],
 });
 const initialActiveState = categoryActiveAdapter.getInitialState({
+  count: "",
+  normalData: [],
+});
+const initialNestedState = categoryNestedAdapter.getInitialState({
   count: "",
   normalData: [],
 });
@@ -40,11 +45,68 @@ export const categoryApiSlice = apiSlice.injectEndpoints({
         initialActiveState.count = responseData?.count;
         initialActiveState.normalData = responseData.Category;
         const loaded = responseData.Category;
-        return categoryActiveAdapter.setAll(initialActiveState, loaded);
+        let names = [];
+        let nested;
+        const handleChildren = (parent, name) => {
+          responseData.Category.map((child) => {
+            if (child.ParentID !== null) {
+              if (parent.id == child.ParentID) {
+                let newName =
+                  name +
+                  " / " +
+                  child.Category_Translation.find(
+                    (x) => x.Language.Code.toLowerCase() == "en"
+                  ).Name;
+
+                if (child.SubCategory.length !== 0) {
+                  handleChildren(child, newName);
+                } else {
+                  let AT = child.Category_Translation.find(
+                    (x) => x.Language.Code.toLowerCase() == "en"
+                  );
+                  names.push({
+                    ...child,
+                    Category_Translation: [{ ...AT, Name: newName }],
+                  });
+                }
+              }
+            }
+          });
+        };
+        let parents = responseData.Category.filter((x) => x.ParentID == null);
+        parents.map((parent) => {
+          let name = parent.Category_Translation.find(
+            (x) => x.Language.Code.toLowerCase() == "en"
+          ).Name;
+          if (parent.SubCategory.length !== 0) {
+            handleChildren(parent, name);
+          } else {
+            let AT = parent.Category_Translation.find(
+              (x) => x.Language.Code.toLowerCase() == "en"
+            );
+            names.push({ ...parent });
+          }
+        });
+        nested = names;
+        const loadedNested = nested;
+        return {
+          allCategories: categoryActiveAdapter.setAll(
+            initialActiveState,
+            loaded
+          ),
+          allNested: categoryNestedAdapter.setAll(
+            initialNestedState,
+            loadedNested
+          ),
+        };
       },
       providesTags: (result, error, arg) => [
         { type: "ActiveCategory", id: "LIST" },
-        ...result.ids.map((id) => ({ type: "ActiveCategory", id })),
+        ...result.allCategories.ids.map((id) => ({
+          type: "ActiveCategory",
+          id,
+        })),
+        ...result.allNested.ids.map((id) => ({ type: "ActiveCategory", id })),
       ],
     }),
     getCategoryById: builder.query({

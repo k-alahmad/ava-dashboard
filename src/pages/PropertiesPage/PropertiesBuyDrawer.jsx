@@ -886,9 +886,11 @@ const PropertyBuyDrawer = ({
                         />
                       </ListSubheader>
 
-                      {categories.ids?.map((item, j) => {
+                      {categories.allNested.ids?.map((item, j) => {
                         if (
-                          categories?.entities[item]?.Category_Translation.find(
+                          categories?.allNested.entities[
+                            item
+                          ]?.Category_Translation.find(
                             (x) => x.Language.Code == "En"
                           )
                             ?.Name.toLowerCase()
@@ -897,7 +899,7 @@ const PropertyBuyDrawer = ({
                           return (
                             <MenuItem key={j} value={item}>
                               {
-                                categories.entities[
+                                categories.allNested.entities[
                                   item
                                 ]?.Category_Translation.find(
                                   (x) => x.Language.Code == "En"
@@ -1312,9 +1314,11 @@ const PropertyBuyDrawer = ({
                         />
                       </ListSubheader>
 
-                      {addresses.ids?.map((item, j) => {
+                      {addresses.allNested.ids?.map((item, j) => {
                         if (
-                          addresses?.entities[item]?.Address_Translation.find(
+                          addresses.allNested?.entities[
+                            item
+                          ]?.Address_Translation.find(
                             (x) => x.Language.Code == "En"
                           )
                             ?.Name.toLowerCase()
@@ -1323,7 +1327,7 @@ const PropertyBuyDrawer = ({
                           return (
                             <MenuItem key={j} value={item}>
                               {
-                                addresses.entities[
+                                addresses.allNested.entities[
                                   item
                                 ]?.Address_Translation.find(
                                   (x) => x.Language.Code == "En"
@@ -1579,7 +1583,7 @@ const PropertyBuyDrawer = ({
   return (
     <PageDrawer
       isOpen={drawerOpen}
-      title={drawerID == "" ? "New Property" : "Edit Property"}
+      title={drawerID == "" ? "New Buy Property" : "Edit Buy Property"}
       newItem={drawerID == "" && true}
       editable={true}
       onCancelClick={closeDrawer}

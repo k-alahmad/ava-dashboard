@@ -858,9 +858,11 @@ const PropertyDrawer = ({
                     />
                   </ListSubheader>
 
-                  {categories.ids?.map((item, j) => {
+                  {categories.allNested.ids?.map((item, j) => {
                     if (
-                      categories?.entities[item]?.Category_Translation.find(
+                      categories?.allNested.entities[
+                        item
+                      ]?.Category_Translation.find(
                         (x) => x.Language.Code == "En"
                       )
                         ?.Name.toLowerCase()
@@ -869,7 +871,7 @@ const PropertyDrawer = ({
                       return (
                         <MenuItem key={j} value={item}>
                           {
-                            categories.entities[
+                            categories.allNested.entities[
                               item
                             ]?.Category_Translation.find(
                               (x) => x.Language.Code == "En"
@@ -930,9 +932,11 @@ const PropertyDrawer = ({
                     />
                   </ListSubheader>
 
-                  {addresses.ids?.map((item, j) => {
+                  {addresses.allNested.ids?.map((item, j) => {
                     if (
-                      addresses?.entities[item]?.Address_Translation.find(
+                      addresses?.allNested.entities[
+                        item
+                      ]?.Address_Translation.find(
                         (x) => x.Language.Code == "En"
                       )
                         ?.Name.toLowerCase()
@@ -941,7 +945,9 @@ const PropertyDrawer = ({
                       return (
                         <MenuItem key={j} value={item}>
                           {
-                            addresses.entities[item]?.Address_Translation.find(
+                            addresses.allNested.entities[
+                              item
+                            ]?.Address_Translation.find(
                               (x) => x.Language.Code == "En"
                             )?.Name
                           }

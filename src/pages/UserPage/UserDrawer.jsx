@@ -551,18 +551,20 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                   />
                 </ListSubheader>
 
-                {addresses.ids?.map((item, j) => {
+                {addresses.allNested.ids?.map((item, j) => {
                   if (
-                    addresses?.entities[item]?.Address_Translation.find(
-                      (x) => x.Language.Code == "En"
-                    )
+                    addresses?.allNested.entities[
+                      item
+                    ]?.Address_Translation.find((x) => x.Language.Code == "En")
                       ?.Name.toLowerCase()
                       .includes(selectSearchTerm.toLowerCase())
                   )
                     return (
                       <MenuItem key={j} value={item}>
                         {
-                          addresses.entities[item]?.Address_Translation.find(
+                          addresses.allNested.entities[
+                            item
+                          ]?.Address_Translation.find(
                             (x) => x.Language.Code == "En"
                           )?.Name
                         }

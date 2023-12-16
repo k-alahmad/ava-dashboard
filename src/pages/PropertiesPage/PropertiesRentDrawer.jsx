@@ -199,6 +199,7 @@ const PropertyRentDrawer = ({
             AddressID: data.addressId,
             CategoryID: data.categoryId,
             Aminities: loadedAmenities,
+            id: data.propertyUnits[0].id,
             Bacloney: data.propertyUnits[0].Bacloney,
             BalconySize: data.propertyUnits[0].BalconySize,
             Bathrooms: data.propertyUnits[0].Bathrooms,
@@ -306,6 +307,7 @@ const PropertyRentDrawer = ({
         properties_Translation[i].languagesID
       );
     }
+    drawerID !== "" && formData.append(`propertyUnits[0][id]`, values.id);
     formData.append(`propertyUnits[0][Bacloney]`, values.Bacloney);
     formData.append(`propertyUnits[0][BalconySize]`, values.BalconySize);
     formData.append(`propertyUnits[0][Bathrooms]`, values.Bathrooms);

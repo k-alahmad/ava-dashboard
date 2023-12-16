@@ -317,6 +317,8 @@ const PropertyBuyDrawer = ({
       );
     }
     for (let i = 0; i < units.length; i++) {
+      drawerID !== "" &&
+        formData.append(`propertyUnits[${i}][id]`, units[i].id);
       formData.append(`propertyUnits[${i}][Bacloney]`, units[i].Bacloney);
       formData.append(`propertyUnits[${i}][BalconySize]`, units[i].BalconySize);
       formData.append(`propertyUnits[${i}][Bathrooms]`, units[i].Bathrooms);

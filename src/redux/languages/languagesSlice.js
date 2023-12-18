@@ -36,7 +36,7 @@ export const lngApiSlice = apiSlice.injectEndpoints({
       query: (args) => ({
         url: "/language",
         method: "POST",
-        body: args.form,
+        body: args.values,
       }),
       invalidatesTags: [{ type: "LNG", id: "LIST" }],
     }),
@@ -44,7 +44,7 @@ export const lngApiSlice = apiSlice.injectEndpoints({
       query: (args) => ({
         url: `/language/${args.id}`,
         method: "PUT",
-        body: args.form,
+        body: args.values,
       }),
       invalidatesTags: (result, error, args) => [{ type: "LNG", id: args.id }],
     }),

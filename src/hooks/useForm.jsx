@@ -273,20 +273,22 @@ const useForm = (
         let newObj = omit(errors, "Email");
         setErrors(newObj);
       }
-    } else if (name == "Password") {
-      if (
-        !new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/).test(value)
-      ) {
-        setErrors({
-          ...errors,
-          Password:
-            "Password should contains atleast 8 charaters and containing uppercase, lowercase and numbers",
-        });
-      } else {
-        let newObj = omit(errors, "Password");
-        setErrors(newObj);
-      }
-    } else {
+    }
+    // else if (name == "Password") {
+    //   if (
+    //     !new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/).test(value)
+    //   ) {
+    //     setErrors({
+    //       ...errors,
+    //       Password:
+    //         "Password should contains atleast 8 charaters and containing uppercase, lowercase and numbers",
+    //     });
+    //   } else {
+    //     let newObj = omit(errors, "Password");
+    //     setErrors(newObj);
+    //   }
+    // }
+    else {
       if (value.length < 1) {
         setErrors({
           ...errors,

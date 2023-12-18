@@ -44,8 +44,6 @@ const defaultFormState = {
   Image: "",
 };
 const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
-  const defaultForm =
-    drawerID == "" ? { ...defaultFormState, Password: "" } : defaultFormState;
   const {
     errors,
     handleChange,
@@ -54,7 +52,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
     handleSubmit,
     disabled,
     setErrors,
-  } = useForm(submit, defaultForm);
+  } = useForm(submit, defaultFormState);
   const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
   const [disableField, setDisableField] = useState(false);
 
@@ -106,9 +104,7 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
           setValues(data);
         }
       } else {
-        setValues({
-          ...defaultFormState,
-        });
+        setValues(defaultFormState);
       }
     }
   }, [drawerID, data, drawerOpen, rolesSuccess]);
@@ -132,14 +128,14 @@ const UserDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
 
   useEffect(() => {
     if (addSuccess || updateSuccess) {
-      setValues(defaultForm);
+      setValues(defaultFormState);
       closeDrawer();
     }
   }, [addSuccess, updateSuccess]);
   const closeDrawer = () => {
     setDrawerID("");
     setDrawerOpen(false);
-    setValues(defaultForm);
+    setValues(defaultFormState);
     setImage(null);
     setErrors({});
     setImageURL(null);

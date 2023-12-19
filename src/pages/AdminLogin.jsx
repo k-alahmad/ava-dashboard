@@ -14,7 +14,11 @@ import { showMessage } from "../redux/messageAction.slice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setCredentials } from "../redux/auth/authSlice";
-import { useLoginMutation } from "../redux/auth/authApiSlice";
+import {
+  useGetProfileQuery,
+  useLazyGetProfileQuery,
+  useLoginMutation,
+} from "../redux/auth/authApiSlice";
 import Message from "../components/MessagePopUp/Message";
 import { systemSettings } from "../settings";
 const defaultForm = {
@@ -58,6 +62,8 @@ const SignIn = () => {
       setPasswordError("passowrd must be 6 charecters or more");
     }
   }
+
+  const [getProfile, {}] = useLazyGetProfileQuery();
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -67,6 +73,7 @@ const SignIn = () => {
       }).unwrap();
       // console.log(userData);
       dispatch(setCredentials(userData));
+      getProfile();
       setForm(defaultForm);
       navigate("/");
     } catch (error) {

@@ -322,7 +322,7 @@ const ProfilePage = () => {
               </FormControl>
             </div>
           )}
-          {teamsSuccess && (
+          {teamsSuccess && !teamsIsFetching && !teamsLoading && (
             <div className=" flex m-4">
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Team</InputLabel>
@@ -364,11 +364,11 @@ const ProfilePage = () => {
             )}
           </div>
         </form>
-        {teamsSuccess && !teamsLoading && !teamsIsFetching && (
+        {teamatesSuccess && !teamatesLoading && !teamatesFetching && (
           <div className="col-span-1 h-[400px] py-4 px-2 rounded-md overflow-hidden">
             <p className="text-med font-bold p-2">Teammates</p>
             <div className="overflow-y-auto space-y-5 h-full max-h-[90%] px-2">
-              {teamates?.ids.map((item, index) => {
+              {teamates.ids.map((item, index) => {
                 if (item !== data.id)
                   return (
                     <div

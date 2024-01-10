@@ -334,7 +334,7 @@ const PaymentPlanDrawer = ({
                         fullWidth
                         type="text"
                         name="SelectSearchTerm"
-                        placeholder="Search for Category"
+                        placeholder="Search for Property"
                         id="SelectSearchTerm"
                         onChange={(e) => setSelectSearchTerm(e.target.value)}
                         value={selectSearchTerm}
@@ -583,11 +583,12 @@ const PaymentPlanDrawer = ({
                                 index
                               )
                             }
+                            onWheel={(e) => e.target.blur()}
                             value={item.PercentageOfPayment}
                             variant="outlined"
                             size="medium"
                             required
-                            error={Boolean(errors?.PercentageOfPayment)}
+                            // error={Boolean(errors?.PercentageOfPayment)}
                             helperText={errors?.PercentageOfPayment}
                             disabled={disableField}
                           />

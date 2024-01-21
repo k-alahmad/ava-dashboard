@@ -43,15 +43,20 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import useForm from "../../hooks/useForm";
 import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
-
+import {
+  APIProvider,
+  Map,
+  AdvancedMarker,
+  Pin,
+} from "@vis.gl/react-google-maps";
 const defaultFormState = {
   id: "",
   RentMin: "",
   RentMax: "",
   FurnishingStatus: "Furnished",
   VacantStatus: "No",
-  Longitude: "",
-  Latitude: "",
+  Longitude: 55.26969018195244,
+  Latitude: 25.188872617717333,
   RentFrequency: "Yearly",
   ReraNo: "",
   // BRNNo: "",
@@ -82,6 +87,10 @@ const PropertyRentDrawer = ({
   setDrawerID,
 }) => {
   const [properties_Translation, setProperties_Translation] = useState([]);
+  const [defaultLatLng, setDefaultLatLng] = useState({
+    lat: 25.188872617717333,
+    lng: 55.26969018195244,
+  });
   const {
     disabled,
     setErrors,
@@ -211,6 +220,10 @@ const PropertyRentDrawer = ({
             Size: data.propertyUnits[0].Size,
           });
           setProperties_Translation(data.Property_Translation);
+          setDefaultLatLng({
+            lat: data.Latitude,
+            lng: data.Longitude,
+          });
         }
       } else {
         setValues(defaultFormState);
@@ -273,8 +286,8 @@ const PropertyRentDrawer = ({
     formData.append("RentFrequency", values.RentFrequency);
     formData.append("FurnishingStatus", values.FurnishingStatus);
     formData.append("VacantStatus", values.VacantStatus);
-    formData.append("Longitude", values.Longitude);
-    formData.append("Latitude", values.Latitude);
+    formData.append("Longitude", defaultLatLng.lng);
+    formData.append("Latitude", defaultLatLng.lat);
     formData.append("Purpose", "Rent");
     formData.append("ReraNo", values.ReraNo);
     // formData.append("BRNNo", values.BRNNo);
@@ -1136,37 +1149,6 @@ const PropertyRentDrawer = ({
           <div className="bg-secondary/10 p-4 space-y-4 rounded-lg mt-8 shadow-lg">
             <p className="font-bold tex-2xl m-4">Location Details</p>
             <div className="grid grid-cols-2">
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="Longitude"
-                  label={`Longitude`}
-                  id="Longitude"
-                  onChange={handleChange}
-                  value={values.Longitude}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  disabled={disableField}
-                />
-              </div>
-              <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="Latitude"
-                  label={`Latitude`}
-                  id="Latitude"
-                  onChange={handleChange}
-                  value={values.Latitude}
-                  variant="outlined"
-                  size="medium"
-                  required
-                  disabled={disableField}
-                />
-              </div>
-
               {addressesisSuccess && (
                 <div className="flex m-4">
                   <FormControl fullWidth>
@@ -1230,7 +1212,18 @@ const PropertyRentDrawer = ({
                             .includes(selectSearchTerm.toLowerCase())
                         )
                           return (
-                            <MenuItem key={j} value={item}>
+                            <MenuItem
+                              key={j}
+                              value={item}
+                              onClick={() =>
+                                setDefaultLatLng({
+                                  lat: addresses.allNested.entities[item]
+                                    .Latitude,
+                                  lng: addresses.allNested.entities[item]
+                                    .Longitude,
+                                })
+                              }
+                            >
                               {
                                 addresses.allNested.entities[
                                   item
@@ -1248,6 +1241,39 @@ const PropertyRentDrawer = ({
                   </FormControl>
                 </div>
               )}
+              <div className="col-span-full h-[500px] w-full">
+                <APIProvider apiKey={import.meta.env.VITE_GOOGLE_API_KEY ?? ""}>
+                  <Map
+                    zoom={14}
+                    center={{
+                      lat: defaultLatLng.lat,
+                      lng: defaultLatLng.lng,
+                    }}
+                    gestureHandling={"greedy"}
+                    disableDefaultUI={true}
+                    mapId={import.meta.env.VITE_GOOGLE_MAP_ID ?? ""}
+                    onClick={(event) => {
+                      setDefaultLatLng({
+                        lat: event.detail.latLng.lat,
+                        lng: event.detail.latLng.lng,
+                      });
+                    }}
+                  >
+                    <AdvancedMarker
+                      position={{
+                        lat: defaultLatLng.lat,
+                        lng: defaultLatLng.lng,
+                      }}
+                    >
+                      <Pin
+                        background={"rgba(221, 178, 110, 1)"}
+                        glyphColor={"rgba(8, 12, 19, 1)"}
+                        borderColor={"rgba(8, 12, 19, 1)"}
+                      />
+                    </AdvancedMarker>
+                  </Map>
+                </APIProvider>
+              </div>
             </div>
           </div>
           <div className="bg-secondary/10 p-4 space-y-4 rounded-lg mt-8 shadow-lg">

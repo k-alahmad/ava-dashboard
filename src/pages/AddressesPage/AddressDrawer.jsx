@@ -20,12 +20,17 @@ import { useDispatch } from "react-redux";
 import PageModal from "../../components/Admin/layout/PageModal";
 import useForm from "../../hooks/useForm";
 import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
-
+import {
+  APIProvider,
+  Map,
+  AdvancedMarker,
+  Pin,
+} from "@vis.gl/react-google-maps";
 const defaultFormState = {
   id: "",
   Image: "",
-  Longitude: "",
-  Latitude: "",
+  Longitude: 55.26969018195244,
+  Latitude: 25.188872617717333,
   Address_Translation: [],
   AddressID: null,
   ActiveStatus: true,
@@ -39,6 +44,10 @@ const AddressDrawer = ({
   parentName,
 }) => {
   const [address_Translation, setAddress_Translation] = useState([]);
+  const [defaultLatLng, setDefaultLatLng] = useState({
+    lat: 25.188872617717333,
+    lng: 55.26969018195244,
+  });
   const {
     errors,
     handleChange,
@@ -111,7 +120,10 @@ const AddressDrawer = ({
           setOldImage(data.Image?.URL);
           setValues(data);
           setAddress_Translation(data.Address_Translation);
-          console.log(data.Address_Translation);
+          setDefaultLatLng({
+            lat: data.Latitude,
+            lng: data.Longitude,
+          });
         }
       } else {
         setValues({ ...defaultFormState, AddressID: parentId });
@@ -167,8 +179,8 @@ const AddressDrawer = ({
   };
   function submit(event) {
     const formData = new FormData();
-    formData.append("Latitude", values.Latitude);
-    formData.append("Longitude", values.Longitude);
+    formData.append("Longitude", defaultLatLng.lng);
+    formData.append("Latitude", defaultLatLng.lat);
     values.AddressID !== "" &&
       drawerID == "" &&
       formData.append("AddressID", values.AddressID);
@@ -212,6 +224,31 @@ const AddressDrawer = ({
       }
     }
   }, [profileIsSuccess, profile, drawerID]);
+
+  const autoCompleteRef = useRef();
+  const inputRef = useRef();
+  const [searchTerm, setSearchTerm] = useState("");
+  const options = {
+    componentRestrictions: { country: "ae" },
+    fields: ["address_components", "geometry", "icon", "name"],
+    types: ["establishment"],
+  };
+  useEffect(() => {
+    autoCompleteRef.current = new window.google.maps.places.Autocomplete(
+      inputRef.current,
+      options
+    );
+    autoCompleteRef.current.addListener("place_changed", async function () {
+      const place = await autoCompleteRef.current.getPlace();
+      const lat = place.geometry.location.lat();
+      const lng = place.geometry.location.lng();
+      setDefaultLatLng({
+        lng: lng,
+        lat: lat,
+      });
+      setSearchTerm(place.name);
+    });
+  }, [searchTerm]);
   const formElements = () => (
     <form ref={formRef} className="flex flex-col justify-center">
       <div className="py-8 md:mx-12">
@@ -255,39 +292,53 @@ const AddressDrawer = ({
             </div>
           )}
         </div>
+
         <div className="flex m-4">
           <TextField
             fullWidth
-            type="number"
-            name="Longitude"
-            label="Longitude"
-            id="Longitude"
-            onChange={handleChange}
-            value={values.Longitude}
-            variant="outlined"
-            size="small"
-            required
-            error={Boolean(errors?.Longitude)}
-            helperText={errors?.Longitude}
+            inputRef={inputRef}
+            type="text"
+            label={`Search Area`}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+            }}
+            value={searchTerm}
+            size="medium"
             disabled={disableField}
           />
         </div>
-        <div className="flex m-4">
-          <TextField
-            fullWidth
-            type="number"
-            name="Latitude"
-            label="Latitude"
-            id="Latitude"
-            onChange={handleChange}
-            value={values.Latitude}
-            variant="outlined"
-            size="small"
-            required
-            error={Boolean(errors?.Latitude)}
-            helperText={errors?.Latitude}
-            disabled={disableField}
-          />
+        <div className="h-[500px] w-auto m-4 shadow-2xl rounded-md overflow-hidden">
+          <APIProvider apiKey={import.meta.env.VITE_GOOGLE_API_KEY ?? ""}>
+            <Map
+              zoom={14}
+              center={{
+                lat: defaultLatLng.lat,
+                lng: defaultLatLng.lng,
+              }}
+              gestureHandling={"greedy"}
+              disableDefaultUI={true}
+              mapId={import.meta.env.VITE_GOOGLE_MAP_ID ?? ""}
+              onClick={(event) => {
+                setDefaultLatLng({
+                  lat: event.detail.latLng.lat,
+                  lng: event.detail.latLng.lng,
+                });
+              }}
+            >
+              <AdvancedMarker
+                position={{
+                  lat: defaultLatLng.lat,
+                  lng: defaultLatLng.lng,
+                }}
+              >
+                <Pin
+                  background={"rgba(221, 178, 110, 1)"}
+                  glyphColor={"rgba(8, 12, 19, 1)"}
+                  borderColor={"rgba(8, 12, 19, 1)"}
+                />
+              </AdvancedMarker>
+            </Map>
+          </APIProvider>
         </div>
         <div className="w-full flex justify-center items-center">
           <Slider

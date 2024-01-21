@@ -83,7 +83,7 @@ const PropertyBuyDrawer = ({
   const [properties_Translation, setProperties_Translation] = useState([]);
   const [units, setUnits] = useState([]);
   const [paymentPlan, setPaymentPlan] = useState({});
-  const [defaultLatLng, SetDefaultLatLng] = useState({
+  const [defaultLatLng, setDefaultLatLng] = useState({
     lat: 25.188872617717333,
     lng: 55.26969018195244,
   });
@@ -213,7 +213,7 @@ const PropertyBuyDrawer = ({
           setProperties_Translation(data.Property_Translation);
           setUnits(data.propertyUnits);
           setPaymentPlan(data.propertyUnits[0]?.Paymentplan[0] ?? []);
-          SetDefaultLatLng({
+          setDefaultLatLng({
             lat: data.Latitude,
             lng: data.Longitude,
           });
@@ -361,6 +361,7 @@ const PropertyBuyDrawer = ({
       updateProperty({ id: drawerID, formData });
     }
   }
+
   const hiddenFileInput = React.useRef(null);
   const formRef = useRef(null);
   useEffect(() => {
@@ -381,6 +382,32 @@ const PropertyBuyDrawer = ({
       }
     }
   }, [profileIsSuccess, profile, drawerID]);
+
+  const autoCompleteRef = useRef();
+  const inputRef = useRef();
+  const [searchTerm, setSearchTerm] = useState("");
+  const options = {
+    componentRestrictions: { country: "ae" },
+    fields: ["address_components", "geometry", "icon", "name"],
+    types: ["establishment"],
+  };
+  useEffect(() => {
+    autoCompleteRef.current = new window.google.maps.places.Autocomplete(
+      inputRef.current,
+      options
+    );
+    autoCompleteRef.current.addListener("place_changed", async function () {
+      const place = await autoCompleteRef.current.getPlace();
+      const lat = place.geometry.location.lat();
+      const lng = place.geometry.location.lng();
+      setDefaultLatLng({
+        lng: lng,
+        lat: lat,
+      });
+      setSearchTerm(place.name);
+    });
+  }, [searchTerm]);
+
   const formElements = () => {
     return (
       <form ref={formRef} className="">
@@ -1248,70 +1275,20 @@ const PropertyBuyDrawer = ({
           <div className="bg-secondary/10 p-4 space-y-4 rounded-lg mt-8 shadow-lg">
             <p className="font-bold tex-2xl m-4">Location Details</p>
             <div className="grid grid-cols-2">
-              <div className="col-span-full h-[500px] w-full">
-                <APIProvider apiKey={import.meta.env.VITE_GOOGLE_API_KEY ?? ""}>
-                  <Map
-                    zoom={14}
-                    //25.188872617717333, 55.26969018195244
-                    center={{
-                      lat: defaultLatLng.lat,
-                      lng: defaultLatLng.lng,
-                    }}
-                    gestureHandling={"greedy"}
-                    disableDefaultUI={true}
-                    mapId={import.meta.env.VITE_GOOGLE_MAP_ID ?? ""}
-                    onClick={(event) => {
-                      SetDefaultLatLng({
-                        lat: event.detail.latLng.lat,
-                        lng: event.detail.latLng.lng,
-                      });
-                    }}
-                  >
-                    <AdvancedMarker
-                      position={{
-                        lat: defaultLatLng.lat,
-                        lng: defaultLatLng.lng,
-                      }}
-                    >
-                      <Pin
-                        background={"rgba(221, 178, 110, 1)"}
-                        glyphColor={"rgba(8, 12, 19, 1)"}
-                        borderColor={"rgba(8, 12, 19, 1)"}
-                      />
-                    </AdvancedMarker>
-                  </Map>
-                </APIProvider>
-              </div>
-
-              {/* <div className="flex m-4">
-                <TextField
-                  fullWidth
-                  type="number"
-                  name="Longitude"
-                  label={`Longitude`}
-                  id="Longitude"
-                  onChange={handleChange}
-                  value={values.Longitude}
-                  variant="outlined"
-                  size="medium"
-                  disabled={disableField}
-                />
-              </div>
               <div className="flex m-4">
                 <TextField
                   fullWidth
-                  type="number"
-                  name="Latitude"
-                  label={`Latitude`}
-                  id="Latitude"
-                  onChange={handleChange}
-                  value={values.Latitude}
-                  variant="outlined"
+                  inputRef={inputRef}
+                  type="text"
+                  label={`Search Area`}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                  }}
+                  value={searchTerm}
                   size="medium"
                   disabled={disableField}
                 />
-              </div> */}
-
+              </div>
               {addressesisSuccess && (
                 <div className="flex m-4">
                   <FormControl fullWidth>
@@ -1393,6 +1370,69 @@ const PropertyBuyDrawer = ({
                   </FormControl>
                 </div>
               )}
+              <div className="col-span-full h-[500px] w-full">
+                <APIProvider apiKey={import.meta.env.VITE_GOOGLE_API_KEY ?? ""}>
+                  <Map
+                    zoom={14}
+                    center={{
+                      lat: defaultLatLng.lat,
+                      lng: defaultLatLng.lng,
+                    }}
+                    gestureHandling={"greedy"}
+                    disableDefaultUI={true}
+                    mapId={import.meta.env.VITE_GOOGLE_MAP_ID ?? ""}
+                    onClick={(event) => {
+                      setSearchTerm("");
+                      setDefaultLatLng({
+                        lat: event.detail.latLng.lat,
+                        lng: event.detail.latLng.lng,
+                      });
+                    }}
+                  >
+                    <AdvancedMarker
+                      position={{
+                        lat: defaultLatLng.lat,
+                        lng: defaultLatLng.lng,
+                      }}
+                    >
+                      <Pin
+                        background={"rgba(221, 178, 110, 1)"}
+                        glyphColor={"rgba(8, 12, 19, 1)"}
+                        borderColor={"rgba(8, 12, 19, 1)"}
+                      />
+                    </AdvancedMarker>
+                  </Map>
+                </APIProvider>
+              </div>
+
+              {/* <div className="flex m-4">
+                <TextField
+                  fullWidth
+                  type="number"
+                  name="Longitude"
+                  label={`Longitude`}
+                  id="Longitude"
+                  onChange={handleChange}
+                  value={values.Longitude}
+                  variant="outlined"
+                  size="medium"
+                  disabled={disableField}
+                />
+              </div>
+              <div className="flex m-4">
+                <TextField
+                  fullWidth
+                  type="number"
+                  name="Latitude"
+                  label={`Latitude`}
+                  id="Latitude"
+                  onChange={handleChange}
+                  value={values.Latitude}
+                  variant="outlined"
+                  size="medium"
+                  disabled={disableField}
+                />
+              </div> */}
             </div>
           </div>
           <div className="bg-secondary/10 p-4 space-y-4 rounded-lg mt-8 shadow-lg">

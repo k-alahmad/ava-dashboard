@@ -294,8 +294,8 @@ const PropertyBuyDrawer = ({
     formData.append("FurnishingStatus", values.FurnishingStatus);
     formData.append("CompletionStatus", values.CompletionStatus);
     formData.append("VacantStatus", values.VacantStatus);
-    formData.append("Longitude", values.Longitude);
-    formData.append("Latitude", values.Latitude);
+    formData.append("Longitude", defaultLatLng.lng);
+    formData.append("Latitude", defaultLatLng.lat);
     formData.append("Purpose", "Buy");
     formData.append("RentMin", "0");
     formData.append("ReraNo", values.ReraNo);

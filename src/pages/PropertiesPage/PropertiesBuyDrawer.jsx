@@ -46,14 +46,19 @@ import { Add, Delete } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { showMessage } from "../../redux/messageAction.slice";
 import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
-
+import {
+  APIProvider,
+  Map,
+  AdvancedMarker,
+  Pin,
+} from "@vis.gl/react-google-maps";
 const defaultFormState = {
   id: "",
   CompletionStatus: "Ready",
   FurnishingStatus: "Furnished",
   VacantStatus: "No",
-  Longitude: "",
-  Latitude: "",
+  Longitude: 55.26969018195244,
+  Latitude: 25.188872617717333,
   Handover: "",
   ReraNo: "",
   // BRNNo: "",
@@ -78,6 +83,10 @@ const PropertyBuyDrawer = ({
   const [properties_Translation, setProperties_Translation] = useState([]);
   const [units, setUnits] = useState([]);
   const [paymentPlan, setPaymentPlan] = useState({});
+  const [defaultLatLng, SetDefaultLatLng] = useState({
+    lat: 25.188872617717333,
+    lng: 55.26969018195244,
+  });
   const {
     disabled,
     setErrors,
@@ -204,6 +213,10 @@ const PropertyBuyDrawer = ({
           setProperties_Translation(data.Property_Translation);
           setUnits(data.propertyUnits);
           setPaymentPlan(data.propertyUnits[0]?.Paymentplan[0] ?? []);
+          SetDefaultLatLng({
+            lat: data.Latitude,
+            lng: data.Longitude,
+          });
         }
       } else {
         setValues(defaultFormState);
@@ -1235,7 +1248,42 @@ const PropertyBuyDrawer = ({
           <div className="bg-secondary/10 p-4 space-y-4 rounded-lg mt-8 shadow-lg">
             <p className="font-bold tex-2xl m-4">Location Details</p>
             <div className="grid grid-cols-2">
-              <div className="flex m-4">
+              <div className="col-span-full h-[500px] w-full">
+                <APIProvider apiKey={import.meta.env.VITE_GOOGLE_API_KEY ?? ""}>
+                  <Map
+                    zoom={14}
+                    //25.188872617717333, 55.26969018195244
+                    center={{
+                      lat: defaultLatLng.lat,
+                      lng: defaultLatLng.lng,
+                    }}
+                    gestureHandling={"greedy"}
+                    disableDefaultUI={true}
+                    mapId={import.meta.env.VITE_GOOGLE_MAP_ID ?? ""}
+                    onClick={(event) => {
+                      SetDefaultLatLng({
+                        lat: event.detail.latLng.lat,
+                        lng: event.detail.latLng.lng,
+                      });
+                    }}
+                  >
+                    <AdvancedMarker
+                      position={{
+                        lat: defaultLatLng.lat,
+                        lng: defaultLatLng.lng,
+                      }}
+                    >
+                      <Pin
+                        background={"rgba(221, 178, 110, 1)"}
+                        glyphColor={"rgba(8, 12, 19, 1)"}
+                        borderColor={"rgba(8, 12, 19, 1)"}
+                      />
+                    </AdvancedMarker>
+                  </Map>
+                </APIProvider>
+              </div>
+
+              {/* <div className="flex m-4">
                 <TextField
                   fullWidth
                   type="number"
@@ -1262,7 +1310,7 @@ const PropertyBuyDrawer = ({
                   size="medium"
                   disabled={disableField}
                 />
-              </div>
+              </div> */}
 
               {addressesisSuccess && (
                 <div className="flex m-4">

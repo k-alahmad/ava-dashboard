@@ -64,7 +64,6 @@ const defaultFormState = {
   // BRNNo: "",
   Images: "",
   MetaData: "",
-  Aminities: "",
   DeveloperID: "",
   CategoryID: "",
   AddressID: "",

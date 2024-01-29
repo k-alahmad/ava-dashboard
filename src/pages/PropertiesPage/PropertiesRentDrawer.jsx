@@ -62,13 +62,12 @@ const defaultFormState = {
   // BRNNo: "",
   Images: "",
   MetaData: "",
-  Aminities: "",
+  Aminities: [],
   DeveloperID: "",
   CategoryID: "",
   AddressID: "",
   // size: "",
   ActiveStatus: true,
-  Aminities: [],
   Bacloney: false,
   BalconySize: "",
   Bathrooms: "",
@@ -203,7 +202,6 @@ const PropertyRentDrawer = ({
           });
           setValues({
             ...data,
-            Bacloney: data.Bacloney,
             DeveloperID: data.developerId,
             AddressID: data.addressId,
             CategoryID: data.categoryId,

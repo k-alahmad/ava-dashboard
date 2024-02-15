@@ -52,6 +52,8 @@ import {
   AdvancedMarker,
   Pin,
 } from "@vis.gl/react-google-maps";
+import PropertyBuyPDF from "./PropertyBuyPDF";
+import { PDFViewer } from "@react-pdf/renderer";
 const defaultFormState = {
   id: "",
   CompletionStatus: "Ready",
@@ -1643,7 +1645,12 @@ const PropertyBuyDrawer = ({
             <CircularProgress color="primary" />
           </div>
         ) : (
-          <div className="text-med font-LIT">{formElements()}</div>
+          <div className="text-med font-LIT">
+            {/* <PDFViewer width={"100%"} height={"500px"}>
+              <PropertyBuyPDF />
+            </PDFViewer> */}
+            {formElements()}
+          </div>
         )
       }
     />

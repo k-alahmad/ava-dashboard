@@ -452,7 +452,9 @@ const useForm = (
         item !== "PosthandoverPercentage" &&
         item !== "NoOfPosthandoverMonths" &&
         item !== "TotalMonths" &&
-        item !== "Password"
+        item !== "Password" &&
+        item !== "EstimatedRent" &&
+        item !== "BalconySize"
       ) {
         theErrors = { ...theErrors, [item]: item + " is required" };
       }

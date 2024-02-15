@@ -247,6 +247,13 @@ const AddressDrawer = ({
         lat: lat,
       });
       setSearchTerm(place.name);
+      const tempEn = address_Translation.find((x) => x.Language.Code == "En");
+      const newTempEn = { ...tempEn, Name: place.name };
+      const removeEnFromOriginal = address_Translation.filter(
+        (x) => x.Language.Code !== "En"
+      );
+      let newAT = [newTempEn, ...removeEnFromOriginal];
+      setAddress_Translation(newAT);
     });
   }, [searchTerm]);
   const formElements = () => (
@@ -315,6 +322,8 @@ const AddressDrawer = ({
                 lat: defaultLatLng.lat,
                 lng: defaultLatLng.lng,
               }}
+              scrollwheel={false}
+              zoomControl
               gestureHandling={"greedy"}
               disableDefaultUI={true}
               mapId={import.meta.env.VITE_GOOGLE_MAP_ID ?? ""}

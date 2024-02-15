@@ -1248,6 +1248,8 @@ const PropertyRentDrawer = ({
                       lng: defaultLatLng.lng,
                     }}
                     gestureHandling={"greedy"}
+                    scrollwheel={false}
+                    zoomControl
                     disableDefaultUI={true}
                     mapId={import.meta.env.VITE_GOOGLE_MAP_ID ?? ""}
                     onClick={(event) => {

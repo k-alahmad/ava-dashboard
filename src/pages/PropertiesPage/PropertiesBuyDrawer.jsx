@@ -1351,6 +1351,8 @@ const PropertyBuyDrawer = ({
                     }}
                     gestureHandling={"greedy"}
                     disableDefaultUI={true}
+                    scrollwheel={false}
+                    zoomControl
                     mapId={import.meta.env.VITE_GOOGLE_MAP_ID ?? ""}
                     onClick={(event) => {
                       setDefaultLatLng({

@@ -42,7 +42,7 @@ import {
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import useForm from "../../hooks/useForm";
-import { Add, Delete } from "@mui/icons-material";
+import { Add, CleanHands, Delete } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { showMessage } from "../../redux/messageAction.slice";
 import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
@@ -384,6 +384,45 @@ const PropertyBuyDrawer = ({
     }
   }, [profileIsSuccess, profile, drawerID]);
 
+  const imageDrag = useRef();
+  const imageDragOver = useRef();
+
+  function D_Start(e, index) {
+    imageDrag.current = index;
+  }
+  function D_Enter(e, index) {
+    imageDragOver.current = index;
+  }
+  function D_End(e, index) {
+    e.preventDefault();
+    const tempimages = [...values.Images];
+    const imagemain = tempimages[imageDrag.current];
+    tempimages.splice(imageDrag.current, 1);
+    tempimages.splice(imageDragOver.current, 0, imagemain);
+    imageDrag.current = null;
+    imageDragOver.current = null;
+    setValues({ ...values, Images: tempimages });
+  }
+  const imageDragNew = useRef();
+  const imageDragOverNew = useRef();
+
+  function DN_Start(e, index) {
+    imageDragNew.current = index;
+  }
+  function DN_Enter(e, index) {
+    imageDragOverNew.current = index;
+  }
+  function DN_End(e, index) {
+    e.preventDefault();
+    const tempimages = [...image];
+    const imagemain = tempimages[imageDragNew.current];
+    tempimages.splice(imageDragNew.current, 1);
+    tempimages.splice(imageDragOverNew.current, 0, imagemain);
+    imageDragNew.current = null;
+    imageDragOverNew.current = null;
+    setImage(tempimages);
+  }
+
   const formElements = () => {
     return (
       <form ref={formRef} className="">
@@ -430,7 +469,15 @@ const PropertyBuyDrawer = ({
               <div className="grid grid-cols-3 gap-4 max-h-[640px] overflow-y-scroll place-items-center">
                 {imageURL?.map((imageSrc, i) => {
                   return (
-                    <div className="relative" key={i}>
+                    <div
+                      className="relative"
+                      key={i}
+                      draggable
+                      droppable
+                      onDragStart={(e) => DN_Start(e, i)}
+                      onDragEnter={(e) => DN_Enter(e, i)}
+                      onDragEnd={(e) => DN_End(e, i)}
+                    >
                       <img
                         key={i}
                         className="h-[300px] w-[400px] col-span-1 rounded-md"
@@ -477,8 +524,16 @@ const PropertyBuyDrawer = ({
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4 max-h-[640px] overflow-y-scroll place-items-center">
-                {data.Images?.map((item, index) => (
-                  <div className="relative" key={index}>
+                {values.Images?.map((item, index) => (
+                  <div
+                    className="relative"
+                    key={index}
+                    draggable
+                    droppable
+                    onDragStart={(e) => D_Start(e, index)}
+                    onDragEnter={(e) => D_Enter(e, index)}
+                    onDragEnd={(e) => D_End(e, index)}
+                  >
                     <img
                       key={index}
                       className="col-span-1 h-[300px] w-[400px] rounded-md"

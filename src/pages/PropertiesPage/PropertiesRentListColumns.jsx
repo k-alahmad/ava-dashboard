@@ -1,7 +1,8 @@
 import React from "react";
 import { IconButton } from "@mui/material";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-export const ComposeColumns = (onDelete) => {
+import { Download } from "@mui/icons-material";
+export const ComposeColumns = (onDelete, onDownload) => {
   return [
     {
       Header: "Name",
@@ -126,6 +127,12 @@ export const ComposeColumns = (onDelete) => {
       sortable: false,
       Cell: ({ row }) => (
         <div className="flex items-center">
+          <IconButton
+            className="p-4"
+            onClick={(ev) => onDownload(ev, row.original)}
+          >
+            <Download color="action" />
+          </IconButton>
           <IconButton
             className="p-4"
             onClick={(ev) => onDelete(ev, row.original)}

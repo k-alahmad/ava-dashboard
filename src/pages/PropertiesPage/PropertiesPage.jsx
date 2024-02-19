@@ -29,6 +29,7 @@ import { Add } from "@mui/icons-material";
 import Slider from "react-slick";
 import PropertyBuyDrawer from "./PropertiesBuyDrawer";
 import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
+import PropertyPDF from "./PropertyPDF";
 const PropertyPage = () => {
   const {
     data: properties,
@@ -51,7 +52,8 @@ const PropertyPage = () => {
   const pageLayout = useRef(null);
   const [deletedName, setDeletedName] = useState("");
   const [searchText, setSearchText] = useState("");
-
+  const [DrawerPDFID, setDrawerPDFID] = useState("");
+  const [DrawerPDFOpen, setDrawerPDFOpen] = useState(false);
   const [drawerRentOpen, setDrawerRentOpen] = useState(false);
   const [drawerRentID, setDrawerRentID] = useState("");
   const [drawerBuyOpen, setDrawerBuyOpen] = useState(false);
@@ -66,7 +68,12 @@ const PropertyPage = () => {
     setDeletedName(model.email);
     dispatch(openDeleteDialog(model));
   };
-
+  const onDownload = (event, model) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setDrawerPDFID(model.id);
+    setDrawerPDFOpen(true);
+  };
   useEffect(() => {
     if (isError) {
       dispatch(
@@ -93,9 +100,13 @@ const PropertyPage = () => {
       );
     }
   }, [isError, deleteIsError, deleteIsSuccess]);
-  const [columns, setColumns] = useState(ComposeColumns(onDelete));
-  const [buyColumns, setBuyColumns] = useState(BuyCompose(onDelete));
-  const [rentColumns, setRentColumns] = useState(RentCompose(onDelete));
+  const [columns, setColumns] = useState(ComposeColumns(onDelete, onDownload));
+  const [buyColumns, setBuyColumns] = useState(
+    BuyCompose(onDelete, onDownload)
+  );
+  const [rentColumns, setRentColumns] = useState(
+    RentCompose(onDelete, onDownload)
+  );
   function yesDeleteContact(flg, data) {
     if (flg === true) {
       //delete
@@ -165,6 +176,12 @@ const PropertyPage = () => {
         setDrawerOpen={setDrawerBuyOpen}
         drawerID={drawerBuyID}
         setDrawerID={setDrawerBuyID}
+      />
+      <PropertyPDF
+        drawerOpen={DrawerPDFID}
+        setDrawerOpen={setDrawerPDFOpen}
+        drawerID={DrawerPDFID}
+        setDrawerID={setDrawerPDFID}
       />
       <PageSimple
         content={
@@ -238,14 +255,19 @@ const PropertyPage = () => {
                       data={properties?.allProperties?.entities}
                       dataCount={properties?.allProperties?.count}
                       onRowClick={(ev, row) => {
-                        // setDrawerID(row.original?.id);
-                        // setDrawerOpen(true);
+                        if (row.original.Purpose == "Rent") {
+                          setDrawerRentID(row.original?.id);
+                          setDrawerRentOpen(true);
+                        } else {
+                          setDrawerBuyID(row.original?.id);
+                          setDrawerBuyOpen(true);
+                        }
                       }}
                       isShown
                     />
                     <AdminTable
                       key={1}
-                      noDataMessage="There are no Properties"
+                      noDataMessage="There are no Rent Properties"
                       searchText={searchText}
                       columns={rentColumns}
                       loading={isLoading}
@@ -259,7 +281,7 @@ const PropertyPage = () => {
                     />
                     <AdminTable
                       key={2}
-                      noDataMessage="There are no Properties"
+                      noDataMessage="There are no Buy Properties"
                       searchText={searchText}
                       columns={buyColumns}
                       loading={isLoading}

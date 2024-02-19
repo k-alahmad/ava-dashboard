@@ -1060,6 +1060,7 @@ const PropertyBuyDrawer = ({
                 setUnits([
                   ...units,
                   {
+                    id: "",
                     Bacloney: false,
                     BalconySize: "",
                     Bathrooms: "",

@@ -52,8 +52,7 @@ import {
   AdvancedMarker,
   Pin,
 } from "@vis.gl/react-google-maps";
-import PropertyBuyPDF from "./PropertyPDF";
-import { PDFViewer } from "@react-pdf/renderer";
+
 const defaultFormState = {
   id: "",
   CompletionStatus: "Ready",

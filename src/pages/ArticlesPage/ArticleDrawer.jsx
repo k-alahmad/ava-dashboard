@@ -278,6 +278,7 @@ const ArticleDrawer = ({
               error={Boolean(errors?.MinRead)}
               helperText={errors?.MinRead}
               disabled={disableField}
+              onWheel={(e) => e.target.blur()}
             />
           </div>
           {usersisSuccess && (

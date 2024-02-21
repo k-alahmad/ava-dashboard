@@ -1139,6 +1139,7 @@ const PropertyBuyDrawer = ({
                         error={Boolean(errors?.Bathrooms)}
                         helperText={errors?.Bathrooms}
                         disabled={disableField}
+                        onWheel={(e) => e.target.blur()}
                       />
                     </div>
                     <div className="flex m-4">
@@ -1157,6 +1158,7 @@ const PropertyBuyDrawer = ({
                         error={Boolean(errors?.DEDNo)}
                         helperText={errors?.DEDNo}
                         disabled={disableField}
+                        onWheel={(e) => e.target.blur()}
                       />
                     </div>
                     <div className="flex m-4">
@@ -1175,6 +1177,7 @@ const PropertyBuyDrawer = ({
                         error={Boolean(errors?.PermitNumber)}
                         helperText={errors?.PermitNumber}
                         disabled={disableField}
+                        onWheel={(e) => e.target.blur()}
                       />
                     </div>
                     <div className="flex m-4">
@@ -1193,6 +1196,7 @@ const PropertyBuyDrawer = ({
                         error={Boolean(errors?.Price)}
                         helperText={errors?.Price}
                         disabled={disableField}
+                        onWheel={(e) => e.target.blur()}
                       />
                     </div>
 
@@ -1212,6 +1216,7 @@ const PropertyBuyDrawer = ({
                         error={Boolean(errors?.Size)}
                         helperText={errors?.Size}
                         disabled={disableField}
+                        onWheel={(e) => e.target.blur()}
                       />
                     </div>
                     <div className="flex m-4">
@@ -1230,6 +1235,7 @@ const PropertyBuyDrawer = ({
                         // error={Boolean(errors?.PricePerSQFT)}
                         // helperText={errors?.PricePerSQFT}
                         disabled
+                        onWheel={(e) => e.target.blur()}
                       />
                     </div>
                     <div className="flex m-4">
@@ -1248,6 +1254,7 @@ const PropertyBuyDrawer = ({
                         error={Boolean(errors?.Bedrooms)}
                         helperText={errors?.Bedrooms}
                         disabled={disableField}
+                        onWheel={(e) => e.target.blur()}
                       />
                     </div>
                     <div className="flex m-4">
@@ -1267,6 +1274,7 @@ const PropertyBuyDrawer = ({
                         error={Boolean(errors?.EstimatedRent)}
                         helperText={errors?.EstimatedRent}
                         disabled={disableField}
+                        onWheel={(e) => e.target.blur()}
                       />
                     </div>
                     <div className="flex m-4">
@@ -1305,6 +1313,7 @@ const PropertyBuyDrawer = ({
                         variant="outlined"
                         size="medium"
                         disabled={disableField}
+                        onWheel={(e) => e.target.blur()}
                       />
                     </div>
                   </div>

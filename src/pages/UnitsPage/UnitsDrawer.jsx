@@ -175,6 +175,7 @@ const UnitsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               error={Boolean(errors?.conversionRate)}
               helperText={errors?.conversionRate}
               disabled={disableField}
+              onWheel={(e) => e.target.blur()}
             />
           </div>
           <div className="w-full flex justify-center items-center">

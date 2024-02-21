@@ -586,6 +586,7 @@ const PropertyDrawer = ({
               variant="outlined"
               size="small"
               required
+              onWheel={(e) => e.target.blur()}
             />
           </div>
           <div className="flex m-4">
@@ -600,6 +601,7 @@ const PropertyDrawer = ({
               variant="outlined"
               size="small"
               required
+              onWheel={(e) => e.target.blur()}
             />
           </div>
           <div className="flex m-4">
@@ -656,6 +658,7 @@ const PropertyDrawer = ({
               variant="outlined"
               size="small"
               required
+              onWheel={(e) => e.target.blur()}
             />
           </div>
           <div className="flex m-4">
@@ -670,6 +673,7 @@ const PropertyDrawer = ({
               variant="outlined"
               size="small"
               required
+              onWheel={(e) => e.target.blur()}
             />
           </div>
           <div className="flex m-4">

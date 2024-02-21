@@ -234,6 +234,7 @@ const PaymentPlanDrawer = ({
                 error={Boolean(errors?.DownPayemnt)}
                 helperText={errors?.DownPayemnt}
                 disabled={disableField}
+                onWheel={(e) => e.target.blur()}
               />
             </div>
             <div className="flex m-4">
@@ -251,6 +252,7 @@ const PaymentPlanDrawer = ({
                 error={Boolean(errors?.DuringConstructionMonths)}
                 helperText={errors?.DuringConstructionMonths}
                 disabled={disableField}
+                onWheel={(e) => e.target.blur()}
               />
             </div>
             <div className="flex m-4">
@@ -268,6 +270,7 @@ const PaymentPlanDrawer = ({
                 error={Boolean(errors?.DuringConstructionPercentage)}
                 helperText={errors?.DuringConstructionPercentage}
                 disabled={disableField}
+                onWheel={(e) => e.target.blur()}
               />
             </div>
             <div className="flex m-4">
@@ -303,6 +306,7 @@ const PaymentPlanDrawer = ({
                 error={Boolean(errors?.OnHandoverPercentage)}
                 helperText={errors?.OnHandoverPercentage}
                 disabled={disableField}
+                onWheel={(e) => e.target.blur()}
               />
             </div>
 
@@ -415,6 +419,7 @@ const PaymentPlanDrawer = ({
                 error={Boolean(errors?.NoOfPosthandoverMonths)}
                 helperText={errors?.NoOfPosthandoverMonths}
                 disabled={disableField}
+                onWheel={(e) => e.target.blur()}
               />
             </div>
             <div
@@ -436,6 +441,7 @@ const PaymentPlanDrawer = ({
                 error={Boolean(errors?.PosthandoverPercentage)}
                 helperText={errors?.PosthandoverPercentage}
                 disabled={disableField}
+                onWheel={(e) => e.target.blur()}
               />
             </div>
 
@@ -489,6 +495,7 @@ const PaymentPlanDrawer = ({
                   error={Boolean(errors?.TotalMonths)}
                   helperText={errors?.TotalMonths}
                   disabled={disableField}
+                  onWheel={(e) => e.target.blur()}
                 />
               ) : (
                 <>

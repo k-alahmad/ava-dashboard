@@ -268,6 +268,7 @@ const AnnouncementDrawer = ({
               required
               error={Boolean(errors?.Rank)}
               helperText={errors.Rank}
+              onWheel={(e) => e.target.blur()}
             />
           </div>
           {Announcement_Type.length > 0 && (

@@ -44,7 +44,6 @@ const App = () => {
       </div>
     );
   };
-
   return (
     <Routes>
       <Route path="/login" element={<AdminLogin />} />

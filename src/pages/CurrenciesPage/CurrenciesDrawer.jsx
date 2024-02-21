@@ -187,6 +187,7 @@ const CurrenciesDrawer = ({
               error={Boolean(errors?.conversionRate)}
               helperText={errors?.conversionRate}
               disabled={disableField}
+              onWheel={(e) => e.target.blur()}
             />
           </div>
           <div className="m-4 flex">

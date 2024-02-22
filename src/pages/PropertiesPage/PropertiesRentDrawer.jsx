@@ -337,6 +337,11 @@ const PropertyRentDrawer = ({
       addProperty({ formData });
     } else {
       //update
+      if (values.Images) {
+        for (let i = 0; i < values.Images.length; i++) {
+          formData.append("CurrentImages", values.Images[i].id);
+        }
+      }
       updateProperty({ id: drawerID, formData });
     }
   }

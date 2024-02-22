@@ -304,11 +304,7 @@ const PropertyBuyDrawer = ({
     formData.append("CategoryID", values.CategoryID);
     formData.append("AddressID", values.AddressID);
     formData.append("ActiveStatus", values.ActiveStatus);
-    if (values.Images) {
-      for (let i = 0; i < values.Images.length; i++) {
-        formData.append("CurrentImages", values.Images[i].id);
-      }
-    }
+
     if (values.Aminities) {
       for (let i = 0; i < values.Aminities.length; i++) {
         formData.append("Aminities", values.Aminities[i]);

@@ -96,7 +96,12 @@ const PropertyPDFDrawer = ({
     units,
     setUnits
   );
-  const { data: profile, isSuccess: profileIsSuccess } = useGetProfileQuery();
+  const {
+    data: profile,
+    isSuccess: profileIsSuccess,
+    isLoading: profileIsLoading,
+    isFetching: profileIsFetching,
+  } = useGetProfileQuery();
   const [disableField, setDisableField] = useState(false);
   const [image, setImage] = useState([]);
   const [oldImage, setOldImage] = useState();
@@ -236,26 +241,143 @@ const PropertyPDFDrawer = ({
 
   const formElements = () => {
     return (
-      <div className="flex justify-center items-start -mt-6 overflow-auto">
+      <div className="flex justify-center items-start -mt-8 overflow-auto">
         <div
-          className={` `}
+          className={`space-y-4 `}
           style={{
-            width: 1240 * pdfScaler + "px",
+            width: 1024 * pdfScaler + "px",
           }}
         >
           <div
             className={`w-full relative `}
             style={{
-              height: 750 * pdfScaler + "px",
+              height: 780 * pdfScaler + "px",
             }}
           >
             <img
               src={API_BASE_URL + values?.Images[0]?.URL}
-              className="w-full h-full"
+              className="w-full h-full object-center"
               alt=""
             />
             <div className="bg-[#141330]/40 w-full h-full absolute left-0 top-0" />
+
+            <img
+              src={API_BASE_URL + values?.Developer?.Image.URL}
+              className="absolute left-5 top-5 w-[200px] h-[150px]"
+              alt=""
+            />
+
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 p-12 bg-[#141330] w-[35%] text-white">
+              <p className=" font-bold text-med">
+                {
+                  values?.Property_Translation?.find(
+                    (x) => x.Language.Code == "En"
+                  ).Name
+                }
+              </p>
+              <p className="text-small">
+                {
+                  values?.Developer?.Developer_Translation?.find(
+                    (x) => x.Language.Code == "En"
+                  ).Name
+                }
+                <span className="text-primary">_____________</span>
+              </p>
+            </div>
+            <div className="absolute right-7 top-1/2 -translate-y-1/2 backdrop-blur-md bg-white/40 rounded-2xl p-8 w-[35%]">
+              <p className="text-med font-bold text-[#141330]">
+                {profile.Name}
+              </p>
+              <div className="grid grid-cols-3 text-white text-tiny mt-4 gap-4">
+                <p className="col-span-1">Address:</p>
+                <p className="col-span-2">
+                  Office 609, Clover Bay Tower - 6a Marasi Dr - Business Bay -
+                  Dubai
+                </p>
+                <p className="col-span-1">Email:</p>
+                <p className="col-span-2">info@avarealestate.ae</p>
+                <p className="col-span-1">Phone:</p>
+                <p className="col-span-2">+971501108606</p>
+              </div>
+            </div>
           </div>
+          {/* -------------------------- */}
+          <div
+            className={`w-full relative bg-[#141330] `}
+            style={{
+              height: 780 * pdfScaler + "px",
+            }}
+          >
+            <img
+              src={API_BASE_URL + values?.Images[1]?.URL}
+              className="absolute right-0 top-1/2 -translate-y-1/2 w-[90%] h-[90%] object-left object-cover z-10"
+              alt=""
+            />
+
+            <div className="bg-primary absolute h-[85%] w-[5%] left-[6%] top-1/2 -translate-y-1/2" />
+            <img
+              src={API_BASE_URL + values?.Developer?.Image.URL}
+              className="absolute left-[12%] bottom-[7%] w-[200px] h-[150px] z-10"
+              alt=""
+            />
+            <div className="absolute bottom-3 w-full h-5 flex justify-end items-center">
+              <div className="flex justify-center items-center h-5 w-5 bg-white text-black rounded-full">
+                1
+              </div>
+              <div className="w-[95%] h-px bg-white" />
+            </div>
+          </div>
+          {/* -------------------------- */}
+          <div
+            className={`w-full relative bg-[#141330]`}
+            style={{
+              height: 780 * pdfScaler + "px",
+            }}
+          >
+            <div className="grid grid-cols-4 gap-4 w-full h-full place-items-center">
+              <div className="col-span-1 w-full h-full relative">
+                <img
+                  src={API_BASE_URL + values?.Images[1]?.URL}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-[90%] object-right object-cover z-10"
+                  alt=""
+                />
+              </div>
+
+              <div className="col-span-3 flex flex-col justify-start items-center w-[95%] h-[90%] overflow-hidden">
+                <p className="text-med font-bold text-primary">Description</p>
+                <div
+                  className="text-white mt-5 overflow-auto"
+                  dangerouslySetInnerHTML={{
+                    __html: values?.Property_Translation?.find(
+                      (x) => x.Language.Code == "En"
+                    ).Description,
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="absolute bottom-3 w-full h-5 flex justify-start items-center">
+              <div className="w-[95%] h-px bg-white" />
+              <div className="flex justify-center items-center h-5 w-5 bg-white text-black rounded-full">
+                2
+              </div>
+            </div>
+          </div>
+          {/* -------------------------- */}
+          <div
+            className={`w-full relative `}
+            style={{
+              height: 780 * pdfScaler + "px",
+            }}
+          ></div>
+          {/* -------------------------- */}
+          <div
+            className={`w-full relative `}
+            style={{
+              height: 780 * pdfScaler + "px",
+            }}
+          ></div>
+          {/* -------------------------- */}
         </div>
       </div>
     );
@@ -282,6 +404,8 @@ const PropertyPDFDrawer = ({
         developersIsFethcing ||
         amenitiesIsLoading ||
         amenitiesIsFethcing ||
+        profileIsLoading ||
+        profileIsFetching ||
         lngIsLoading ||
         lngIsFethcing ? (
           <div className="flex flex-row justify-center items-center h-screen w-full">
@@ -293,7 +417,7 @@ const PropertyPDFDrawer = ({
               <div
                 className="flex justify-center items-center border-r-2 border-white cursor-pointer"
                 onClick={() => {
-                  if (pdfScaler > 0.25) setPdfScaler(pdfScaler - 0.25);
+                  if (pdfScaler > 1) setPdfScaler(pdfScaler - 0.25);
                 }}
               >
                 <Remove sx={{ color: "white" }} />

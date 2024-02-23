@@ -281,7 +281,7 @@ const PropertyPDFDrawer = ({
                     (x) => x.Language.Code == "En"
                   ).Name
                 }
-                <span className="text-primary">_____________</span>
+                <span className="text-primary"> _____________</span>
               </p>
             </div>
             <div className="absolute right-7 top-1/2 -translate-y-1/2 backdrop-blur-md bg-white/40 rounded-2xl p-8 w-[35%]">
@@ -303,7 +303,7 @@ const PropertyPDFDrawer = ({
           </div>
           {/* -------------------------- */}
           <div
-            className={`w-full relative bg-[#141330] `}
+            className={`w-full relative bg-[#141330]`}
             style={{
               height: 780 * pdfScaler + "px",
             }}
@@ -334,7 +334,7 @@ const PropertyPDFDrawer = ({
               height: 780 * pdfScaler + "px",
             }}
           >
-            <div className="grid grid-cols-4 gap-4 w-full h-full place-items-center">
+            <div className="grid grid-cols-6 gap-4 w-full h-full place-items-center">
               <div className="col-span-1 w-full h-full relative">
                 <img
                   src={API_BASE_URL + values?.Images[1]?.URL}
@@ -343,7 +343,7 @@ const PropertyPDFDrawer = ({
                 />
               </div>
 
-              <div className="col-span-3 flex flex-col justify-start items-center w-[95%] h-[90%] overflow-hidden">
+              <div className="col-span-5 flex flex-col justify-start items-center w-[95%] h-[90%] overflow-hidden">
                 <p className="text-med font-bold text-primary">Description</p>
                 <div
                   className="text-white mt-5 overflow-auto"

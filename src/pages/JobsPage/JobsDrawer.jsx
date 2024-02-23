@@ -156,7 +156,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
           Type: values.Type,
           WeekHours: values.WeekHours,
           Expired: `${values.Expired}`,
-          AuthorID: values.usersId,
+          AuthorID: values.usersID,
           Jobs_Translation: JT,
         },
       });
@@ -170,7 +170,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
           Type: values.Type,
           WeekHours: values.WeekHours,
           Expired: `${values.Expired}`,
-          Author: values.usersId,
+          Author: values.usersID,
           Jobs_Translation: JT,
         },
       });
@@ -371,7 +371,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
                   Job Creator*
                 </InputLabel>
                 <Select
-                  labelId="usersId"
+                  labelId="usersID"
                   name="usersID"
                   id="usersID"
                   value={values.usersID}

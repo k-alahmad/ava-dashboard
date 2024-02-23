@@ -13,3 +13,48 @@ export const FurnishingStatus = [
 export const VacantStatus = ["Yes", "No"];
 export const Announcement_Type = ["Normal", "Popup"];
 export const Directions = ["ltr", "rtl"];
+export const Language_Lvl = [
+  {
+    value: "None",
+    lng: { en: "No proficiency", ar: "لا يوجد" },
+  },
+  {
+    value: "A1",
+    lng: { en: "Beginner", ar: "مبتدئ" },
+  },
+  {
+    value: "A2",
+    lng: {
+      en: "Pre-intermediate",
+      ar: "ما قبل المتوسط",
+    },
+  },
+  {
+    value: "B1",
+    lng: {
+      en: "Intermediate",
+      ar: "متوسط",
+    },
+  },
+  {
+    value: "B2",
+    lng: {
+      en: "Upper-intermediate",
+      ar: "وسيط ذو مستوي رفيع",
+    },
+  },
+  {
+    value: "C1",
+    lng: {
+      en: "Advanced",
+      ar: "متقدم",
+    },
+  },
+  {
+    value: "C2",
+    lng: {
+      en: "Native or Bilingual",
+      ar: "أصلية أو ثنائية اللغة",
+    },
+  },
+];

@@ -7,7 +7,7 @@ import { showMessage } from "../../redux/messageAction.slice";
 import PageModal from "../../components/Admin/layout/PageModal";
 import profilePic from "../../assets/profilepic.png";
 import { API_BASE_URL } from "../../constants";
-
+import { Language_Lvl } from "../../constants";
 const defaultFormState = {
   id: "",
   YearsOfExp: "",
@@ -93,7 +93,7 @@ const ApplicationDrawer = ({
           </p>
         </div>
       </div>
-      <div className="p-8 grid md:grid-cols-2 w-full gap-5">
+      <div className="p-8 grid md:grid-cols-2 w-full gap-5 text-small">
         <p>
           <span className="font-semibold">Years Of Experience: </span>{" "}
           {form.YearsOfExp}
@@ -108,11 +108,15 @@ const ApplicationDrawer = ({
         </p>
         <p>
           <span className="font-semibold">Level Of English: </span>
-          {form.EnglishLvl}
+          {form.EnglishLvl +
+            " - " +
+            Language_Lvl.find((x) => x.value == form.EnglishLvl)?.lng.en}
         </p>
         <p>
           <span className="font-semibold">Level Of Arabic: </span>
-          {form.ArabicLvl}
+          {form.ArabicLvl +
+            " - " +
+            Language_Lvl.find((x) => x.value == form.ArabicLvl)?.lng.en}
         </p>
         <p>
           <span className="font-semibold">Other Languages: </span>

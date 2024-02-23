@@ -2,7 +2,7 @@ import React from "react";
 import { IconButton } from "@mui/material";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import { Download } from "@mui/icons-material";
-
+import { Language_Lvl } from "../../constants";
 export const ComposeColumns = (onDelete, onDownload) => {
   return [
     {
@@ -63,7 +63,10 @@ export const ComposeColumns = (onDelete, onDownload) => {
     {
       Header: "English Level",
       id: "EnglishLvl",
-      accessor: (d) => d.EnglishLvl,
+      accessor: (d) =>
+        d.EnglishLvl +
+        " - " +
+        Language_Lvl.find((x) => x.value == d.EnglishLvl).lng.en,
       className: "font-bold",
       sortable: true,
       show: false,
@@ -72,7 +75,10 @@ export const ComposeColumns = (onDelete, onDownload) => {
     {
       Header: "Arabic Level",
       id: "ArabicLvl",
-      accessor: (d) => d.ArabicLvl,
+      accessor: (d) =>
+        d.ArabicLvl +
+        " - " +
+        Language_Lvl.find((x) => x.value == d.ArabicLvl).lng.en,
       className: "font-bold",
       sortable: true,
       show: false,

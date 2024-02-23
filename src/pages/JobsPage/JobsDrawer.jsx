@@ -32,7 +32,7 @@ const defaultFormState = {
   id: "",
   Location: "",
   Type: "",
-  WeekHours: "",
+  WeekHours: "44",
   Expired: false,
   usersID: "",
   ActiveStatus: true,
@@ -330,7 +330,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               disabled={disableField}
             />
           </div>
-          <div className="flex m-4">
+          {/* <div className="flex m-4">
             <TextField
               fullWidth
               type="text"
@@ -346,7 +346,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
               helperText={errors?.WeekHours}
               disabled={disableField}
             />
-          </div>
+          </div> */}
           <div className="flex m-4">
             <FormGroup>
               <FormControlLabel

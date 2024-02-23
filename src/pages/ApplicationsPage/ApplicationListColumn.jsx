@@ -60,15 +60,6 @@ export const ComposeColumns = (onDelete) => {
       checked: true,
     },
     {
-      Header: "Field",
-      id: "Field",
-      accessor: (d) => d.Field,
-      className: "font-bold",
-      sortable: true,
-      show: false,
-      checked: true,
-    },
-    {
       Header: "English Level",
       id: "EnglishLvl",
       accessor: (d) => d.EnglishLvl,

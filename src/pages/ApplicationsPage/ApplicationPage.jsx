@@ -22,6 +22,7 @@ import {
   useGetApplicationQuery,
 } from "../../redux/applications/applicationsSlice";
 import ApplicationDrawer from "./ApplicationDrawer";
+import { API_BASE_URL } from "../../constants";
 
 const ApplicationPage = () => {
   const {
@@ -53,7 +54,11 @@ const ApplicationPage = () => {
     setDeletedName(model.email);
     dispatch(openDeleteDialog(model));
   };
-
+  const onDownload = (event, model) => {
+    event.preventDefault();
+    event.stopPropagation();
+    window.open(API_BASE_URL + model.CVURL, "_blank", "noopener,noreferrer");
+  };
   useEffect(() => {
     if (isError) {
       dispatch(
@@ -80,7 +85,7 @@ const ApplicationPage = () => {
       );
     }
   }, [isError, deleteIsError, deleteIsSuccess]);
-  const [columns, setColumns] = useState(ComposeColumns(onDelete));
+  const [columns, setColumns] = useState(ComposeColumns(onDelete, onDownload));
   function yesDeleteContact(flg, data) {
     if (flg === true) {
       //delete

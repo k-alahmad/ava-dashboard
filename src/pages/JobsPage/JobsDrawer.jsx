@@ -170,7 +170,7 @@ const JobsDrawer = ({ drawerOpen, setDrawerOpen, drawerID, setDrawerID }) => {
           Type: values.Type,
           WeekHours: values.WeekHours,
           Expired: `${values.Expired}`,
-          Author: values.usersID,
+          AuthorID: values.usersID,
           Jobs_Translation: JT,
         },
       });

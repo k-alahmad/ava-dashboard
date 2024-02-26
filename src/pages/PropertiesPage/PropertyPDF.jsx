@@ -10,29 +10,10 @@ import { useGetActiveDevelopersQuery } from "../../redux/developers/developersSl
 import { useGetActiveAddressQuery } from "../../redux/addresses/addressesSlice";
 import { useGetAmenitiesQuery } from "../../redux/amentities/amenitiesSlice";
 import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
-import {
-  CircularProgress,
-  TextField,
-  FormGroup,
-  FormControlLabel,
-  Switch,
-  InputLabel,
-  FormControl,
-  Select,
-  ListSubheader,
-  InputAdornment,
-  MenuItem,
-  Chip,
-  OutlinedInput,
-} from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Button from "../../components/UI/Button";
-import {
-  API_BASE_URL,
-  CompletionStatus,
-  FurnishingStatus,
-  VacantStatus,
-} from "../../constants";
+import { API_BASE_URL } from "../../constants";
 import RichTextBox from "../../components/Forms/RichTextBox";
 import {
   useDeleteAllPropertyImagesMutation,
@@ -41,11 +22,12 @@ import {
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import useForm from "../../hooks/useForm";
-import { Add, CleanHands, Delete, Remove } from "@mui/icons-material";
+import { Add, Remove } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { showMessage } from "../../redux/messageAction.slice";
 import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
-
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
 const defaultFormState = {
   id: "",
   CompletionStatus: "Ready",
@@ -222,8 +204,32 @@ const PropertyPDFDrawer = ({
     setErrors({});
     setUnits([]);
   };
+  const [pdfCount, setPdfCount] = useState(["pdf1", "pdf2", "pdf3"]);
   function submit(event) {}
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const createPDF = async () => {
+    const pdf = new jsPDF("landscape", "pt", "a4");
+    setPdfLoading(true);
+    for (let i = 0; i < pdfCount.length; i++) {
+      const data = await html2canvas(document.querySelector("#pdf" + (i + 1)), {
+        // allowTaint: true,
+        useCORS: true,
+      });
+      const img = data.toDataURL("image/png");
+      // const imgProperties = pdf.getImageProperties(img);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      // const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
+      const pdfHeight = pdf.internal.pageSize.getHeight();
 
+      if (i > 0) pdf.addPage("a4", "landscape");
+      pdf.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight);
+    }
+    setPdfLoading(false);
+    pdf.save(
+      values?.Property_Translation?.find((x) => x.Language.Code == "En").Name +
+        "Property"
+    );
+  };
   // useEffect(() => {
   //   if (profileIsSuccess) {
   //     if (drawerID !== "") {
@@ -249,6 +255,7 @@ const PropertyPDFDrawer = ({
           }}
         >
           <div
+            id="pdf1"
             className={`w-full relative `}
             style={{
               height: 780 * pdfScaler + "px",
@@ -264,7 +271,7 @@ const PropertyPDFDrawer = ({
             <img
               src={API_BASE_URL + values?.Developer?.Image.URL}
               className="absolute left-5 top-5 w-[200px] h-[150px]"
-              alt=""
+              alt="pdf1"
             />
 
             <div className="absolute left-0 top-1/2 -translate-y-1/2 p-12 bg-[#141330] w-[35%] text-white">
@@ -303,45 +310,44 @@ const PropertyPDFDrawer = ({
           </div>
           {/* -------------------------- */}
           <div
-            className={`w-full relative bg-[#141330]`}
+            id="pdf2"
+            className={`w-full relative bg-[#141330] overflow-hidden`}
             style={{
               height: 780 * pdfScaler + "px",
             }}
           >
             <img
               src={API_BASE_URL + values?.Images[1]?.URL}
-              className="absolute right-0 top-1/2 -translate-y-1/2 w-[90%] h-[90%] object-left object-cover z-10"
-              alt=""
+              className="absolute -right-[10%] top-1/2 -translate-y-1/2 w-full h-[90%] object-left object-cover z-10"
+              alt="pdf2"
             />
 
             <div className="bg-primary absolute h-[85%] w-[5%] left-[6%] top-1/2 -translate-y-1/2" />
             <img
               src={API_BASE_URL + values?.Developer?.Image.URL}
               className="absolute left-[12%] bottom-[7%] w-[200px] h-[150px] z-10"
-              alt=""
+              alt="pdf2Logo"
             />
-            <div className="absolute bottom-3 w-full h-5 flex justify-end items-center">
-              <div className="flex justify-center items-center h-5 w-5 bg-white text-black rounded-full">
-                1
-              </div>
-              <div className="w-[95%] h-px bg-white" />
+            <div className="absolute bottom-5 w-[95%] right-0 h-px bg-white" />
+            <div className="absolute bottom-2.5 left-[5%] h-6 w-6 bg-white rounded-full text-center font-semibold">
+              <p className="absolute left-1/2 -translate-x-1/2 -top-2 ">1</p>
             </div>
           </div>
           {/* -------------------------- */}
           <div
-            className={`w-full relative bg-[#141330]`}
+            id="pdf3"
+            className={`w-full relative overflow-hidden bg-[#141330]`}
             style={{
               height: 780 * pdfScaler + "px",
             }}
           >
-            <div className="grid grid-cols-6 gap-4 w-full h-full place-items-center">
-              <div className="col-span-1 w-full h-full relative">
-                <img
-                  src={API_BASE_URL + values?.Images[1]?.URL}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-[90%] object-right object-cover z-10"
-                  alt=""
-                />
-              </div>
+            <div className="grid grid-cols-6 gap-4 w-full h-full place-items-center ">
+              <img
+                src={API_BASE_URL + values?.Images[1]?.URL}
+                className="absolute -left-[83%] top-1/2 -translate-y-1/2 !w-full h-[90%]"
+                alt="pdf3"
+              />
+              <div className="col-span-1 w-full h-full relative overflow-hidden"></div>
 
               <div className="col-span-5 flex flex-col justify-start items-center w-[95%] h-[90%] overflow-hidden">
                 <p className="text-med font-bold text-primary">Description</p>
@@ -356,11 +362,9 @@ const PropertyPDFDrawer = ({
               </div>
             </div>
 
-            <div className="absolute bottom-3 w-full h-5 flex justify-start items-center">
-              <div className="w-[95%] h-px bg-white" />
-              <div className="flex justify-center items-center h-5 w-5 bg-white text-black rounded-full">
-                2
-              </div>
+            <div className="absolute bottom-5 w-[95%] h-px bg-white" />
+            <div className="absolute bottom-2.5 right-[5%] h-6 w-6 bg-white rounded-full text-center font-semibold">
+              <p className="absolute left-1/2 -translate-x-1/2 -top-2 ">2</p>
             </div>
           </div>
           {/* -------------------------- */}
@@ -371,12 +375,12 @@ const PropertyPDFDrawer = ({
             }}
           ></div>
           {/* -------------------------- */}
-          <div
+          {/* <div
             className={`w-full relative `}
             style={{
               height: 780 * pdfScaler + "px",
             }}
-          ></div>
+          ></div> */}
           {/* -------------------------- */}
         </div>
       </div>
@@ -387,11 +391,13 @@ const PropertyPDFDrawer = ({
       isOpen={drawerOpen}
       title={"PDF View"}
       newItem={true}
-      editable={true}
+      editable={false}
+      pdf={true}
+      pdfLoading={pdfLoading}
       modalWidth={"max-w-[1240px]"}
       drawerH={"h-full max-h-[80vh]"}
       onCancelClick={closeDrawer}
-      onSaveClick={handleSubmit}
+      onSaveClick={createPDF}
       disabled={disabled}
       children={
         isLoading ||

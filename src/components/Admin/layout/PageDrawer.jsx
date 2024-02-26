@@ -11,6 +11,8 @@ export default function PageDrawer({
   newItem,
   editable,
   disabled,
+  pdf,
+  pdfLoading,
 }) {
   const sideNavOpen = useSelector(selectSideNavStatus);
   return (
@@ -75,9 +77,14 @@ export default function PageDrawer({
                 onClick={onSaveClick}
                 className={`cursor-pointer ${
                   disabled ? "text-gray-600" : "text-primary"
-                }`}
+                } ${pdfLoading && "animate-bounce font-bold"}`}
+                disabled={pdfLoading}
               >
-                {editable && (newItem ? "Save" : "Save Changes")}
+                {editable
+                  ? newItem
+                    ? "Save"
+                    : "Save Changes"
+                  : pdf && (pdfLoading ? "GENERATING FILE" : "Download PDF")}
               </button>
             </div>
           </footer>

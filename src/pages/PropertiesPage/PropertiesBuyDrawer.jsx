@@ -42,7 +42,7 @@ import {
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import useForm from "../../hooks/useForm";
-import { Add, CleanHands, Delete } from "@mui/icons-material";
+import { Add, Delete } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { showMessage } from "../../redux/messageAction.slice";
 import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
@@ -1714,12 +1714,7 @@ const PropertyBuyDrawer = ({
             <CircularProgress color="primary" />
           </div>
         ) : (
-          <div className="text-med font-LIT">
-            {/* <PDFViewer width={"100%"} height={"500px"}>
-              <PropertyBuyPDF />
-            </PDFViewer> */}
-            {formElements()}
-          </div>
+          <div className="text-med font-LIT">{formElements()}</div>
         )
       }
     />

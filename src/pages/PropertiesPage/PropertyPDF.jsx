@@ -11,16 +11,8 @@ import { useGetActiveAddressQuery } from "../../redux/addresses/addressesSlice";
 import { useGetAmenitiesQuery } from "../../redux/amentities/amenitiesSlice";
 import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
 import { CircularProgress } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import Button from "../../components/UI/Button";
 import { API_BASE_URL } from "../../constants";
 import RichTextBox from "../../components/Forms/RichTextBox";
-import {
-  useDeleteAllPropertyImagesMutation,
-  useDeleteImageMutation,
-} from "../../redux/images/imagesSlice";
-import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
 import useForm from "../../hooks/useForm";
 import { Add, Remove } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
@@ -204,7 +196,13 @@ const PropertyPDFDrawer = ({
     setErrors({});
     setUnits([]);
   };
-  const [pdfCount, setPdfCount] = useState(["pdf1", "pdf2", "pdf3"]);
+  const [pdfCount, setPdfCount] = useState([
+    "pdf1",
+    "pdf2",
+    "pdf3",
+    "pdf4",
+    "pdf5",
+  ]);
   function submit(event) {}
   const [pdfLoading, setPdfLoading] = useState(false);
   const createPDF = async () => {
@@ -369,18 +367,167 @@ const PropertyPDFDrawer = ({
           </div>
           {/* -------------------------- */}
           <div
-            className={`w-full relative `}
+            id="pdf4"
+            className={`w-full relative  bg-gray-100 pt-10`}
             style={{
               height: 780 * pdfScaler + "px",
             }}
-          ></div>
+          >
+            <div className="bg-[#141330] w-[500px] flex  justify-center items-center p-4">
+              <div>
+                <p className="text-primary text-[40px] font-bold">Inventory</p>
+                <div className="w-[100px] h-px bg-white" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-16 m-14">
+              {units.map((item, index) => {
+                if (index <= 1)
+                  return (
+                    <div key={index} className="relative">
+                      <div className="absolute -top-[30px] -left-[30px] h-[100px] w-[100px] bg-primary p-0.5 z-0">
+                        <div className="w-full h-full bg-gray-100" />
+                      </div>
+                      <div className="bg-[#141330] p-4 flex flex-col justify-start items-center text-white relative min-h-[300px]">
+                        <p className="text-small font-bold">
+                          {item.Bedrooms > 0
+                            ? item.Bedrooms + " Bedroom"
+                            : "Studio"}
+                        </p>
+                        <div className="grid grid-cols-11 mt-5">
+                          <div className="flex gap-x-1 justify-center items-center col-span-3">
+                            <div>*</div>
+                            <p>{item.Bathrooms + " Bathrooms"}</p>
+                          </div>
+                          <div className="flex justify-center items-center">
+                            <div className="w-px h-full bg-white" />
+                          </div>
+                          <div className="flex gap-x-1 justify-center items-center col-span-3">
+                            <div>*</div>
+                            <p>
+                              {item.Bedrooms > 0
+                                ? item.Bedrooms + " Bedroom"
+                                : "Studio"}
+                            </p>
+                          </div>
+                          <div className="flex justify-center items-center">
+                            <div className="w-px h-full bg-white" />
+                          </div>
+                          <div className="flex gap-x-1 justify-center items-center col-span-3">
+                            <div>*</div>
+                            <p>
+                              <p>{item.Size + " SQ.FT."}</p>
+                            </p>
+                          </div>
+                        </div>
+                        <div className="mt-8 flex flex-col justify-center items-center">
+                          <div className="space-y-2">
+                            <div className="flex gap-x-2">
+                              <div>*</div>
+                              <p>Price Of Unit: {item.Price}</p>
+                            </div>
+                            <div className="flex gap-x-2">
+                              <div>*</div>
+                              <p>Price Per SQ.FT.: {item.PricePerSQFT}</p>
+                            </div>
+                            {/* <div className="flex gap-x-2">
+                              <div>*</div>
+                              <p>Price Per SQ.FT.: {item.PricePerSQFT}</p>
+                            </div> */}
+                          </div>
+                        </div>
+                      </div>
+                      <div>{/* {image} */}</div>
+                    </div>
+                  );
+              })}
+            </div>
+            <div className="absolute bottom-5 w-[95%] right-0 h-px bg-[#141330]" />
+            <div className="absolute bottom-2.5 left-[5%] h-6 w-6 bg-[#141330] rounded-full text-center font-semibold">
+              <p className="absolute left-1/2 -translate-x-1/2 -top-2 text-white ">
+                3
+              </p>
+            </div>
+          </div>
           {/* -------------------------- */}
-          {/* <div
-            className={`w-full relative `}
-            style={{
-              height: 780 * pdfScaler + "px",
-            }}
-          ></div> */}
+          {units.length > 2 && (
+            <div
+              id="pdf5"
+              className={`w-full relative  bg-gray-100 pt-16`}
+              style={{
+                height: 780 * pdfScaler + "px",
+              }}
+            >
+              <div className="grid grid-cols-2 gap-16 m-14">
+                {units.map((item, index) => {
+                  if (index > 1 && index < 4)
+                    return (
+                      <div key={index} className="relative">
+                        <div className="absolute -top-[30px] -left-[30px] h-[100px] w-[100px] bg-primary p-0.5 z-0">
+                          <div className="w-full h-full bg-gray-100" />
+                        </div>
+                        <div className="bg-[#141330] p-4 flex flex-col justify-start items-center text-white relative min-h-[300px]">
+                          <p className="text-small font-bold">
+                            {item.Bedrooms > 0
+                              ? item.Bedrooms + " Bedroom"
+                              : "Studio"}
+                          </p>
+                          <div className="grid grid-cols-11 mt-5">
+                            <div className="flex gap-x-1 justify-center items-center col-span-3">
+                              <div>*</div>
+                              <p>{item.Bathrooms + " Bathrooms"}</p>
+                            </div>
+                            <div className="flex justify-center items-center">
+                              <div className="w-px h-full bg-white" />
+                            </div>
+                            <div className="flex gap-x-1 justify-center items-center col-span-3">
+                              <div>*</div>
+                              <p>
+                                {item.Bedrooms > 0
+                                  ? item.Bedrooms + " Bedroom"
+                                  : "Studio"}
+                              </p>
+                            </div>
+                            <div className="flex justify-center items-center">
+                              <div className="w-px h-full bg-white" />
+                            </div>
+                            <div className="flex gap-x-1 justify-center items-center col-span-3">
+                              <div>*</div>
+                              <p>
+                                <p>{item.Size + " SQ.FT."}</p>
+                              </p>
+                            </div>
+                          </div>
+                          <div className="mt-8 flex flex-col justify-center items-center">
+                            <div className="space-y-2">
+                              <div className="flex gap-x-2">
+                                <div>*</div>
+                                <p>Price Of Unit: {item.Price}</p>
+                              </div>
+                              <div className="flex gap-x-2">
+                                <div>*</div>
+                                <p>Price Per SQ.FT.: {item.PricePerSQFT}</p>
+                              </div>
+                              {/* <div className="flex gap-x-2">
+                              <div>*</div>
+                              <p>Price Per SQ.FT.: {item.PricePerSQFT}</p>
+                            </div> */}
+                            </div>
+                          </div>
+                        </div>
+                        <div>{/* {image} */}</div>
+                      </div>
+                    );
+                })}
+              </div>
+              <div className="absolute bottom-5 w-[95%] h-px bg-[#141330]" />
+              <div className="absolute bottom-2.5 right-[5%] h-6 w-6 bg-[#141330] rounded-full text-center font-semibold">
+                <p className="absolute left-1/2 -translate-x-1/2 -top-2 text-white ">
+                  4
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* -------------------------- */}
         </div>
       </div>

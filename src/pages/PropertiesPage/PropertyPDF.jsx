@@ -202,6 +202,7 @@ const PropertyPDFDrawer = ({
     "pdf3",
     "pdf4",
     "pdf5",
+    "pdf6",
   ]);
   function submit(event) {}
   const [pdfLoading, setPdfLoading] = useState(false);
@@ -368,7 +369,7 @@ const PropertyPDFDrawer = ({
           {/* -------------------------- */}
           <div
             id="pdf4"
-            className={`w-full relative  bg-gray-100 pt-10`}
+            className={`w-full relative  bg-gray-50 pt-10`}
             style={{
               height: 780 * pdfScaler + "px",
             }}
@@ -385,7 +386,7 @@ const PropertyPDFDrawer = ({
                   return (
                     <div key={index} className="relative">
                       <div className="absolute -top-[30px] -left-[30px] h-[100px] w-[100px] bg-primary p-0.5 z-0">
-                        <div className="w-full h-full bg-gray-100" />
+                        <div className="w-full h-full bg-gray-50" />
                       </div>
                       <div className="bg-[#141330] p-4 flex flex-col justify-start items-center text-white relative min-h-[300px]">
                         <p className="text-small font-bold">
@@ -452,7 +453,7 @@ const PropertyPDFDrawer = ({
           {units.length > 2 && (
             <div
               id="pdf5"
-              className={`w-full relative  bg-gray-100 pt-16`}
+              className={`w-full relative  bg-gray-50 pt-16`}
               style={{
                 height: 780 * pdfScaler + "px",
               }}
@@ -463,7 +464,7 @@ const PropertyPDFDrawer = ({
                     return (
                       <div key={index} className="relative">
                         <div className="absolute -top-[30px] -left-[30px] h-[100px] w-[100px] bg-primary p-0.5 z-0">
-                          <div className="w-full h-full bg-gray-100" />
+                          <div className="w-full h-full bg-gray-50" />
                         </div>
                         <div className="bg-[#141330] p-4 flex flex-col justify-start items-center text-white relative min-h-[300px]">
                           <p className="text-small font-bold">
@@ -529,6 +530,57 @@ const PropertyPDFDrawer = ({
           )}
 
           {/* -------------------------- */}
+          <div
+            id="pdf6"
+            className={`w-full relative  bg-gray-50 pt-10`}
+            style={{
+              height: 780 * pdfScaler + "px",
+            }}
+          >
+            <div className="bg-[#141330] w-[500px] flex  justify-center items-center p-4">
+              <div>
+                <p className="text-primary text-[40px] font-bold">
+                  Feature & Amenities
+                </p>
+                <div className="w-[100px] h-px bg-white" />
+              </div>
+            </div>
+            <div className="mt-20 grid grid-cols-4 gap-x-7 gap-y-20 px-7">
+              {data?.Aminities.map((item, index) => {
+                return (
+                  <div key={index} className="relative">
+                    <img
+                      src={API_BASE_URL + item.Image.URL}
+                      alt={"AIMAGE" + (index + 1)}
+                      className="bg-gray-50 h-[100px] w-[100px] absolute left-[50px] -top-[75px] object-center object-contain"
+                    />
+                    <div className="bg-[#141330] pt-8 pb-4 px-4 flex flex-col justify-start items-center w-[200px] h-[200px] text-white">
+                      <p className="font-bold text-smaller text-center">
+                        {
+                          item.Aminities_Translation.find(
+                            (x) => x.Language.Code == "En"
+                          ).Name
+                        }
+                      </p>
+                      <p className="text-[14px] mt-5">
+                        {
+                          item.Aminities_Translation.find(
+                            (x) => x.Language.Code == "En"
+                          ).Description
+                        }
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="absolute bottom-5 w-[95%] right-0 h-px bg-[#141330]" />
+            <div className="absolute bottom-2.5 left-[5%] h-6 w-6 bg-[#141330] rounded-full text-center font-semibold">
+              <p className="absolute left-1/2 -translate-x-1/2 -top-2 text-white ">
+                5
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );

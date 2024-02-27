@@ -545,7 +545,7 @@ const PropertyPDFDrawer = ({
                 <div className="w-[100px] h-px bg-white" />
               </div>
             </div>
-            <div className="mt-20 grid grid-cols-4 gap-x-7 gap-y-20 px-7">
+            <div className="mt-20 grid grid-cols-4 gap-x-7 gap-y-20 px-7 place-items-center">
               {data?.Aminities.map((item, index) => {
                 return (
                   <div key={index} className="relative">
@@ -581,6 +581,111 @@ const PropertyPDFDrawer = ({
               </p>
             </div>
           </div>
+
+          {/* -------------------------- */}
+
+          <div
+            id="pdf7"
+            className={`w-full relative  bg-gray-50 `}
+            style={{
+              height: 780 * pdfScaler + "px",
+            }}
+          >
+            <div className="relative p-7">
+              <div className="bg-[#141330] w-[500px] flex  justify-center items-center p-4 absolute left-7 top-12">
+                <div>
+                  <p className="text-primary text-[40px] font-bold">Gallery</p>
+                  <div className="w-[100px] h-px bg-white" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-0 place-items-center">
+                {data?.Images?.map((item, index) => {
+                  if (index < 3)
+                    return (
+                      <div
+                        key={index}
+                        className={`h-[350px] w-full ${
+                          index < 1 ? "col-span-2" : "col-span-1"
+                        }`}
+                      >
+                        <img
+                          src={API_BASE_URL + item.URL}
+                          alt={"images" + index}
+                          className={`object-cover object-center w-full h-full`}
+                        />
+                      </div>
+                    );
+                })}
+              </div>
+            </div>
+            <div className="absolute bottom-5 w-[95%] h-px bg-[#141330]" />
+            <div className="absolute bottom-2.5 right-[5%] h-6 w-6 bg-[#141330] rounded-full text-center font-semibold">
+              <p className="absolute left-1/2 -translate-x-1/2 -top-2 text-white ">
+                7
+              </p>
+            </div>
+          </div>
+          {/* -------------------------- */}
+          {data?.Images?.length > 3 && (
+            <div
+              id="pdf7"
+              className={`w-full relative  bg-gray-50 `}
+              style={{
+                height: 780 * pdfScaler + "px",
+              }}
+            >
+              <div className="relative p-7">
+                <div className="bg-[#141330] w-[500px] flex  justify-center items-center p-4 absolute left-7 top-12">
+                  <div>
+                    <p className="text-primary text-[40px] font-bold">
+                      Gallery
+                    </p>
+                    <div className="w-[100px] h-px bg-white" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-0 place-items-center">
+                  <div className="w-full flex flex-col">
+                    {data?.Images?.map((item, index) => {
+                      if (index > 2 && index < 5)
+                        return (
+                          <div key={index} className={`h-[350px] w-full`}>
+                            <img
+                              src={API_BASE_URL + item.URL}
+                              alt={"images" + index}
+                              className={`object-cover object-center w-full h-full`}
+                            />
+                          </div>
+                        );
+                    })}
+                  </div>
+                  <div className="w-full flex flex-col">
+                    {data?.Images?.map((item, index) => {
+                      if (index > 4 && index < 8)
+                        return (
+                          <div key={index} className={`h-[233px] w-full`}>
+                            <img
+                              src={API_BASE_URL + item.URL}
+                              alt={"images" + index}
+                              className={`object-cover object-center w-full h-full`}
+                            />
+                          </div>
+                        );
+                    })}
+                  </div>
+                </div>
+              </div>
+              <div className="absolute bottom-5 w-[95%] right-0 h-px bg-[#141330]" />
+              <div className="absolute bottom-2.5 left-[5%] h-6 w-6 bg-[#141330] rounded-full text-center font-semibold">
+                <p className="absolute left-1/2 -translate-x-1/2 -top-2 text-white ">
+                  8
+                </p>
+              </div>
+            </div>
+          )}
+          {/* -------------------------- */}
+          {/* -------------------------- */}
         </div>
       </div>
     );

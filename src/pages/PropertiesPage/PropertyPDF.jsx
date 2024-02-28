@@ -20,6 +20,12 @@ import { showMessage } from "../../redux/messageAction.slice";
 import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
+import paymentIcon from "../../assets/icons/payment.svg";
+import websiteIcon from "../../assets/icons/website.svg";
+import locationIcon from "../../assets/icons/location.svg";
+import mailIcon from "../../assets/icons/mail2.svg";
+import phoneIcon from "../../assets/icons/phone-blue.svg";
+
 const defaultFormState = {
   id: "",
   CompletionStatus: "Ready",
@@ -203,6 +209,10 @@ const PropertyPDFDrawer = ({
     "pdf4",
     "pdf5",
     "pdf6",
+    "pdf7",
+    "pdf8",
+    "pdf9",
+    // "pdf10",
   ]);
   function submit(event) {}
   const [pdfLoading, setPdfLoading] = useState(false);
@@ -629,7 +639,7 @@ const PropertyPDFDrawer = ({
           {/* -------------------------- */}
           {data?.Images?.length > 3 && (
             <div
-              id="pdf7"
+              id="pdf8"
               className={`w-full relative  bg-gray-50 `}
               style={{
                 height: 780 * pdfScaler + "px",
@@ -685,6 +695,209 @@ const PropertyPDFDrawer = ({
             </div>
           )}
           {/* -------------------------- */}
+          <div
+            id="pdf9"
+            className={`w-full relative  bg-gray-50 pt-10`}
+            style={{
+              height: 780 * pdfScaler + "px",
+            }}
+          >
+            <div className="bg-[#141330] w-[500px] flex  justify-center items-center p-4">
+              <div>
+                <p className="text-primary text-[40px] font-bold">
+                  Payment Plan
+                </p>
+                <div className="w-[100px] h-px bg-white" />
+              </div>
+            </div>
+
+            <div className="p-14 bg-[#141330] m-12 grid grid-cols-2 gap-4 text-white font-semibold text-smaller">
+              <div className="flex gap-x-1 justify-start items-center">
+                <img
+                  src={paymentIcon}
+                  className="w-[50px] h-[50px] scale-150"
+                  alt="payment1"
+                />
+                <p>
+                  {"Down Payment: " +
+                    data?.propertyUnits[0]?.Paymentplan[0]?.DownPayemnt}
+                </p>
+              </div>
+              <div className="flex gap-x-1 justify-start items-center">
+                <img
+                  src={paymentIcon}
+                  className="w-[50px] h-[50px] scale-150"
+                  alt="payment2"
+                />
+                <p>
+                  {"During Construction /M: " +
+                    data?.propertyUnits[0]?.Paymentplan[0]
+                      ?.DuringConstructionMonths}
+                </p>
+              </div>
+              <div className="flex gap-x-1 justify-start items-center">
+                <img
+                  src={paymentIcon}
+                  className="w-[50px] h-[50px] scale-150"
+                  alt="payment3"
+                />
+                <p>
+                  {"During Construction %:  " +
+                    data?.propertyUnits[0]?.Paymentplan[0]
+                      ?.DuringConstructionPercentage}
+                </p>
+              </div>
+              <div className="flex gap-x-1 justify-start items-center">
+                <img
+                  src={paymentIcon}
+                  className="w-[50px] h-[50px] scale-150"
+                  alt="payment4"
+                />
+                <p>
+                  {"Handover Date: " +
+                    data?.propertyUnits[0]?.Paymentplan[0]?.HandoverDate.split(
+                      "T"
+                    )[0]}
+                </p>
+              </div>
+              <div className="flex gap-x-1 justify-start items-center">
+                <img
+                  src={paymentIcon}
+                  className="w-[50px] h-[50px] scale-150"
+                  alt="payment5"
+                />
+                <p>
+                  {"On Handover %:  " +
+                    data?.propertyUnits[0]?.Paymentplan[0]
+                      ?.OnHandoverPercentage}
+                </p>
+              </div>
+              <div className="flex gap-x-1 justify-start items-center">
+                <img
+                  src={paymentIcon}
+                  className="w-[50px] h-[50px] scale-150"
+                  alt="payment5"
+                />
+                <p>
+                  {"Post handover: " +
+                    (data?.propertyUnits[0]?.Paymentplan[0]?.Posthandover
+                      ? "YES"
+                      : "NO")}
+                </p>
+              </div>
+              <div className="flex gap-x-1 justify-start items-center">
+                <img
+                  src={paymentIcon}
+                  className="w-[50px] h-[50px] scale-150"
+                  alt="payment5"
+                />
+                <p>
+                  {"Post Handover No /M: " +
+                    data?.propertyUnits[0]?.Paymentplan[0]
+                      ?.NoOfPosthandoverMonths}
+                </p>
+              </div>
+              <div className="flex gap-x-1 justify-start items-center">
+                <img
+                  src={paymentIcon}
+                  className="w-[50px] h-[50px] scale-150"
+                  alt="payment5"
+                />
+                <p>
+                  {"Post Handover %: " +
+                    data?.propertyUnits[0]?.Paymentplan[0]
+                      ?.PosthandoverPercentage}
+                </p>
+              </div>
+              <div className="flex gap-x-1 justify-start items-center">
+                <img
+                  src={paymentIcon}
+                  className="w-[50px] h-[50px] scale-150"
+                  alt="payment5"
+                />
+                <p>
+                  {"Total Installments: " +
+                    data?.propertyUnits[0]?.Paymentplan[0]?.TotalMonths}
+                </p>
+              </div>
+            </div>
+            <div className="absolute bottom-5 w-[95%] h-px bg-[#141330]" />
+            <div className="absolute bottom-2.5 right-[5%] h-6 w-6 bg-[#141330] rounded-full text-center font-semibold">
+              <p className="absolute left-1/2 -translate-x-1/2 -top-2 text-white ">
+                9
+              </p>
+            </div>
+          </div>
+          {/* -------------------------- */}
+          <div
+            id="pdf10"
+            className={`w-full relative  bg-gray-50 pt-10`}
+            style={{
+              height: 780 * pdfScaler + "px",
+            }}
+          >
+            <div className="bg-[#141330] w-[500px] flex  justify-center items-center p-4">
+              <div>
+                <p className="text-primary text-[40px] font-bold">Location </p>
+                <div className="w-[100px] h-px bg-white" />
+              </div>
+            </div>
+
+            <div className="m-6"></div>
+            <div className="absolute bottom-5 w-[95%] right-0 h-px bg-[#141330]" />
+            <div className="absolute bottom-2.5 left-[5%] h-6 w-6 bg-[#141330] rounded-full text-center font-semibold">
+              <p className="absolute left-1/2 -translate-x-1/2 -top-2 text-white ">
+                10
+              </p>
+            </div>
+          </div>
+          {/* -------------------------- */}
+          <div
+            id="pdf1"
+            className={`w-full relative `}
+            style={{
+              height: 780 * pdfScaler + "px",
+            }}
+          >
+            <img
+              src={API_BASE_URL + values?.Images[0]?.URL}
+              className="w-full h-full object-center"
+              alt=""
+            />
+            <div className="bg-[#141330]/40 w-full h-full absolute left-0 top-0" />
+
+            <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 backdrop-blur-md bg-white/20 rounded-2xl p-8 w-[40%]">
+              <div className="flex flex-col justify-center items-center py-4">
+                <div>
+                  <p className="text-med font-bold text-white">Contact Us </p>
+                  <div className="w-[100px] h-px bg-[#141330]" />
+                </div>
+              </div>
+              <div className="flex gap-x-2 text-white text-tiny mt-4 gap-4 items-start">
+                <img
+                  src={locationIcon}
+                  className="w-8 h-8"
+                  alt="locationIcon"
+                />
+                <p>
+                  Office 609, Clover Bay Tower - 6a Marasi Dr - Business Bay -
+                  Dubai
+                </p>
+              </div>
+              <div className="flex gap-x-2 text-white text-tiny mt-4 gap-4 items-center">
+                <img src={mailIcon} className="w-8 h-8" alt="locationIcon" />
+                <p>info@avarealestate.ae</p>
+              </div>
+              <div className="flex gap-x-2 text-white text-tiny mt-4 gap-4 items-center">
+                <img src={phoneIcon} className="w-8 h-8" alt="locationIcon" />
+                <p>+971501108606</p>
+              </div>
+              <div className="flex gap-x-2 text-white text-tiny mt-4 gap-4 items-center">
+                <img src={websiteIcon} className="w-8 h-8" alt="locationIcon" />
+                <p>www.avarealestate.ae</p>
+              </div>
+            </div>
+          </div>
           {/* -------------------------- */}
         </div>
       </div>

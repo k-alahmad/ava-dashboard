@@ -488,9 +488,9 @@ const PropertyPDFDrawer = ({
                 <img
                   src={API_BASE_URL + item.Image.URL}
                   alt={"AIMAGE" + (index + 1)}
-                  className="bg-gray-50 h-[100px] w-[100px] absolute left-[50px] -top-[75px] object-center object-contain"
+                  className="bg-gray-50 h-[75px] w-[75px] absolute left-[35px] -top-[50px] object-center object-contain"
                 />
-                <div className="bg-[#141330] pt-8 pb-4 px-4 flex flex-col justify-start items-center w-[200px] h-[200px] text-white">
+                <div className="bg-[#141330] pt-8 pb-4 px-4 flex flex-col justify-start items-center w-[150px] h-[150px] text-white">
                   <p
                     className={`font-bold text-smaller text-center ${
                       pdfLoading ? "-translate-y-3" : ""

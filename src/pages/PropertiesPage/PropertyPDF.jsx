@@ -768,7 +768,7 @@ const PropertyPDFDrawer = ({
           elements.push(
             <GalleryPage
               i={i}
-              Images={[data.Images[0], data.Images[1], data.Images[2]]}
+              Images={[data?.Images[0], data?.Images[1], data?.Images[2]]}
             />
           );
         }
@@ -780,7 +780,7 @@ const PropertyPDFDrawer = ({
           elements.push(
             <GalleryPage
               i={i}
-              Images={[data.Images[0], data.Images[1], data.Images[2]]}
+              Images={[data?.Images[0], data?.Images[1], data?.Images[2]]}
             />
           );
         } else {
@@ -789,11 +789,11 @@ const PropertyPDFDrawer = ({
               <GalleryPage
                 i={i}
                 Images={[
-                  data.Images[3],
-                  data.Images[4],
-                  data.Images[5],
-                  data.Images[6],
-                  data.Images[7],
+                  data?.Images[3],
+                  data?.Images[4],
+                  data?.Images[5],
+                  data?.Images[6],
+                  data?.Images[7],
                 ]}
                 Design
               />
@@ -808,7 +808,7 @@ const PropertyPDFDrawer = ({
           elements.push(
             <GalleryPage
               i={i}
-              Images={[data.Images[0], data.Images[1], data.Images[2]]}
+              Images={[data?.Images[0], data?.Images[1], data?.Images[2]]}
             />
           );
         } else if (units.length > 2) {
@@ -817,11 +817,11 @@ const PropertyPDFDrawer = ({
               <GalleryPage
                 i={i}
                 Images={[
-                  data.Images[3],
-                  data.Images[4],
-                  data.Images[5],
-                  data.Images[6],
-                  data.Images[7],
+                  data?.Images[3],
+                  data?.Images[4],
+                  data?.Images[5],
+                  data?.Images[6],
+                  data?.Images[7],
                 ]}
                 Design
               />
@@ -844,11 +844,11 @@ const PropertyPDFDrawer = ({
               <GalleryPage
                 i={i}
                 Images={[
-                  data.Images[3],
-                  data.Images[4],
-                  data.Images[5],
-                  data.Images[6],
-                  data.Images[7],
+                  data?.Images[3],
+                  data?.Images[4],
+                  data?.Images[5],
+                  data?.Images[6],
+                  data?.Images[7],
                 ]}
                 Design
               />

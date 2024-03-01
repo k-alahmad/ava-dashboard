@@ -236,13 +236,17 @@ const PropertyPDFDrawer = ({
         />
 
         <div className="absolute left-0 top-1/2 -translate-y-1/2 p-12 bg-[#141330] w-[35%] text-white">
-          <p className=" font-bold text-med">
+          <p
+            className={`font-bold text-med ${
+              pdfLoading ? "-translate-y-3" : ""
+            }`}
+          >
             {
               values?.Property_Translation?.find((x) => x.Language.Code == "En")
                 .Name
             }
           </p>
-          <p className="text-small">
+          <p className={`text-small ${pdfLoading ? "-translate-y-3" : ""}`}>
             {
               values?.Developer?.Developer_Translation?.find(
                 (x) => x.Language.Code == "En"
@@ -251,17 +255,33 @@ const PropertyPDFDrawer = ({
             <span className="text-primary"> _____________</span>
           </p>
         </div>
-        <div className="absolute right-7 top-1/2 -translate-y-1/2 backdrop-blur-md bg-white/40 rounded-2xl p-8 w-[35%]">
-          <p className="text-med font-bold text-[#141330]">{profile.Name}</p>
+        <div className="absolute right-7 top-1/2 -translate-y-1/2 backdrop-blur-md bg-gray-300/50 rounded-2xl p-8 w-[35%]">
+          <p
+            className={`text-med font-bold text-[#141330] ${
+              pdfLoading ? "-translate-y-3" : ""
+            }`}
+          >
+            {profile.Name}
+          </p>
           <div className="grid grid-cols-3 text-white text-tiny mt-4 gap-4">
-            <p className="col-span-1">Address:</p>
-            <p className="col-span-2">
+            <p className={`col-span-1 ${pdfLoading ? "-translate-y-3" : ""}`}>
+              Address:
+            </p>
+            <p className={`col-span-2 ${pdfLoading ? "-translate-y-3" : ""}`}>
               Office 609, Clover Bay Tower - 6a Marasi Dr - Business Bay - Dubai
             </p>
-            <p className="col-span-1">Email:</p>
-            <p className="col-span-2">info@avarealestate.ae</p>
-            <p className="col-span-1">Phone:</p>
-            <p className="col-span-2">+971501108606</p>
+            <p className={`col-span-1 ${pdfLoading ? "-translate-y-3" : ""}`}>
+              Email:
+            </p>
+            <p className={`col-span-2 ${pdfLoading ? "-translate-y-3" : ""}`}>
+              info@avarealestate.ae
+            </p>
+            <p className={`col-span-1 ${pdfLoading ? "-translate-y-3" : ""}`}>
+              Phone:
+            </p>
+            <p className={`col-span-2 ${pdfLoading ? "-translate-y-3" : ""}`}>
+              +971501108606
+            </p>
           </div>
         </div>
       </div>
@@ -310,9 +330,17 @@ const PropertyPDFDrawer = ({
           <div className="col-span-1 w-full h-full relative overflow-hidden"></div>
 
           <div className="col-span-5 flex flex-col justify-start items-center w-[95%] h-[90%] overflow-hidden">
-            <p className="text-med font-bold text-primary">Description</p>
+            <p
+              className={`text-med font-bold text-primary ${
+                pdfLoading ? "-translate-y-3" : ""
+              }`}
+            >
+              Description
+            </p>
             <div
-              className="text-white mt-5 overflow-auto"
+              className={`text-white mt-5 overflow-auto ${
+                pdfLoading ? "-translate-y-3" : ""
+              }`}
               dangerouslySetInnerHTML={{
                 __html: values?.Property_Translation?.find(
                   (x) => x.Language.Code == "En"
@@ -338,7 +366,13 @@ const PropertyPDFDrawer = ({
         {viewTitle && (
           <div className="bg-[#141330] w-[500px] flex  justify-center items-center p-4">
             <div>
-              <p className="text-primary text-[40px] font-bold">Inventory</p>
+              <p
+                className={`text-primary text-[40px] font-bold ${
+                  pdfLoading ? "-translate-y-3" : "translate-y-0"
+                }`}
+              >
+                Inventory
+              </p>
               <div className="w-[100px] h-px bg-white" />
             </div>
           </div>
@@ -352,7 +386,11 @@ const PropertyPDFDrawer = ({
                     <div className="w-full h-full bg-gray-50" />
                   </div>
                   <div className="bg-[#141330] p-4 flex flex-col justify-start items-center text-white relative min-h-[300px]">
-                    <p className="text-small font-bold">
+                    <p
+                      className={`text-small font-bold ${
+                        pdfLoading ? "-translate-y-3" : ""
+                      }`}
+                    >
                       {item?.Bedrooms > 0
                         ? item?.Bedrooms + " Bedroom"
                         : "Studio"}
@@ -360,14 +398,16 @@ const PropertyPDFDrawer = ({
                     <div className="grid grid-cols-11 mt-5">
                       <div className="flex gap-x-1 justify-center items-center col-span-3">
                         <div>*</div>
-                        <p>{item?.Bathrooms + " Bathrooms"}</p>
+                        <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
+                          {item?.Bathrooms + " Bathrooms"}
+                        </p>
                       </div>
                       <div className="flex justify-center items-center">
                         <div className="w-px h-full bg-white" />
                       </div>
                       <div className="flex gap-x-1 justify-center items-center col-span-3">
                         <div>*</div>
-                        <p>
+                        <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
                           {item?.Bedrooms > 0
                             ? item?.Bedrooms + " Bedroom"
                             : "Studio"}
@@ -378,8 +418,9 @@ const PropertyPDFDrawer = ({
                       </div>
                       <div className="flex gap-x-1 justify-center items-center col-span-3">
                         <div>*</div>
-                        <p>
-                          <p>{item?.Size + " SQ.FT."}</p>
+
+                        <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
+                          {item?.Size + " SQ.FT."}
                         </p>
                       </div>
                     </div>
@@ -387,11 +428,19 @@ const PropertyPDFDrawer = ({
                       <div className="space-y-2">
                         <div className="flex gap-x-2">
                           <div>*</div>
-                          <p>Price Of Unit: {item?.Price}</p>
+                          <p
+                            className={`${pdfLoading ? "-translate-y-3" : ""}`}
+                          >
+                            Price Of Unit: {item?.Price}
+                          </p>
                         </div>
                         <div className="flex gap-x-2">
                           <div>*</div>
-                          <p>Price Per SQ.FT.: {item?.PricePerSQFT}</p>
+                          <p
+                            className={`${pdfLoading ? "-translate-y-3" : ""}`}
+                          >
+                            Price Per SQ.FT.: {item?.PricePerSQFT}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -422,7 +471,11 @@ const PropertyPDFDrawer = ({
       >
         <div className="bg-[#141330] w-[500px] flex  justify-center items-center p-4">
           <div>
-            <p className="text-primary text-[40px] font-bold">
+            <p
+              className={`text-primary text-[40px] font-bold ${
+                pdfLoading ? "-translate-y-3" : "translate-y-0"
+              }`}
+            >
               Feature & Amenities
             </p>
             <div className="w-[100px] h-px bg-white" />
@@ -438,14 +491,22 @@ const PropertyPDFDrawer = ({
                   className="bg-gray-50 h-[100px] w-[100px] absolute left-[50px] -top-[75px] object-center object-contain"
                 />
                 <div className="bg-[#141330] pt-8 pb-4 px-4 flex flex-col justify-start items-center w-[200px] h-[200px] text-white">
-                  <p className="font-bold text-smaller text-center">
+                  <p
+                    className={`font-bold text-smaller text-center ${
+                      pdfLoading ? "-translate-y-3" : ""
+                    }`}
+                  >
                     {
                       item.Aminities_Translation.find(
                         (x) => x.Language.Code == "En"
                       ).Name
                     }
                   </p>
-                  <p className="text-[14px] mt-5">
+                  <p
+                    className={`text-[14px] mt-5 ${
+                      pdfLoading ? "-translate-y-3" : ""
+                    }`}
+                  >
                     {
                       item.Aminities_Translation.find(
                         (x) => x.Language.Code == "En"
@@ -479,7 +540,13 @@ const PropertyPDFDrawer = ({
         <div className="relative p-7">
           <div className="bg-[#141330] w-[500px] flex  justify-center items-center p-4 absolute left-7 top-12">
             <div>
-              <p className="text-primary text-[40px] font-bold">Gallery</p>
+              <p
+                className={`text-primary text-[40px] font-bold ${
+                  pdfLoading ? "-translate-y-3" : "translate-y-0"
+                }`}
+              >
+                Gallery
+              </p>
               <div className="w-[100px] h-px bg-white" />
             </div>
           </div>
@@ -560,7 +627,13 @@ const PropertyPDFDrawer = ({
       >
         <div className="bg-[#141330] w-[500px] flex  justify-center items-center p-4">
           <div>
-            <p className="text-primary text-[40px] font-bold">Payment Plan</p>
+            <p
+              className={`text-primary text-[40px] font-bold ${
+                pdfLoading ? "-translate-y-3" : "translate-y-0"
+              }`}
+            >
+              Payment Plan
+            </p>
             <div className="w-[100px] h-px bg-white" />
           </div>
         </div>
@@ -572,7 +645,7 @@ const PropertyPDFDrawer = ({
               className="w-[50px] h-[50px] scale-150"
               alt="payment1"
             />
-            <p>
+            <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
               {"Down Payment: " +
                 data?.propertyUnits[0]?.Paymentplan[0]?.DownPayemnt}
             </p>
@@ -583,7 +656,7 @@ const PropertyPDFDrawer = ({
               className="w-[50px] h-[50px] scale-150"
               alt="payment2"
             />
-            <p>
+            <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
               {"During Construction /M: " +
                 data?.propertyUnits[0]?.Paymentplan[0]
                   ?.DuringConstructionMonths}
@@ -595,7 +668,7 @@ const PropertyPDFDrawer = ({
               className="w-[50px] h-[50px] scale-150"
               alt="payment3"
             />
-            <p>
+            <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
               {"During Construction %:  " +
                 data?.propertyUnits[0]?.Paymentplan[0]
                   ?.DuringConstructionPercentage}
@@ -607,7 +680,7 @@ const PropertyPDFDrawer = ({
               className="w-[50px] h-[50px] scale-150"
               alt="payment4"
             />
-            <p>
+            <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
               {"Handover Date: " +
                 data?.propertyUnits[0]?.Paymentplan[0]?.HandoverDate.split(
                   "T"
@@ -620,7 +693,7 @@ const PropertyPDFDrawer = ({
               className="w-[50px] h-[50px] scale-150"
               alt="payment5"
             />
-            <p>
+            <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
               {"On Handover %:  " +
                 data?.propertyUnits[0]?.Paymentplan[0]?.OnHandoverPercentage}
             </p>
@@ -631,7 +704,7 @@ const PropertyPDFDrawer = ({
               className="w-[50px] h-[50px] scale-150"
               alt="payment5"
             />
-            <p>
+            <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
               {"Post handover: " +
                 (data?.propertyUnits[0]?.Paymentplan[0]?.Posthandover
                   ? "YES"
@@ -644,7 +717,7 @@ const PropertyPDFDrawer = ({
               className="w-[50px] h-[50px] scale-150"
               alt="payment5"
             />
-            <p>
+            <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
               {"Post Handover No /M: " +
                 data?.propertyUnits[0]?.Paymentplan[0]?.NoOfPosthandoverMonths}
             </p>
@@ -655,7 +728,7 @@ const PropertyPDFDrawer = ({
               className="w-[50px] h-[50px] scale-150"
               alt="payment5"
             />
-            <p>
+            <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
               {"Post Handover %: " +
                 data?.propertyUnits[0]?.Paymentplan[0]?.PosthandoverPercentage}
             </p>
@@ -666,7 +739,7 @@ const PropertyPDFDrawer = ({
               className="w-[50px] h-[50px] scale-150"
               alt="payment5"
             />
-            <p>
+            <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
               {"Total Installments: " +
                 data?.propertyUnits[0]?.Paymentplan[0]?.TotalMonths}
             </p>
@@ -698,30 +771,47 @@ const PropertyPDFDrawer = ({
         />
         <div className="bg-[#141330]/40 w-full h-full absolute left-0 top-0" />
 
-        <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 backdrop-blur-md bg-white/20 rounded-2xl p-8 w-[40%]">
+        <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 backdrop-blur-md bg-gray-300/50 rounded-2xl p-8 w-[40%]">
           <div className="flex flex-col justify-center items-center py-4">
             <div>
-              <p className="text-med font-bold text-white">Contact Us </p>
+              <p
+                className={`text-primary text-[40px] font-bold ${
+                  pdfLoading ? "-translate-y-3" : "translate-y-0"
+                }`}
+              ></p>
+              <p
+                className={`text-med font-bold text-white ${
+                  pdfLoading ? "-translate-y-3" : "translate-y-0"
+                }`}
+              >
+                Contact Us
+              </p>
               <div className="w-[100px] h-px bg-[#141330]" />
             </div>
           </div>
           <div className="flex gap-x-2 text-white text-tiny mt-4 gap-4 items-start">
             <img src={locationIcon} className="w-8 h-8" alt="locationIcon" />
-            <p>
+            <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
               Office 609, Clover Bay Tower - 6a Marasi Dr - Business Bay - Dubai
             </p>
           </div>
           <div className="flex gap-x-2 text-white text-tiny mt-4 gap-4 items-center">
             <img src={mailIcon} className="w-8 h-8" alt="locationIcon" />
-            <p>info@avarealestate.ae</p>
+            <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
+              info@avarealestate.ae
+            </p>
           </div>
           <div className="flex gap-x-2 text-white text-tiny mt-4 gap-4 items-center">
             <img src={phoneIcon} className="w-8 h-8" alt="locationIcon" />
-            <p>+971501108606</p>
+            <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
+              +971501108606
+            </p>
           </div>
           <div className="flex gap-x-2 text-white text-tiny mt-4 gap-4 items-center">
             <img src={websiteIcon} className="w-8 h-8" alt="locationIcon" />
-            <p>www.avarealestate.ae</p>
+            <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
+              www.avarealestate.ae
+            </p>
           </div>
         </div>
       </div>

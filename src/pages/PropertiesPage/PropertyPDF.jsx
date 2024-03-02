@@ -20,11 +20,15 @@ import { showMessage } from "../../redux/messageAction.slice";
 import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-import paymentIcon from "../../assets/icons/payment.svg";
-import websiteIcon from "../../assets/icons/website.svg";
-import locationIcon from "../../assets/icons/location.svg";
-import mailIcon from "../../assets/icons/mail2.svg";
-import phoneIcon from "../../assets/icons/phone-blue.svg";
+import paymentIcon from "../../assets/icons/payment.png";
+import websiteIcon from "../../assets/icons/website.png";
+import locationIcon from "../../assets/icons/location.png";
+import mailIcon from "../../assets/icons/mail2.png";
+import phoneIcon from "../../assets/icons/phone-blue.png";
+import areaIcon from "../../assets/icons/area.png";
+import priceIcon from "../../assets/icons/price.png";
+import bathroomIcon from "../../assets/icons/bathroom.png";
+import bedroomIcon from "../../assets/icons/bedroom.png";
 
 const defaultFormState = {
   id: "",
@@ -397,8 +401,16 @@ const PropertyPDFDrawer = ({
                     </p>
                     <div className="grid grid-cols-11 mt-5">
                       <div className="flex gap-x-1 justify-center items-center col-span-3">
-                        <div>*</div>
-                        <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
+                        <img
+                          src={bathroomIcon}
+                          className="h-6 w-6 scale-150"
+                          alt="bathroomIcon"
+                        />
+                        <p
+                          className={`text-[14px] ${
+                            pdfLoading ? "-translate-y-3" : ""
+                          }`}
+                        >
                           {item?.Bathrooms + " Bathrooms"}
                         </p>
                       </div>
@@ -406,8 +418,16 @@ const PropertyPDFDrawer = ({
                         <div className="w-px h-full bg-white" />
                       </div>
                       <div className="flex gap-x-1 justify-center items-center col-span-3">
-                        <div>*</div>
-                        <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
+                        <img
+                          src={bedroomIcon}
+                          className="h-6 w-6 scale-150"
+                          alt="bedroomIcon"
+                        />
+                        <p
+                          className={`text-[14px] ${
+                            pdfLoading ? "-translate-y-3" : ""
+                          }`}
+                        >
                           {item?.Bedrooms > 0
                             ? item?.Bedrooms + " Bedroom"
                             : "Studio"}
@@ -417,9 +437,16 @@ const PropertyPDFDrawer = ({
                         <div className="w-px h-full bg-white" />
                       </div>
                       <div className="flex gap-x-1 justify-center items-center col-span-3">
-                        <div>*</div>
-
-                        <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
+                        <img
+                          src={areaIcon}
+                          className="h-6 w-6 scale-150"
+                          alt="areaIcon"
+                        />
+                        <p
+                          className={`text-[14px] ${
+                            pdfLoading ? "-translate-y-3" : ""
+                          }`}
+                        >
                           {item?.Size + " SQ.FT."}
                         </p>
                       </div>
@@ -427,7 +454,11 @@ const PropertyPDFDrawer = ({
                     <div className="mt-8 flex flex-col justify-center items-center">
                       <div className="space-y-2">
                         <div className="flex gap-x-2">
-                          <div>*</div>
+                          <img
+                            src={priceIcon}
+                            className="h-6 w-6 "
+                            alt="priceIcon"
+                          />
                           <p
                             className={`${pdfLoading ? "-translate-y-3" : ""}`}
                           >
@@ -435,7 +466,11 @@ const PropertyPDFDrawer = ({
                           </p>
                         </div>
                         <div className="flex gap-x-2">
-                          <div>*</div>
+                          <img
+                            src={priceIcon}
+                            className="h-6 w-6 "
+                            alt="priceIcon"
+                          />
                           <p
                             className={`${pdfLoading ? "-translate-y-3" : ""}`}
                           >

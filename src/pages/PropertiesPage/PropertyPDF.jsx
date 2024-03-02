@@ -62,7 +62,6 @@ const PropertyPDFDrawer = ({
   const [paymentPlan, setPaymentPlan] = useState({});
   const [pdfScaler, setPdfScaler] = useState(1);
   const [pdfLoading, setPdfLoading] = useState(false);
-  // const [pdfCount, setPdfCount] = useState([]);
   let tempPdfCount = [];
 
   const {

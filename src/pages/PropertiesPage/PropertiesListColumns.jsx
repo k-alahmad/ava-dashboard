@@ -77,7 +77,7 @@ export const ComposeColumns = (onDelete, onDownload) => {
     },
     {
       Header: "Address",
-      id: "addressId",
+      id: "Address",
       accessor: (d) =>
         d.Address?.Address_Translation?.find((x) => x.Language.Code == "En")
           .Name,

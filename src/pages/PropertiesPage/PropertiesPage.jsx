@@ -163,6 +163,14 @@ const PropertyPage = () => {
     exportToCSV("Properties", columnsArray, propertiesData);
   };
   const puposeButtons = ["All", "Rent", "Buy"];
+
+  const [disabledButtons, setDisabledButtons] = useState(false);
+  useEffect(() => {
+    setDisabledButtons(true);
+    setTimeout(() => {
+      setDisabledButtons(false);
+    }, 800);
+  }, [currentSlide]);
   return (
     <>
       <PropertyRentDrawer
@@ -208,8 +216,9 @@ const PropertyPage = () => {
                 <div className="flex justify-start items-center gap-x-8 px-12 w-full">
                   {puposeButtons.map((item, index) => {
                     return (
-                      <div
+                      <button
                         key={index}
+                        disabled={disabledButtons}
                         className={`w-full max-w-[250px] py-1 px-2 text-center font-semibold shadow-md ${
                           currentSlide == index
                             ? "bg-primary text-secondary"
@@ -224,7 +233,7 @@ const PropertyPage = () => {
                         }}
                       >
                         {item}
-                      </div>
+                      </button>
                     );
                   })}
                 </div>

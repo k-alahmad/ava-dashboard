@@ -1,20 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import PageDrawer from "../../components/Admin/layout/PageDrawer";
-import {
-  useAddPropertyMutation,
-  useLazyGetPropertyByIdQuery,
-  useUpdatePropertyMutation,
-} from "../../redux/properties/propertiesSlice";
-import { useGetActiveCategoryQuery } from "../../redux/categories/categoriesSlice";
-import { useGetActiveDevelopersQuery } from "../../redux/developers/developersSlice";
-import { useGetActiveAddressQuery } from "../../redux/addresses/addressesSlice";
-import { useGetAmenitiesQuery } from "../../redux/amentities/amenitiesSlice";
+import { useLazyGetPropertyByIdQuery } from "../../redux/properties/propertiesSlice";
 import { useGetLNGQuery } from "../../redux/languages/languagesSlice";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, TextField } from "@mui/material";
 import { API_BASE_URL } from "../../constants";
 import RichTextBox from "../../components/Forms/RichTextBox";
 import useForm from "../../hooks/useForm";
-import { Add, Close, Delete, Edit, Remove } from "@mui/icons-material";
+import { Add, Close, Delete, Edit, Remove, Undo } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { showMessage } from "../../redux/messageAction.slice";
 import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
@@ -77,7 +69,7 @@ const PropertyPDFDrawer = ({
     handleTranslationChange,
     handleUnitsChange,
   } = useForm(
-    submit,
+    createPDF,
     defaultFormState,
     properties_Translation,
     setProperties_Translation,
@@ -181,8 +173,9 @@ const PropertyPDFDrawer = ({
       </>
     );
   };
-  function submit(event) {}
-  const createPDF = async () => {
+
+  async function createPDF() {
+    setEdit(false);
     const pdf = new jsPDF("landscape", "pt", "a4");
     setPdfLoading(true);
     for (let i = 0; i < tempPdfCount.length; i++) {
@@ -203,7 +196,7 @@ const PropertyPDFDrawer = ({
       values?.Property_Translation?.find((x) => x.Language.Code == "En").Name +
         "Property"
     );
-  };
+  }
   // useEffect(() => {
   //   if (profileIsSuccess) {
   //     if (drawerID !== "") {
@@ -357,9 +350,10 @@ const PropertyPDFDrawer = ({
                             (x) => x == "Description" + item.Language.Code
                           )
                         )}
-                        onChange={(e) =>
-                          handleTranslationChange(e, item, "Description", true)
-                        }
+                        onChange={(e) => {
+                          e.preventDefault();
+                          handleTranslationChange(e, item, "Description", true);
+                        }}
                       />
                     </div>
                   );
@@ -397,7 +391,7 @@ const PropertyPDFDrawer = ({
             <div>
               <p
                 className={`text-primary text-[40px] font-bold ${
-                  pdfLoading ? "-translate-y-3" : "translate-y-0"
+                  pdfLoading ? "-translate-y-2" : "translate-y-0"
                 }`}
               >
                 Inventory
@@ -406,7 +400,7 @@ const PropertyPDFDrawer = ({
             </div>
           </div>
         )}
-        <div className="grid grid-cols-2 gap-16 m-14">
+        <div className="grid grid-cols-2 gap-16 m-14 h-full">
           {units.map((item, index) => {
             let condition;
             if (unitsPage == 1) {
@@ -447,10 +441,10 @@ const PropertyPDFDrawer = ({
                   <div className="absolute -top-[30px] -left-[30px] h-[100px] w-[100px] bg-primary p-0.5 z-0">
                     <div className="w-full h-full bg-gray-50" />
                   </div>
-                  <div className="bg-[#141330] p-4 flex flex-col justify-start items-center text-white relative min-h-[300px]">
+                  <div className="bg-[#141330] p-4 flex flex-col justify-start items-center text-white relative min-h-[40%]">
                     <p
                       className={`text-small font-bold ${
-                        pdfLoading ? "-translate-y-3" : ""
+                        pdfLoading ? "-translate-y-2" : ""
                       }`}
                     >
                       {item?.Bedrooms > 0
@@ -466,7 +460,7 @@ const PropertyPDFDrawer = ({
                         />
                         <p
                           className={`text-[14px] ${
-                            pdfLoading ? "-translate-y-3" : ""
+                            pdfLoading ? "-translate-y-2" : ""
                           }`}
                         >
                           {item?.Bathrooms + " Bathrooms"}
@@ -483,7 +477,7 @@ const PropertyPDFDrawer = ({
                         />
                         <p
                           className={`text-[14px] ${
-                            pdfLoading ? "-translate-y-3" : ""
+                            pdfLoading ? "-translate-y-2" : ""
                           }`}
                         >
                           {item?.Bedrooms > 0
@@ -495,18 +489,42 @@ const PropertyPDFDrawer = ({
                         <div className="w-px h-full bg-white" />
                       </div>
                       <div className="flex gap-x-1 justify-center items-center col-span-3">
-                        <img
-                          src={areaIcon}
-                          className="h-6 w-6 scale-150"
-                          alt="areaIcon"
-                        />
-                        <p
-                          className={`text-[14px] ${
-                            pdfLoading ? "-translate-y-3" : ""
-                          }`}
-                        >
-                          {item?.Size + " SQ.FT."}
-                        </p>
+                        {edit ? (
+                          <div className="flex bg-white py-2 px-1 rounded-md">
+                            <TextField
+                              fullWidth
+                              type="number"
+                              name={"Size"}
+                              label={`Size`}
+                              id={"Size"}
+                              onChange={(e) => {
+                                handleUnitsChange(e, "Size", index);
+                              }}
+                              value={item.Size}
+                              variant="outlined"
+                              size="medium"
+                              // error={Boolean(errors?.Size)}
+                              // helperText={errors?.Size}
+                              // disabled={disableField}
+                              onWheel={(e) => e.target.blur()}
+                            />
+                          </div>
+                        ) : (
+                          <>
+                            <img
+                              src={areaIcon}
+                              className="h-6 w-6 scale-150"
+                              alt="areaIcon"
+                            />
+                            <p
+                              className={`text-[14px] ${
+                                pdfLoading ? "-translate-y-2" : ""
+                              }`}
+                            >
+                              {item?.Size + " SQ.FT."}
+                            </p>
+                          </>
+                        )}
                       </div>
                     </div>
                     <div className="mt-8 flex flex-col justify-center items-center">
@@ -517,11 +535,35 @@ const PropertyPDFDrawer = ({
                             className="h-6 w-6 "
                             alt="priceIcon"
                           />
-                          <p
-                            className={`${pdfLoading ? "-translate-y-3" : ""}`}
-                          >
-                            Price Of Unit: {item?.Price}
-                          </p>
+                          {edit ? (
+                            <div className="flex bg-white py-2 px-1 rounded-md">
+                              <TextField
+                                fullWidth
+                                type="number"
+                                name={"Price"}
+                                label={`Price`}
+                                id={"Price"}
+                                onChange={(e) => {
+                                  handleUnitsChange(e, "Price", index);
+                                }}
+                                value={item.Price}
+                                variant="outlined"
+                                size="medium"
+                                // error={Boolean(errors?.Price)}
+                                // helperText={errors?.Price}
+                                // disabled={disableField}
+                                onWheel={(e) => e.target.blur()}
+                              />
+                            </div>
+                          ) : (
+                            <p
+                              className={`${
+                                pdfLoading ? "-translate-y-2" : ""
+                              }`}
+                            >
+                              Price Of Unit: {item?.Price}
+                            </p>
+                          )}
                         </div>
                         <div className="flex gap-x-2">
                           <img
@@ -530,9 +572,10 @@ const PropertyPDFDrawer = ({
                             alt="priceIcon"
                           />
                           <p
-                            className={`${pdfLoading ? "-translate-y-3" : ""}`}
+                            className={`${pdfLoading ? "-translate-y-2" : ""}`}
                           >
-                            Price Per SQ.FT.: {item?.PricePerSQFT}
+                            {"Price Per SQ.FT.: "}
+                            {(item?.Price / item?.Size).toFixed(3)}
                           </p>
                         </div>
                       </div>
@@ -911,8 +954,8 @@ const PropertyPDFDrawer = ({
     );
   };
 
-  const formElements = () => {
-    const elements = [];
+  const PDF = () => {
+    let elements = [];
     let pageLength = 9;
     if (units.length > 4) {
       pageLength = 11;
@@ -1110,7 +1153,7 @@ const PropertyPDFDrawer = ({
       modalWidth={"max-w-[1240px]"}
       drawerH={"h-full max-h-[80vh]"}
       onCancelClick={closeDrawer}
-      onSaveClick={createPDF}
+      onSaveClick={handleSubmit}
       disabled={disabled}
       children={
         isLoading ||
@@ -1145,6 +1188,20 @@ const PropertyPDFDrawer = ({
                 <Add sx={{ color: "white" }} />
               </div>
             </div>
+            {edit && (
+              <div
+                className="fixed top-24 left-52 bg-secondary/80 h-[50px] w-[50px] rounded-md shadow-2xl z-40 flex justify-center items-center cursor-pointer"
+                onClick={() => {
+                  // setEdit(!edit);
+                  setProperties_Translation(data.Property_Translation);
+                  setUnits(data.propertyUnits);
+                }}
+              >
+                <div>
+                  <Undo sx={{ color: "rgba(207 165 108)" }} fontSize="large" />
+                </div>
+              </div>
+            )}
             <div
               className="fixed top-24 left-36 bg-secondary/80 h-[50px] w-[50px] rounded-md shadow-2xl z-40 flex justify-center items-center cursor-pointer"
               onClick={() => {
@@ -1160,7 +1217,7 @@ const PropertyPDFDrawer = ({
               )}
             </div>
 
-            {formElements()}
+            <PDF />
           </div>
         )
       }

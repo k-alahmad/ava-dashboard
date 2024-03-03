@@ -402,6 +402,7 @@ const useForm = (
       let newObj = omit(errors, `${type}`);
       setErrors(newObj);
     }
+
     setUnits((current) =>
       current.map((obj, i) => {
         if (i == index) {

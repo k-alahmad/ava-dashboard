@@ -14,7 +14,7 @@ import { CircularProgress } from "@mui/material";
 import { API_BASE_URL } from "../../constants";
 import RichTextBox from "../../components/Forms/RichTextBox";
 import useForm from "../../hooks/useForm";
-import { Add, Remove } from "@mui/icons-material";
+import { Add, Close, Delete, Edit, Remove } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { showMessage } from "../../redux/messageAction.slice";
 import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
@@ -62,6 +62,8 @@ const PropertyPDFDrawer = ({
   const [paymentPlan, setPaymentPlan] = useState({});
   const [pdfScaler, setPdfScaler] = useState(1);
   const [pdfLoading, setPdfLoading] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const dispatch = useDispatch();
   let tempPdfCount = [];
 
   const {
@@ -138,6 +140,7 @@ const PropertyPDFDrawer = ({
     setPaymentPlan([]);
     setPdfScaler(1);
     setPdfLoading(false);
+    setEdit(false);
   };
 
   const PageNumber = ({
@@ -340,16 +343,39 @@ const PropertyPDFDrawer = ({
             >
               Description
             </p>
-            <div
-              className={`text-white mt-5 overflow-auto ${
-                pdfLoading ? "-translate-y-3" : ""
-              }`}
-              dangerouslySetInnerHTML={{
-                __html: values?.Property_Translation?.find(
-                  (x) => x.Language.Code == "En"
-                ).Description,
-              }}
-            />
+
+            {edit ? (
+              properties_Translation.map((item, index) => {
+                if (item.Language.Code == "En")
+                  return (
+                    <div key={index} className="pb-12 -mt-8">
+                      <RichTextBox
+                        label={`${item.Language.Name} Description`}
+                        value={item.Description}
+                        error={Boolean(
+                          Object.keys(errors).find(
+                            (x) => x == "Description" + item.Language.Code
+                          )
+                        )}
+                        onChange={(e) =>
+                          handleTranslationChange(e, item, "Description", true)
+                        }
+                      />
+                    </div>
+                  );
+              })
+            ) : (
+              <div
+                className={`text-white mt-5 overflow-auto ${
+                  pdfLoading ? "-translate-y-3" : ""
+                }`}
+                dangerouslySetInnerHTML={{
+                  __html: properties_Translation?.find(
+                    (x) => x.Language.Code == "En"
+                  )?.Description,
+                }}
+              />
+            )}
           </div>
         </div>
 
@@ -357,7 +383,7 @@ const PropertyPDFDrawer = ({
       </div>
     );
   };
-  const UnitsPage = ({ i, units, viewTitle }) => {
+  const UnitsPage = ({ i, unitsPage, viewTitle }) => {
     return (
       <div
         id={"pdf" + i}
@@ -382,9 +408,42 @@ const PropertyPDFDrawer = ({
         )}
         <div className="grid grid-cols-2 gap-16 m-14">
           {units.map((item, index) => {
-            if (item)
+            let condition;
+            if (unitsPage == 1) {
+              condition = index < 2;
+            } else if (unitsPage == 2) {
+              condition = index > 1 && index < 4;
+            } else if (unitsPage == 3) {
+              condition = index > 3 && index < 6;
+            }
+            if (condition)
               return (
                 <div key={index} className="relative">
+                  {edit && (
+                    <div
+                      className="absolute -right-4 -top-4 bg-primary w-8 h-8 rounded-full text-white z-10 flex justify-center items-center cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (units.length > 1) {
+                          let tempUnits = [...units];
+                          let idx = tempUnits.indexOf(item);
+                          if (idx > -1) {
+                            tempUnits.splice(idx, 1);
+                            setUnits(tempUnits);
+                          }
+                        } else {
+                          dispatch(
+                            showMessage({
+                              message: "At Least One Unit Must Exist",
+                              variant: "error",
+                            })
+                          );
+                        }
+                      }}
+                    >
+                      <Delete sx={{ color: "white" }} fontSize="medium" />
+                    </div>
+                  )}
                   <div className="absolute -top-[30px] -left-[30px] h-[100px] w-[100px] bg-primary p-0.5 z-0">
                     <div className="w-full h-full bg-gray-50" />
                   </div>
@@ -808,11 +867,11 @@ const PropertyPDFDrawer = ({
         <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 backdrop-blur-md bg-gray-300/50 rounded-2xl p-8 w-[40%]">
           <div className="flex flex-col justify-center items-center py-4">
             <div>
-              <p
+              {/* <p
                 className={`text-primary text-[40px] font-bold ${
                   pdfLoading ? "-translate-y-3" : "translate-y-0"
                 }`}
-              ></p>
+              ></p> */}
               <p
                 className={`text-med font-bold text-white ${
                   pdfLoading ? "-translate-y-3" : "translate-y-0"
@@ -872,20 +931,18 @@ const PropertyPDFDrawer = ({
         elements.push(<DescriptionPage i={i} />);
       } else if (i == 4) {
         tempPdfCount.push(`pdf${i}`);
-        elements.push(
-          <UnitsPage i={i} units={[units[0], units[1]]} viewTitle={true} />
-        );
+        elements.push(<UnitsPage i={i} unitsPage={1} viewTitle={true} />);
       } else if (i == 5) {
         tempPdfCount.push(`pdf${i}`);
         if (units.length > 2) {
-          elements.push(<UnitsPage i={i} units={[units[2], units[3]]} />);
+          elements.push(<UnitsPage i={i} unitsPage={2} />);
         } else {
           elements.push(<FeaturesPage i={i} />);
         }
       } else if (i == 6) {
         tempPdfCount.push(`pdf${i}`);
         if (units.length > 4) {
-          elements.push(<UnitsPage i={i} units={[units[4], units[5]]} />);
+          elements.push(<UnitsPage i={i} unitsPage={3} />);
         } else if (units.length > 2) {
           elements.push(<FeaturesPage i={i} />);
         } else {
@@ -1067,7 +1124,7 @@ const PropertyPDFDrawer = ({
           </div>
         ) : (
           <div className="relative">
-            <div className="fixed top-24 right-32 bg-secondary/80 h-[50px] w-[130px] rounded-md shadow-2xl grid grid-cols-4 gap-0 z-40">
+            <div className="fixed top-24 left-2 bg-secondary/80 h-[50px] w-[130px] rounded-md shadow-2xl grid grid-cols-4 gap-0 z-40">
               <div
                 className="flex justify-center items-center border-r-2 border-white cursor-pointer"
                 onClick={() => {
@@ -1087,6 +1144,20 @@ const PropertyPDFDrawer = ({
               >
                 <Add sx={{ color: "white" }} />
               </div>
+            </div>
+            <div
+              className="fixed top-24 left-36 bg-secondary/80 h-[50px] w-[50px] rounded-md shadow-2xl z-40 flex justify-center items-center cursor-pointer"
+              onClick={() => {
+                setEdit(!edit);
+              }}
+            >
+              {edit ? (
+                <div className="animate-bounce ">
+                  <Close sx={{ color: "rgba(207 165 108)" }} fontSize="large" />
+                </div>
+              ) : (
+                <Edit sx={{ color: "rgba(207 165 108)" }} fontSize="large" />
+              )}
             </div>
 
             {formElements()}

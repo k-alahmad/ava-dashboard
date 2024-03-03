@@ -6,7 +6,15 @@ import { CircularProgress, TextField } from "@mui/material";
 import { API_BASE_URL } from "../../constants";
 import RichTextBox from "../../components/Forms/RichTextBox";
 import useForm from "../../hooks/useForm";
-import { Add, Close, Delete, Edit, Remove, Undo } from "@mui/icons-material";
+import {
+  Add,
+  Close,
+  Delete,
+  Done,
+  Edit,
+  Remove,
+  Undo,
+} from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { showMessage } from "../../redux/messageAction.slice";
 import { useGetProfileQuery } from "../../redux/auth/authApiSlice";
@@ -55,6 +63,7 @@ const PropertyPDFDrawer = ({
   const [pdfScaler, setPdfScaler] = useState(1);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [edit, setEdit] = useState(false);
+  const [selectedUnit, setSelectedUnit] = useState();
   const dispatch = useDispatch();
   let tempPdfCount = [];
 
@@ -133,6 +142,7 @@ const PropertyPDFDrawer = ({
     setPdfScaler(1);
     setPdfLoading(false);
     setEdit(false);
+    setSelectedUnit();
   };
 
   const PageNumber = ({
@@ -415,7 +425,17 @@ const PropertyPDFDrawer = ({
                 <div key={index} className="relative">
                   {edit && (
                     <div
-                      className="absolute -right-4 -top-4 bg-primary w-8 h-8 rounded-full text-white z-10 flex justify-center items-center cursor-pointer"
+                      className="absolute right-6 -top-4 bg-primary w-8 h-8 rounded-full text-white z-10 flex justify-center items-center cursor-pointer"
+                      onClick={() => {
+                        setSelectedUnit(index);
+                      }}
+                    >
+                      <Edit sx={{ color: "white" }} fontSize="medium" />
+                    </div>
+                  )}
+                  {edit && (
+                    <div
+                      className="absolute -right-4 -top-4 bg-red-500 w-8 h-8 rounded-full text-white z-10 flex justify-center items-center cursor-pointer"
                       onClick={(e) => {
                         e.preventDefault();
                         if (units.length > 1) {
@@ -488,82 +508,34 @@ const PropertyPDFDrawer = ({
                       <div className="flex justify-center items-center">
                         <div className="w-px h-full bg-white" />
                       </div>
-                      <div className="flex gap-x-1 justify-center items-center col-span-3">
-                        {edit ? (
-                          <div className="flex bg-white py-2 px-1 rounded-md">
-                            <TextField
-                              fullWidth
-                              type="number"
-                              name={"Size"}
-                              label={`Size`}
-                              id={"Size"}
-                              onChange={(e) => {
-                                handleUnitsChange(e, "Size", index);
-                              }}
-                              value={item.Size}
-                              variant="outlined"
-                              size="medium"
-                              // error={Boolean(errors?.Size)}
-                              // helperText={errors?.Size}
-                              // disabled={disableField}
-                              onWheel={(e) => e.target.blur()}
-                            />
-                          </div>
-                        ) : (
-                          <>
-                            <img
-                              src={areaIcon}
-                              className="h-6 w-6 scale-150"
-                              alt="areaIcon"
-                            />
-                            <p
-                              className={`text-[14px] ${
-                                pdfLoading ? "-translate-y-2" : ""
-                              }`}
-                            >
-                              {item?.Size + " SQ.FT."}
-                            </p>
-                          </>
-                        )}
+                      <div className="flex gap-x-1 justify-center items-center col-span-3 relative">
+                        <img
+                          src={areaIcon}
+                          className="h-6 w-6 scale-150"
+                          alt="areaIcon"
+                        />
+                        <p
+                          className={`text-[14px] ${
+                            pdfLoading ? "-translate-y-2" : ""
+                          }`}
+                        >
+                          {item?.Size + " SQ.FT."}
+                        </p>
                       </div>
                     </div>
                     <div className="mt-8 flex flex-col justify-center items-center">
                       <div className="space-y-2">
-                        <div className="flex gap-x-2">
+                        <div className="flex gap-x-2 relative">
                           <img
                             src={priceIcon}
-                            className="h-6 w-6 "
+                            className="h-6 w-6"
                             alt="priceIcon"
                           />
-                          {edit ? (
-                            <div className="flex bg-white py-2 px-1 rounded-md">
-                              <TextField
-                                fullWidth
-                                type="number"
-                                name={"Price"}
-                                label={`Price`}
-                                id={"Price"}
-                                onChange={(e) => {
-                                  handleUnitsChange(e, "Price", index);
-                                }}
-                                value={item.Price}
-                                variant="outlined"
-                                size="medium"
-                                // error={Boolean(errors?.Price)}
-                                // helperText={errors?.Price}
-                                // disabled={disableField}
-                                onWheel={(e) => e.target.blur()}
-                              />
-                            </div>
-                          ) : (
-                            <p
-                              className={`${
-                                pdfLoading ? "-translate-y-2" : ""
-                              }`}
-                            >
-                              Price Of Unit: {item?.Price}
-                            </p>
-                          )}
+                          <p
+                            className={`${pdfLoading ? "-translate-y-2" : ""}`}
+                          >
+                            Price Of Unit: {item?.Price}
+                          </p>
                         </div>
                         <div className="flex gap-x-2">
                           <img
@@ -953,8 +925,8 @@ const PropertyPDFDrawer = ({
       </div>
     );
   };
-
-  const PDF = () => {
+  const [pdfPages, setPdfPages] = useState([]);
+  useEffect(() => {
     let elements = [];
     let pageLength = 9;
     if (units.length > 4) {
@@ -1107,6 +1079,10 @@ const PropertyPDFDrawer = ({
         }
       }
     }
+    setPdfPages(elements);
+  }, [units, drawerID, edit]);
+
+  const PDF = () => {
     return (
       <div className="flex justify-center items-start -mt-8 overflow-auto">
         <div
@@ -1115,7 +1091,7 @@ const PropertyPDFDrawer = ({
             width: 1024 * pdfScaler + "px",
           }}
         >
-          {elements}
+          {pdfPages}
         </div>
       </div>
     );
@@ -1216,6 +1192,57 @@ const PropertyPDFDrawer = ({
                 <Edit sx={{ color: "rgba(207 165 108)" }} fontSize="large" />
               )}
             </div>
+            {selectedUnit !== undefined && edit && (
+              <div className="fixed top-44 left-2 bg-secondary/60 min-h-[200px] w-[300px] rounded-md shadow-2xl px-4 py-8 flex flex-col justify-start items-center space-y-4">
+                <p
+                  className={`text-small font-bold ${
+                    pdfLoading ? "-translate-y-2" : ""
+                  }`}
+                >
+                  {units[selectedUnit]?.Bedrooms > 0
+                    ? units[selectedUnit]?.Bedrooms + " Bedroom"
+                    : "Studio"}
+                </p>
+                <div className="flex bg-white py-2 px-1 rounded-md">
+                  <TextField
+                    fullWidth
+                    type="number"
+                    name={"Size"}
+                    label={`Size`}
+                    id={"Size"}
+                    onChange={(e) => {
+                      handleUnitsChange(e, "Size", selectedUnit);
+                    }}
+                    value={units[selectedUnit].Size}
+                    variant="outlined"
+                    size="medium"
+                    onWheel={(e) => e.target.blur()}
+                  />
+                </div>
+                <div className="flex bg-white py-2 px-1 rounded-md">
+                  <TextField
+                    fullWidth
+                    type="number"
+                    name={"Price"}
+                    label={`Price`}
+                    id={"Price"}
+                    onChange={(e) => {
+                      handleUnitsChange(e, "Price", selectedUnit);
+                    }}
+                    value={units[selectedUnit].Price}
+                    variant="outlined"
+                    size="medium"
+                    onWheel={(e) => e.target.blur()}
+                  />
+                </div>
+                <div
+                  className="bg-primary rounded-md cursor-pointer"
+                  onClick={() => setSelectedUnit()}
+                >
+                  <Done sx={{ color: "white" }} fontSize="large" />
+                </div>
+              </div>
+            )}
 
             <PDF />
           </div>

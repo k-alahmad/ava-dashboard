@@ -65,7 +65,8 @@ const PropertyPDFDrawer = ({
   const [edit, setEdit] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState();
   const dispatch = useDispatch();
-  let tempPdfCount = [];
+  const [pdfCount, setPdfCount] = useState([]);
+  const [pdfPages, setPdfPages] = useState([]);
 
   const {
     disabled,
@@ -188,7 +189,7 @@ const PropertyPDFDrawer = ({
     setEdit(false);
     const pdf = new jsPDF("landscape", "pt", "a4");
     setPdfLoading(true);
-    for (let i = 0; i < tempPdfCount.length; i++) {
+    for (let i = 0; i < pdfCount.length; i++) {
       const data = await html2canvas(document.querySelector("#pdf" + (i + 1)), {
         // allowTaint: true,
         useCORS: true,
@@ -925,10 +926,10 @@ const PropertyPDFDrawer = ({
       </div>
     );
   };
-
-  const PDF = () => {
+  useEffect(() => {
     let elements = [];
     let pageLength = 9;
+    let tempPdfCount = [];
     if (units.length > 4) {
       pageLength = 11;
     } else if (units.length > 2) {
@@ -1079,6 +1080,11 @@ const PropertyPDFDrawer = ({
         }
       }
     }
+    setPdfPages(elements);
+    setPdfCount(tempPdfCount);
+  }, [units, drawerID, edit]);
+
+  const PDF = () => {
     return (
       <div className="flex justify-center items-start -mt-8 overflow-auto">
         <div
@@ -1087,7 +1093,7 @@ const PropertyPDFDrawer = ({
             width: 1024 * pdfScaler + "px",
           }}
         >
-          {elements}
+          {pdfPages}
         </div>
       </div>
     );

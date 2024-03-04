@@ -925,8 +925,8 @@ const PropertyPDFDrawer = ({
       </div>
     );
   };
-  const [pdfPages, setPdfPages] = useState([]);
-  useEffect(() => {
+
+  const PDF = () => {
     let elements = [];
     let pageLength = 9;
     if (units.length > 4) {
@@ -1079,10 +1079,6 @@ const PropertyPDFDrawer = ({
         }
       }
     }
-    setPdfPages(elements);
-  }, [units, drawerID, edit]);
-
-  const PDF = () => {
     return (
       <div className="flex justify-center items-start -mt-8 overflow-auto">
         <div
@@ -1091,7 +1087,7 @@ const PropertyPDFDrawer = ({
             width: 1024 * pdfScaler + "px",
           }}
         >
-          {pdfPages}
+          {elements}
         </div>
       </div>
     );

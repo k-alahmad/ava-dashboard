@@ -132,7 +132,7 @@ const AdminTable = ({
   return (
     <Paper>
       <TableContainer
-        className="2xl:max-h-[550px]"
+        className="h-full max-h-[70vh]"
         style={{
           borderColor: "white",
           overflowX: "initial",

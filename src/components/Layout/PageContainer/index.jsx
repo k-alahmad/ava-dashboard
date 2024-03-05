@@ -26,8 +26,8 @@ const PageLayout = ({ children }) => {
       >
         <article className="relative w-full pb-10 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden h-full ">
           <header
-            className={`absolute w-[90%] backdrop-blur-2xl p-1 rounded-xl font-bold flex items-center justify-between left-[5%] shadow-xl drop-shadow-xl z-10 transition-all duration-500 ${
-              sideNavOpen ? "!top-[10%]" : "!-top-full"
+            className={`absolute w-[90%] p-1 rounded-xl font-bold flex items-center justify-between left-[5%] z-10 transition-all duration-500 h-[150px] ${
+              sideNavOpen ? "!top-[100px]" : "!-top-full"
             }`}
           >
             <img
@@ -39,7 +39,7 @@ const PageLayout = ({ children }) => {
               alt={
                 isSuccess && !isLoading && !isFetching ? user.Name : "Profile"
               }
-              className={`!w-20 !h-20 2xl:!w-28 2xl:!h-28 rounded-xl bg-secondary transition-all duration-500 `}
+              className={`!w-24 !h-24 2xl:!w-28 2xl:!h-28 rounded-xl bg-secondary transition-all duration-500 `}
             />
             <div>
               <p className="font-bold text-tiny md:text-smaller 2xl:text-small text-primary text-center px-1">
@@ -55,7 +55,7 @@ const PageLayout = ({ children }) => {
           <div
             className={`${
               sideNavOpen
-                ? "h-[250px] min-h-[250px]"
+                ? "h-[300px] min-h-[300px]"
                 : "h-[80px] md:min-h-[100px]"
             }  !w-full transition-all duration-300`}
           />

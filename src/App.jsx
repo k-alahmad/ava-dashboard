@@ -30,6 +30,7 @@ import ApplicationPage from "./pages/ApplicationsPage/ApplicationPage";
 import ListingPage from "./pages/ListingsPage/ListingsPage";
 import PaymentPlanPage from "./pages/PaymentPlanPage/PaymentPlanPage";
 import { useGetProfileQuery } from "./redux/auth/authApiSlice";
+import OpenHousePage from "./pages/OpenHousePage/OpenHousePage";
 const App = () => {
   const { data, isSuccess } = useGetProfileQuery();
 
@@ -316,6 +317,7 @@ const App = () => {
                 )
               }
             />
+            <Route path="/open-house" element={<OpenHousePage />} />
             <Route path="*" element={<DashboardPage />} />
           </>
         )}

@@ -104,6 +104,7 @@ export const data = [
       { icon: feedback, name: "Guest Feedback", link: "/feedback" },
       { icon: enquiry, name: "Guest Enquiries", link: "/enquiry" },
       { icon: listing, name: "Guest Listing", link: "/list-with-us" },
+      { icon: "", name: "Open House", link: "/open-house" },
     ],
   },
 ];

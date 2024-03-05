@@ -50,9 +50,8 @@ const NavBar = () => {
           <div className="absolute -top-0 -right-0 h-full w-1/2 overflow-hidden">
             <div className="h-[500px] w-full -right-[10%] rounded-full bg-primary/50 blur-[120px] absolute" />
           </div>
-
           <div className="flex items-center justify-start flex-1">
-            <div className="m-1 p-2 max-md:hidden">
+            <div className="m-1 p-2 ">
               <img
                 src={Logo}
                 alt="LOGO"
@@ -64,7 +63,7 @@ const NavBar = () => {
                 dispatch(sideNavOpen == true ? closeSideNav() : openSideNav());
                 // setExpand({ ...expand, status: false });
               }}
-              className={`cursor-pointer md:ml-4 space-y-2 ${
+              className={`cursor-pointer md:ml-4 space-y-2 z-50 ${
                 sideNavOpen && "md:translate-x-52"
               } transition-all duration-500`}
             >

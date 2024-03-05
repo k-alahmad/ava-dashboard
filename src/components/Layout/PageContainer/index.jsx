@@ -14,29 +14,31 @@ const PageLayout = ({ children }) => {
   }, []);
   const [expand, setExpand] = useState({ status: false, key: 0 });
   const sideNavOpen = useSelector(selectSideNavStatus);
-  const { data: user, isSuccess, isLoading } = useGetProfileQuery();
+  const { data: user, isSuccess, isLoading, isFetching } = useGetProfileQuery();
   return (
     <div className="flex overflow-x-hidden">
       <NavBar />
       <aside
         className={
-          "sticky bg-secondary h-screen overflow-y-hidden shadow-2xl duration-500 transition-all transform" +
-          (sideNavOpen
-            ? "w-[60%] lg:w-[35%] xl:w-[28%] 2xl:w-[25%]"
-            : " w-[5%]")
+          "max-md:fixed z-40 md:sticky bg-secondary h-screen overflow-y-hidden shadow-2xl duration-500 transition-all transform " +
+          (sideNavOpen ? " md:w-[400px] 2xl:w-[500px]" : "w-0 md:w-[100px]")
         }
       >
         <article className="relative w-full pb-10 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden h-full ">
           <header
-            className={`absolute w-[90%] backdrop-blur-[100px] p-1 rounded-xl font-bold flex items-center justify-between top-[10%] left-[5%] shadow-xl drop-shadow-xl z-10 transition-all duration-500 ${
-              sideNavOpen ? "!top-[15%] 2xl:!top-[10%]" : "!-top-full"
+            className={`absolute w-[90%] backdrop-blur-2xl p-1 rounded-xl font-bold flex items-center justify-between left-[5%] shadow-xl drop-shadow-xl z-10 transition-all duration-500 ${
+              sideNavOpen ? "!top-[10%]" : "!-top-full"
             }`}
           >
             <img
               src={
-                isSuccess && !isLoading ? API_BASE_URL + user.Image?.URL : ""
+                isSuccess && !isLoading && !isFetching
+                  ? API_BASE_URL + user.Image?.URL
+                  : ""
               }
-              alt={isSuccess && !isLoading ? user.Name : "Profile"}
+              alt={
+                isSuccess && !isLoading && !isFetching ? user.Name : "Profile"
+              }
               className={`!w-20 !h-20 2xl:!w-28 2xl:!h-28 rounded-xl bg-secondary transition-all duration-500 `}
             />
             <div>
@@ -53,7 +55,7 @@ const PageLayout = ({ children }) => {
           <div
             className={`${
               sideNavOpen
-                ? "h-[180px] md:min-h-[250px]"
+                ? "h-[250px] min-h-[250px]"
                 : "h-[80px] md:min-h-[100px]"
             }  !w-full transition-all duration-300`}
           />

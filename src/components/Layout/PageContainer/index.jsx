@@ -28,7 +28,7 @@ const PageLayout = ({ children }) => {
       >
         <article className="relative w-full pb-10 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden h-full ">
           <header
-            className={`absolute w-[90%] p-1 rounded-xl font-bold flex items-center justify-between left-[5%] z-10 transition-all duration-500 h-[150px] ${
+            className={`absolute w-[90%] p-1 rounded-xl font-bold flex items-center justify-between left-[5%] z-10 transition-all duration-500 h-[100px] ${
               sideNavOpen ? "!top-[100px]" : "!-top-full"
             }`}
           >
@@ -57,7 +57,7 @@ const PageLayout = ({ children }) => {
           <div
             className={`${
               sideNavOpen
-                ? "h-[300px] min-h-[300px]"
+                ? "h-[250px] min-h-[250px]"
                 : "h-[80px] md:min-h-[100px]"
             }  !w-full transition-all duration-300`}
           />

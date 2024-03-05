@@ -21,7 +21,9 @@ const PageLayout = ({ children }) => {
       <aside
         className={
           "max-md:fixed z-40 md:sticky bg-secondary h-screen overflow-y-hidden shadow-2xl duration-500 transition-all transform " +
-          (sideNavOpen ? " md:w-[400px] 2xl:w-[500px]" : "w-0 md:w-[100px]")
+          (sideNavOpen
+            ? "w-[80%] sm:w-[50%] md:w-[400px] 2xl:w-[500px]"
+            : "w-0 md:w-[100px]")
         }
       >
         <article className="relative w-full pb-10 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden h-full ">

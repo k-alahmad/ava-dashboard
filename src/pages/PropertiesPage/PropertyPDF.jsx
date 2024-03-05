@@ -1195,7 +1195,7 @@ const PropertyPDFDrawer = ({
               )}
             </div>
             {selectedUnit !== undefined && edit && (
-              <div className="fixed top-44 left-2 bg-secondary/60 min-h-[200px] w-[300px] rounded-md shadow-2xl px-4 py-8 flex flex-col justify-start items-center space-y-4">
+              <div className="fixed top-44 left-2 bg-secondary/60 min-h-[200px] w-[300px] rounded-md shadow-2xl px-4 py-8 flex flex-col justify-start items-center space-y-4 z-40">
                 <p
                   className={`text-small font-bold ${
                     pdfLoading ? "-translate-y-2" : ""

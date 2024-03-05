@@ -12,13 +12,13 @@ export const openHouseApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getOpenHouse: builder.query({
       query: (args) => ({
-        url: `/openHouse`,
+        url: `/openhouse`,
         method: "GET",
       }),
       transformResponse: (responseData) => {
         initialState.count = responseData?.count;
-        initialState.normalData = responseData.OpenHouse;
-        const loaded = responseData.OpenHouse;
+        initialState.normalData = responseData.Appointments;
+        const loaded = responseData.Appointments;
         return openHouseAdapter.setAll(initialState, loaded);
       },
       providesTags: (result, error, arg) => [
@@ -28,14 +28,14 @@ export const openHouseApiSlice = apiSlice.injectEndpoints({
     }),
 
     getOpenHouseById: builder.query({
-      query: (args) => `/openHouse/${args.id}`,
+      query: (args) => `/openhouse/${args.id}`,
       providesTags: (result, error, args) => [
         { type: "OpenHouse", id: args.id },
       ],
     }),
     deleteOpenHouse: builder.mutation({
       query: (args) => ({
-        url: `/openHouse/${args.id}`,
+        url: `/openhouse/${args.id}`,
         method: "DELETE",
         credentials: "include",
       }),

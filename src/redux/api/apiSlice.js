@@ -80,6 +80,7 @@ export const apiSlice = createApi({
     "MetaData",
     "Job",
     "Application",
+    "OpenHouse",
   ],
   endpoints: (builder) => ({}),
 });

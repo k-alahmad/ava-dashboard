@@ -29,23 +29,23 @@ export default function PageDrawer({
           "w-screen max-w-full right-0 absolute bg-white h-full delay-400 duration-500 ease-in-out transition-all transform  " +
           (isOpen
             ? sideNavOpen
-              ? " translate-x-[60%] lg:translate-x-[35%] xl:translate-x-[28%] 2xl:translate-x-[20%] "
-              : "translate-x-[5%] "
+              ? " md:translate-x-[300px] 2xl:translate-x-[400px] "
+              : "md:translate-x-[100px] "
             : " translate-x-full ")
         }
       >
         <article
           className={`relative w-screen ${
             sideNavOpen
-              ? "w-[40%] lg:w-[65%] xl:w-[72%] 2xl:w-[80%]"
-              : "max-w-[95%]"
+              ? "w-screen  md:w-[calc(100%-300px)] 2xl:w-[calc(100%-400px)]"
+              : "max-w-full md:max-w-[calc(100%-100px)]"
           } pb-10 flex flex-col justify-start items-center space-y-6 overflow-y-scroll h-full`}
         >
           <header
             className={`${
               sideNavOpen
-                ? "w-[40%] lg:w-[65%] xl:w-[72%] 2xl:w-[80%]"
-                : "w-[95%]"
+                ? "w-full md:w-[calc(100%-300px)] 2xl:w-[calc(100%-400px)]"
+                : "w-full md:w-[calc(100%-100px)]"
             } px-[3%] h-16 fixed z-20 bg-secondary overflow-hidden flex justify-center items-center left-0`}
           >
             <div className="relative w-full">
@@ -65,8 +65,8 @@ export default function PageDrawer({
           <footer
             className={`text-tiny font-regular fixed left-0 bottom-0 bg-white ${
               sideNavOpen
-                ? "w-[40%] lg:w-[65%] xl:w-[72%] 2xl:w-[80%]"
-                : "w-[95%]"
+                ? "w-full md:w-[calc(100%-300px)] 2xl:w-[calc(100%-400px)]"
+                : "w-full md:w-[calc(100%-100px)]"
             } drop-shadow-2xl px-[3%] z-20 h-14 `}
           >
             <div className="flex justify-evenly items-center py-4">

@@ -51,7 +51,7 @@ const NavBar = () => {
             <div className="h-[500px] w-full -right-[10%] rounded-full bg-primary/50 blur-[120px] absolute" />
           </div>
           <div className="flex items-center justify-start flex-1">
-            <div className="m-1 p-2 ">
+            <div className="m-1 p-1">
               <img
                 src={Logo}
                 alt="LOGO"
@@ -64,7 +64,7 @@ const NavBar = () => {
                 // setExpand({ ...expand, status: false });
               }}
               className={`cursor-pointer md:ml-4 space-y-2 z-50 ${
-                sideNavOpen && "md:translate-x-52"
+                sideNavOpen ? "md:translate-x-52" : "md:translate-x-4"
               } transition-all duration-500`}
             >
               <div

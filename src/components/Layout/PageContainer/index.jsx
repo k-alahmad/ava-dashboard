@@ -20,13 +20,13 @@ const PageLayout = ({ children }) => {
       <NavBar />
       <aside
         className={
-          "max-md:fixed z-40 md:sticky bg-secondary h-screen overflow-y-hidden shadow-2xl duration-500 transition-all transform " +
+          "max-md:fixed z-40 md:sticky bg-secondary h-screen overflow-y-hidden shadow-2xl duration-500 transition-all transform w-screen " +
           (sideNavOpen
-            ? "w-[80%] sm:w-[50%] md:w-[400px] 2xl:w-[500px]"
-            : "w-0 md:w-[100px]")
+            ? "max-w-[80%] sm:max-w-[50%] md:max-w-[300px] 2xl:max-w-[400px]"
+            : "max-w-0 md:max-w-[100px]")
         }
       >
-        <article className="relative w-full pb-10 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden h-full ">
+        <article className="relative w-full pb-10 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden h-full">
           <header
             className={`absolute w-[90%] p-1 rounded-xl font-bold flex items-center justify-between left-[5%] z-10 transition-all duration-500 h-[100px] ${
               sideNavOpen ? "!top-[100px]" : "!-top-full"

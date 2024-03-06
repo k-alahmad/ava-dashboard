@@ -41,7 +41,20 @@ export const ComposeColumns = (onDelete) => {
       show: false,
       checked: true,
     },
-
+    {
+      Header: "Send Status",
+      id: "isSent",
+      accessor: (d) =>
+        d.isSent === true ? (
+          <div className="text-[green]"> {"Yes"} </div>
+        ) : (
+          <div className="text-[red]"> {"No"} </div>
+        ),
+      className: "font-bold",
+      sortable: true,
+      show: false,
+      checked: true,
+    },
     {
       Header: "Sent At",
       id: "CreatedAt",

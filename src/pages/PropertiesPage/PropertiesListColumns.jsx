@@ -11,12 +11,11 @@ export const ComposeColumns = (onDelete, onDownload) => {
         d.Property_Translation.find((x) => x.Language.Code == "En").Name,
       className: "font-bold",
       sortable: true,
-      show: false,
+      show: true,
       checked: true,
-      lockToggle: false,
+      lockToggle: true,
       hover: true,
     },
-
     {
       Header: "Handover",
       id: "Handover",

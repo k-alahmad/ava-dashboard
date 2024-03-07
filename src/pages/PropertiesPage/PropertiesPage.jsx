@@ -124,43 +124,47 @@ const PropertyPage = () => {
   }
   const handleToggleColumn = (columnId) => {
     //it's a toggle all
-    if (currentSlide == 0) {
-      if (!columnId) setColumns(toggleAllColumns(columns));
-      else setColumns(toggleColumn(columns, columnId));
-    }
-    if (currentSlide == 1) {
-      if (!columnId) setRentColumns(toggleAllColumns(rentColumns));
-      else setRentColumns(toggleColumn(columns, columnId));
-    }
-    if (currentSlide == 2) {
-      if (!columnId) setBuyColumns(toggleAllColumns(buyColumns));
-      else setBuyColumns(toggleColumn(columns, columnId));
-    }
+
+    if (!columnId) setColumns(toggleAllColumns(columns));
+    else setColumns(toggleColumn(columns, columnId));
+  };
+  const handleRentToggleColumn = (columnId) => {
+    //it's a toggle all
+
+    if (!columnId) setRentColumns(toggleAllColumns(rentColumns));
+    else setRentColumns(toggleColumn(rentColumns, columnId));
+  };
+  const handleBuyToggleColumn = (columnId) => {
+    //it's a toggle all
+
+    if (!columnId) setBuyColumns(toggleAllColumns(buyColumns));
+    else setBuyColumns(toggleColumn(buyColumns, columnId));
   };
   useEffect(() => {
     dispatch(hideMessage());
   }, []);
-  const [columnsArray, setColumnsArray] = useState(columns);
   const [propertiesData, setPropertiesData] = useState();
   useEffect(() => {
     if (currentSlide == 0) {
-      setColumnsArray(columns);
       if (isSuccess) setPropertiesData(properties.allProperties);
     }
     if (currentSlide == 1) {
-      setColumnsArray(rentColumns);
       if (isSuccess) setPropertiesData(properties.rentProperties);
     }
     if (currentSlide == 2) {
-      setColumnsArray(buyColumns);
       if (isSuccess) setPropertiesData(properties.buyProperties);
     } else {
-      setColumnsArray(columns);
       if (isSuccess) setPropertiesData(properties.allProperties);
     }
   }, [currentSlide, isSuccess]);
   const handleOnCSVExport = () => {
-    exportToCSV("Properties", columnsArray, propertiesData);
+    exportToCSV("Properties", columns, propertiesData);
+  };
+  const handleRentOnCSVExport = () => {
+    exportToCSV("Properties", rentColumns, propertiesData);
+  };
+  const handleBuyOnCSVExport = () => {
+    exportToCSV("Properties", buyColumns, propertiesData);
   };
   const puposeButtons = ["All", "Rent", "Buy"];
 
@@ -171,6 +175,7 @@ const PropertyPage = () => {
       setDisabledButtons(false);
     }, 800);
   }, [currentSlide]);
+
   return (
     <>
       <PropertyRentDrawer
@@ -193,70 +198,51 @@ const PropertyPage = () => {
       />
       <PageSimple
         content={
-          <>
-            <PageCard
-              searchText={searchText}
-              handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
-              PrimaryButtonlabel={
-                currentSlide !== 0 &&
-                profile.Role.Role_Resources.find(
-                  (x) => x.resource.Name == "Property"
-                ).Create == true && <Add fontSize="large" />
-              }
-              onClickPrimaryBtn={(ev) => {
-                if (currentSlide == 1) {
-                  setDrawerRentID("");
-                  setDrawerRentOpen(true);
-                } else if (currentSlide == 2) {
-                  setDrawerBuyID("");
-                  setDrawerBuyOpen(true);
-                }
-              }}
-              other={
-                <div className="flex justify-start items-center gap-x-8 px-12 w-full">
-                  {puposeButtons.map((item, index) => {
-                    return (
-                      <button
-                        key={index}
-                        disabled={disabledButtons}
-                        className={`w-[100px] max-w-[250px] py-1 px-2 text-center font-semibold shadow-md ${
-                          currentSlide == index
-                            ? "bg-primary text-secondary"
-                            : "bg-secondary text-white"
-                        } cursor-pointer transition-all duration-300 text-black rounded-md`}
-                        onClick={() => {
-                          sliderRef.current.slickGoTo(index);
-                          setCurrentSlide(index);
-                          setSearchText("");
-                          setDrawerRentID("");
-                          setDrawerBuyID("");
-                        }}
-                      >
-                        {item}
-                      </button>
-                    );
-                  })}
-                </div>
-              }
-              table={
-                isLoading || isFetching ? (
-                  <div className="flex flex-row justify-center items-center p-44">
-                    <CircularProgress color="primary" />
-                  </div>
-                ) : (
-                  <Slider
-                    accessibility={false}
-                    ref={sliderRef}
-                    dots={false}
-                    touchMove={false}
-                    swipe={false}
-                    arrows={false}
-                    initialSlide={currentSlide}
-                    infinite={false}
-                    className="overflow-hidden h-full w-full col-span-full"
+          <div className="relative">
+            <div className="flex justify-center items-center gap-x-3 p-4 rounded-md">
+              {puposeButtons.map((item, index) => {
+                return (
+                  <button
+                    key={index}
+                    disabled={disabledButtons}
+                    className={`w-full h-full py-1 px-2 text-center font-semibold text-med rounded-md border-2 border-secondary ${
+                      currentSlide == index ? " bg-primary text-white" : ""
+                    } cursor-pointer transition-all duration-300 text-black`}
+                    onClick={() => {
+                      sliderRef.current.slickGoTo(index);
+                      setCurrentSlide(index);
+                      setSearchText("");
+                      setDrawerRentID("");
+                      setDrawerBuyID("");
+                    }}
                   >
+                    {item}
+                  </button>
+                );
+              })}
+            </div>
+            <Slider
+              accessibility={false}
+              ref={sliderRef}
+              dots={false}
+              touchMove={false}
+              swipe={false}
+              arrows={false}
+              initialSlide={currentSlide}
+              infinite={false}
+              className="overflow-hidden h-full w-full col-span-full"
+            >
+              <PageCard
+                key={0}
+                searchText={searchText}
+                handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
+                table={
+                  isLoading || isFetching ? (
+                    <div className="flex flex-row justify-center items-center p-44">
+                      <CircularProgress color="primary" />
+                    </div>
+                  ) : (
                     <AdminTable
-                      key={0}
                       noDataMessage="There are no Properties"
                       searchText={searchText}
                       columns={columns}
@@ -274,8 +260,45 @@ const PropertyPage = () => {
                       }}
                       isShown
                     />
+                  )
+                }
+                handleCheckChange={(columnId) => handleToggleColumn(columnId)}
+                columnsOfTogglerColumns={columns
+                  .filter(
+                    (column) =>
+                      !(column.id === "action" || column.id === "monitor") &&
+                      !column.lockToggle
+                  )
+                  .map((column) => ({
+                    name: column.Header,
+                    id: column.id,
+                    checked: column.checked,
+                  }))}
+                columnsToggler
+                exportMenu={{
+                  onCSVExport: handleOnCSVExport,
+                }}
+              />
+              <PageCard
+                key={1}
+                searchText={searchText}
+                handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
+                PrimaryButtonlabel={
+                  profile.Role.Role_Resources.find(
+                    (x) => x.resource.Name == "Property"
+                  ).Create == true && <Add fontSize="large" />
+                }
+                onClickPrimaryBtn={(ev) => {
+                  setDrawerRentID("");
+                  setDrawerRentOpen(true);
+                }}
+                table={
+                  isLoading || isFetching ? (
+                    <div className="flex flex-row justify-center items-center p-44">
+                      <CircularProgress color="primary" />
+                    </div>
+                  ) : (
                     <AdminTable
-                      key={1}
                       noDataMessage="There are no Rent Properties"
                       searchText={searchText}
                       columns={rentColumns}
@@ -288,6 +311,46 @@ const PropertyPage = () => {
                       }}
                       isShown
                     />
+                  )
+                }
+                handleCheckChange={(columnId) =>
+                  handleRentToggleColumn(columnId)
+                }
+                columnsOfTogglerColumns={rentColumns
+                  .filter(
+                    (column) =>
+                      !(column.id === "action" || column.id === "monitor") &&
+                      !column.lockToggle
+                  )
+                  .map((column) => ({
+                    name: column.Header,
+                    id: column.id,
+                    checked: column.checked,
+                  }))}
+                columnsToggler
+                exportMenu={{
+                  onCSVExport: handleRentOnCSVExport,
+                }}
+              />
+              <PageCard
+                key={2}
+                searchText={searchText}
+                handleChangeTextBox={(ev) => setSearchText(ev.target.value)}
+                PrimaryButtonlabel={
+                  profile.Role.Role_Resources.find(
+                    (x) => x.resource.Name == "Property"
+                  ).Create == true && <Add fontSize="large" />
+                }
+                onClickPrimaryBtn={(ev) => {
+                  setDrawerBuyID("");
+                  setDrawerBuyOpen(true);
+                }}
+                table={
+                  isLoading || isFetching ? (
+                    <div className="flex flex-row justify-center items-center p-44">
+                      <CircularProgress color="primary" />
+                    </div>
+                  ) : (
                     <AdminTable
                       key={2}
                       noDataMessage="There are no Buy Properties"
@@ -302,27 +365,29 @@ const PropertyPage = () => {
                       }}
                       isShown
                     />
-                  </Slider>
-                )
-              }
-              handleCheckChange={(columnId) => handleToggleColumn(columnId)}
-              columnsOfTogglerColumns={columnsArray
-                .filter(
-                  (column) =>
-                    !(column.id === "action" || column.id === "monitor") &&
-                    !column.lockToggle
-                )
-                .map((column) => ({
-                  name: column.Header,
-                  id: column.id,
-                  checked: column.checked,
-                }))}
-              columnsToggler
-              exportMenu={{
-                onCSVExport: handleOnCSVExport,
-              }}
-            />
-          </>
+                  )
+                }
+                handleCheckChange={(columnId) =>
+                  handleBuyToggleColumn(columnId)
+                }
+                columnsOfTogglerColumns={buyColumns
+                  .filter(
+                    (column) =>
+                      !(column.id === "action" || column.id === "monitor") &&
+                      !column.lockToggle
+                  )
+                  .map((column) => ({
+                    name: column.Header,
+                    id: column.id,
+                    checked: column.checked,
+                  }))}
+                columnsToggler
+                exportMenu={{
+                  onCSVExport: handleBuyOnCSVExport,
+                }}
+              />
+            </Slider>
+          </div>
         }
         sidebarInner
         ref={pageLayout}

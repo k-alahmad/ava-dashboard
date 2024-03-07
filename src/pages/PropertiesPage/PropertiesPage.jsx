@@ -219,7 +219,7 @@ const PropertyPage = () => {
                       <button
                         key={index}
                         disabled={disabledButtons}
-                        className={`w-full max-w-[250px] py-1 px-2 text-center font-semibold shadow-md ${
+                        className={`w-[100px] max-w-[250px] py-1 px-2 text-center font-semibold shadow-md ${
                           currentSlide == index
                             ? "bg-primary text-secondary"
                             : "bg-secondary text-white"

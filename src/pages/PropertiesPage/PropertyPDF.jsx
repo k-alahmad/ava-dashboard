@@ -65,7 +65,6 @@ const PropertyPDFDrawer = ({
   const [edit, setEdit] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState();
   const dispatch = useDispatch();
-  const [pdfCount, setPdfCount] = useState([]);
   const [pdfPages, setPdfPages] = useState([]);
 
   const {
@@ -189,7 +188,7 @@ const PropertyPDFDrawer = ({
     setEdit(false);
     const pdf = new jsPDF("landscape", "pt", "a4");
     setPdfLoading(true);
-    for (let i = 0; i < pdfCount.length; i++) {
+    for (let i = 0; i < pdfPages.length; i++) {
       const data = await html2canvas(document.querySelector("#pdf" + (i + 1)), {
         // allowTaint: true,
         useCORS: true,
@@ -864,6 +863,99 @@ const PropertyPDFDrawer = ({
       </div>
     );
   };
+  const InstallmentsPage = ({ i, viewTitle, installments }) => {
+    return (
+      <div
+        id={"pdf" + i}
+        className={`w-full relative  bg-gray-50 pt-10`}
+        style={{
+          height: 780 * pdfScaler + "px",
+        }}
+      >
+        <div className="bg-[#141330] w-[500px] flex  justify-center items-center p-4">
+          <div>
+            <p
+              className={`text-primary text-[40px] font-bold ${
+                pdfLoading ? "-translate-y-2" : "translate-y-0"
+              }`}
+            >
+              {viewTitle ? "Installments" : "Installments Cont."}
+            </p>
+            <div className="w-[100px] h-px bg-white" />
+          </div>
+        </div>
+
+        <div
+          className="m-3 overflow-hidden"
+          style={{
+            height: 570 * pdfScaler + "px",
+          }}
+        >
+          <table className="w-full">
+            <tbody>
+              <tr className="border-black/30 border-y-[2px] text-tiny text-center ">
+                {/* <th className="p-4 border-black/30 border-y-2">Number</th> */}
+                <th className="p-2 lg:p-4 border-black/30 border-y-[2px] sticky -top-1 backdrop-blur-sm">
+                  Description
+                </th>
+                <th className="p-2 lg:p-4 border-black/30 border-y-[2px] sticky -top-1 backdrop-blur-sm">
+                  Payment %
+                </th>
+                {/* <th className="p-2 lg:p-4 border-black/30 border-y-[2px] sticky -top-1 backdrop-blur-sm">
+                  Amount
+                </th> */}
+                <th className="p-2 lg:p-4 border-black/30 border-y-[2px] sticky -top-1 backdrop-blur-sm">
+                  Date
+                </th>
+              </tr>
+              {installments?.map((item, index) => {
+                if (item)
+                  return (
+                    <tr
+                      key={index}
+                      className="border-black/30 border-y-[2px] text-tiny text-center"
+                    >
+                      {/* <td className="p-4 border-black/30  font-bold">
+                    {item.Number}
+                  </td> */}
+                      <td className={`p-4 border-black/30 border-y-[2px]`}>
+                        {
+                          item.Installments_Translation.find(
+                            (x) => x.Language.Code == "En"
+                          ).Description
+                        }
+                      </td>
+                      <td
+                        className={`p-4 border-black/30 border-y-[2px] whitespace-nowrap`}
+                      >
+                        {item.PercentageOfPayment + "%"}
+                      </td>
+                      {/* <td
+                      className={`p-4 border-black/30 border-y-[2px] whitespace-nowrap`}
+                    >
+                      {(unitPrice / 100) * item.PercentageOfPayment}
+                    </td> */}
+                      <td
+                        className={`p-4 border-black/30 border-y-[2px] whitespace-nowrap`}
+                      >
+                        {item.Date.split("T")[0]}
+                      </td>
+                    </tr>
+                  );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <PageNumber
+          key={i}
+          number={i - 1}
+          flip={i % 2 == 0}
+          bgColor="bg-[#141330]"
+          numberColor="text-white"
+        />
+      </div>
+    );
+  };
   const LastPage = ({ i }) => {
     return (
       <div
@@ -927,161 +1019,72 @@ const PropertyPDFDrawer = ({
     );
   };
   useEffect(() => {
-    let elements = [];
-    let pageLength = 9;
-    let tempPdfCount = [];
-    if (units.length > 4) {
-      pageLength = 11;
-    } else if (units.length > 2) {
-      pageLength = 10;
-    }
-    for (let i = 1; i <= pageLength; i++) {
-      if (i == 1) {
-        tempPdfCount.push(`pdf${i}`);
-        elements.push(<FirstPage i={i} />);
-      } else if (i == 2) {
-        tempPdfCount.push(`pdf${i}`);
-        elements.push(<SecondPage i={i} />);
-      } else if (i == 3) {
-        tempPdfCount.push(`pdf${i}`);
-        elements.push(<DescriptionPage i={i} />);
-      } else if (i == 4) {
-        tempPdfCount.push(`pdf${i}`);
-        elements.push(<UnitsPage i={i} unitsPage={1} viewTitle={true} />);
-      } else if (i == 5) {
-        tempPdfCount.push(`pdf${i}`);
-        if (units.length > 2) {
-          elements.push(<UnitsPage i={i} unitsPage={2} />);
-        } else {
-          elements.push(<FeaturesPage i={i} />);
-        }
-      } else if (i == 6) {
-        tempPdfCount.push(`pdf${i}`);
-        if (units.length > 4) {
-          elements.push(<UnitsPage i={i} unitsPage={3} />);
-        } else if (units.length > 2) {
-          elements.push(<FeaturesPage i={i} />);
-        } else {
-          elements.push(
-            <GalleryPage
-              i={i}
-              Images={[data?.Images[0], data?.Images[1], data?.Images[2]]}
-            />
-          );
-        }
-      } else if (i == 7) {
-        tempPdfCount.push(`pdf${i}`);
-        if (units.length > 4) {
-          elements.push(<FeaturesPage i={i} />);
-        } else if (units.length > 2) {
-          elements.push(
-            <GalleryPage
-              i={i}
-              Images={[data?.Images[0], data?.Images[1], data?.Images[2]]}
-            />
-          );
-        } else {
-          if (data?.Images.length > 3) {
-            elements.push(
-              <GalleryPage
-                i={i}
-                Images={[
-                  data?.Images[3],
-                  data?.Images[4],
-                  data?.Images[5],
-                  data?.Images[6],
-                  data?.Images[7],
-                ]}
-                Design
-              />
-            );
-          } else {
-            elements.push(<PaymentPlanPage i={i} />);
-          }
-        }
-      } else if (i == 8) {
-        tempPdfCount.push(`pdf${i}`);
-        if (units.length > 4) {
-          elements.push(
-            <GalleryPage
-              i={i}
-              Images={[data?.Images[0], data?.Images[1], data?.Images[2]]}
-            />
-          );
-        } else if (units.length > 2) {
-          if (data?.Images.length > 3) {
-            elements.push(
-              <GalleryPage
-                i={i}
-                Images={[
-                  data?.Images[3],
-                  data?.Images[4],
-                  data?.Images[5],
-                  data?.Images[6],
-                  data?.Images[7],
-                ]}
-                Design
-              />
-            );
-          } else {
-            elements.push(<PaymentPlanPage i={i} />);
-          }
-        } else {
-          if (data?.Images.length > 3) {
-            elements.push(<PaymentPlanPage i={i} />);
-          } else {
-            elements.push(<LastPage i={i} />);
-          }
-        }
-      } else if (i == 9) {
-        tempPdfCount.push(`pdf${i}`);
-        if (units.length > 4) {
-          if (data?.Images.length > 3) {
-            elements.push(
-              <GalleryPage
-                i={i}
-                Images={[
-                  data?.Images[3],
-                  data?.Images[4],
-                  data?.Images[5],
-                  data?.Images[6],
-                  data?.Images[7],
-                ]}
-                Design
-              />
-            );
-          } else {
-            elements.push(<PaymentPlanPage i={i} />);
-          }
-        } else if (units.length > 2) {
-          if (data?.Images.length > 3) {
-            elements.push(<PaymentPlanPage i={i} />);
-          } else {
-            elements.push(<LastPage i={i} />);
-          }
-        } else {
-          if (data?.Images.length > 3) {
-            elements.push(<LastPage i={i} />);
-          }
-        }
-      } else if (i == 10) {
-        tempPdfCount.push(`pdf${i}`);
-        if (units.length > 4) {
-          if (data?.Images.length > 3) {
-            elements.push(<PaymentPlanPage i={i} />);
-          } else {
-            elements.push(<LastPage i={i} />);
-          }
-        } else if (units.length > 2) {
-          if (data?.Images.length > 3) {
-            elements.push(<LastPage i={i} />);
-          }
-        } else {
-        }
+    let installmentsComponents = [];
+    let galleryComponents = [];
+    let unitsComponents = [];
+    if (units.length > 2) {
+      unitsComponents.push(<UnitsPage i={5} unitsPage={2} />);
+      if (units.length > 4) {
+        unitsComponents.push(<UnitsPage i={6} unitsPage={3} />);
       }
     }
+    if (data?.Images.length > 3) {
+      galleryComponents.push(
+        <GalleryPage
+          i={7 + unitsComponents.length}
+          Images={[
+            data?.Images[3],
+            data?.Images[4],
+            data?.Images[5],
+            data?.Images[6],
+            data?.Images[7],
+          ]}
+          Design
+        />
+      );
+    }
+    let instArray = [];
+    for (let i = 1; i <= paymentPlan?.Installments?.length; i++) {
+      console.log(instArray);
+      if (instArray.length < 8) {
+        instArray.push(paymentPlan?.Installments[i]);
+      } else if (instArray.length == 8) {
+        installmentsComponents.push(
+          <InstallmentsPage
+            i={
+              8 +
+              unitsComponents.length +
+              galleryComponents.length +
+              installmentsComponents.length
+            }
+            viewTitle={i < 10}
+            installments={instArray}
+          />
+        );
+        instArray = [];
+      }
+    }
+    let elements = [
+      <FirstPage i={1} />,
+      <SecondPage i={2} />,
+      <DescriptionPage i={3} />,
+      <UnitsPage i={4} unitsPage={1} viewTitle={true} />,
+      ...unitsComponents,
+      <FeaturesPage i={5 + unitsComponents.length} />,
+      <GalleryPage
+        i={6 + unitsComponents.length}
+        Images={[data?.Images[0], data?.Images[1], data?.Images[2]]}
+      />,
+      ...galleryComponents,
+      data?.propertyUnits[0]?.Paymentplan[0] && (
+        <PaymentPlanPage
+          i={7 + unitsComponents.length + galleryComponents.length}
+        />
+      ),
+      ...installmentsComponents,
+      <LastPage i={9 + unitsComponents.length + galleryComponents.length} />,
+    ];
     setPdfPages(elements);
-    setPdfCount(tempPdfCount);
   }, [units, drawerID, edit]);
 
   const PDF = () => {
@@ -1097,28 +1100,6 @@ const PropertyPDFDrawer = ({
         </div>
       </div>
     );
-    //       {/* <div
-    //         id="pdf10"
-    //         className={`w-full relative  bg-gray-50 pt-10`}
-    //         style={{
-    //           height: 780 * pdfScaler + "px",
-    //         }}
-    //       >
-    //         <div className="bg-[#141330] w-[500px] flex  justify-center items-center p-4">
-    //           <div>
-    //             <p className="text-primary text-[40px] font-bold">Location </p>
-    //             <div className="w-[100px] h-px bg-white" />
-    //           </div>
-    //         </div>
-
-    //         <div className="m-6"></div>
-    //         <div className="absolute bottom-5 w-[95%] right-0 h-px bg-[#141330]" />
-    //         <div className="absolute bottom-2.5 left-[5%] h-6 w-6 bg-[#141330] rounded-full text-center font-semibold">
-    //           <p className="absolute left-1/2 -translate-x-1/2 -top-2 text-white ">
-    //             10
-    //           </p>
-    //         </div>
-    //       </div> */}
   };
   return (
     <PageDrawer

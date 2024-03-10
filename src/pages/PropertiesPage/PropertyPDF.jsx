@@ -189,7 +189,6 @@ const PropertyPDFDrawer = ({
     const pdf = new jsPDF("landscape", "pt", "a4");
     setPdfLoading(true);
     for (let i = 0; i < pdfPages.length; i++) {
-      console.log(i);
       const data = await html2canvas(document.querySelector("#pdf" + (i + 1)), {
         // allowTaint: true,
         useCORS: true,

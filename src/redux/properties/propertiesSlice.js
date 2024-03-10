@@ -36,6 +36,8 @@ export const propertiesApiSlice = apiSlice.injectEndpoints({
         let rent = responseData.Properties.filter((x) => x.Purpose == "Rent");
         let buy = responseData.Properties.filter((x) => x.Purpose == "Buy");
         const loadedProperties = responseData.Properties;
+        initialBuyState.count = buy.length;
+        initialRentState.count = rent.length;
         const loadedRentProperties = rent;
         const loadedBuyProperties = buy;
 

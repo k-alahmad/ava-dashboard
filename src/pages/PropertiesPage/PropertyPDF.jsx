@@ -189,10 +189,15 @@ const PropertyPDFDrawer = ({
     const pdf = new jsPDF("landscape", "pt", "a4");
     setPdfLoading(true);
     for (let i = 0; i < pdfPages.length; i++) {
+      console.log(i);
       const data = await html2canvas(document.querySelector("#pdf" + (i + 1)), {
         // allowTaint: true,
         useCORS: true,
-      });
+      })
+        .then()
+        .catch(() => {
+          setPdfLoading(false);
+        });
       const img = data.toDataURL("image/png");
       // const imgProperties = pdf.getImageProperties(img);
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -1022,6 +1027,7 @@ const PropertyPDFDrawer = ({
     let installmentsComponents = [];
     let galleryComponents = [];
     let unitsComponents = [];
+    let paymentPlanComponent = [];
     if (units.length > 2) {
       unitsComponents.push(<UnitsPage i={5} unitsPage={2} />);
       if (units.length > 4) {
@@ -1043,19 +1049,26 @@ const PropertyPDFDrawer = ({
         />
       );
     }
+    if (data?.propertyUnits[0]?.Paymentplan[0]) {
+      paymentPlanComponent.push(
+        <PaymentPlanPage
+          i={7 + unitsComponents.length + galleryComponents.length}
+        />
+      );
+    }
     let instArray = [];
     for (let i = 1; i <= paymentPlan?.Installments?.length; i++) {
-      console.log(instArray);
       if (instArray.length < 8) {
         instArray.push(paymentPlan?.Installments[i]);
       } else if (instArray.length == 8) {
         installmentsComponents.push(
           <InstallmentsPage
             i={
-              8 +
+              7 +
               unitsComponents.length +
               galleryComponents.length +
-              installmentsComponents.length
+              installmentsComponents.length +
+              paymentPlanComponent.length
             }
             viewTitle={i < 10}
             installments={instArray}
@@ -1076,16 +1089,20 @@ const PropertyPDFDrawer = ({
         Images={[data?.Images[0], data?.Images[1], data?.Images[2]]}
       />,
       ...galleryComponents,
-      data?.propertyUnits[0]?.Paymentplan[0] && (
-        <PaymentPlanPage
-          i={7 + unitsComponents.length + galleryComponents.length}
-        />
-      ),
+      ...paymentPlanComponent,
       ...installmentsComponents,
-      <LastPage i={9 + unitsComponents.length + galleryComponents.length} />,
+      <LastPage
+        i={
+          7 +
+          unitsComponents.length +
+          galleryComponents.length +
+          installmentsComponents.length +
+          paymentPlanComponent.length
+        }
+      />,
     ];
     setPdfPages(elements);
-  }, [units, drawerID, edit]);
+  }, [units, drawerID, edit, paymentPlan, pdfLoading]);
 
   const PDF = () => {
     return (

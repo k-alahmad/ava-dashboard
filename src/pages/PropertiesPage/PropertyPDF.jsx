@@ -13,6 +13,8 @@ import {
   Done,
   Edit,
   Remove,
+  Star,
+  StarBorder,
   Undo,
 } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
@@ -64,6 +66,7 @@ const PropertyPDFDrawer = ({
   const [pdfLoading, setPdfLoading] = useState(false);
   const [edit, setEdit] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState();
+  const [mainUnit, setMainUnit] = useState(0);
   const dispatch = useDispatch();
   const [pdfPages, setPdfPages] = useState([]);
 
@@ -143,6 +146,7 @@ const PropertyPDFDrawer = ({
     setPdfLoading(false);
     setEdit(false);
     setSelectedUnit();
+    setMainUnit(0);
   };
 
   const PageNumber = ({
@@ -427,6 +431,21 @@ const PropertyPDFDrawer = ({
             if (condition)
               return (
                 <div key={index} className="relative">
+                  {edit && (
+                    <div
+                      className="absolute right-16 -top-4 bg-primary w-8 h-8 rounded-full text-white z-10 flex justify-center items-center cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setMainUnit(index);
+                      }}
+                    >
+                      {mainUnit == index ? (
+                        <Star sx={{ color: "white" }} fontSize="medium" />
+                      ) : (
+                        <StarBorder sx={{ color: "white" }} fontSize="medium" />
+                      )}
+                    </div>
+                  )}
                   {edit && (
                     <div
                       className="absolute right-6 -top-4 bg-primary w-8 h-8 rounded-full text-white z-10 flex justify-center items-center cursor-pointer"
@@ -905,9 +924,9 @@ const PropertyPDFDrawer = ({
                 <th className="p-2 lg:p-4 border-black/30 border-y-[2px] sticky -top-1 backdrop-blur-sm">
                   Payment %
                 </th>
-                {/* <th className="p-2 lg:p-4 border-black/30 border-y-[2px] sticky -top-1 backdrop-blur-sm">
+                <th className="p-2 lg:p-4 border-black/30 border-y-[2px] sticky -top-1 backdrop-blur-sm">
                   Amount
-                </th> */}
+                </th>
                 <th className="p-2 lg:p-4 border-black/30 border-y-[2px] sticky -top-1 backdrop-blur-sm">
                   Date
                 </th>
@@ -920,8 +939,8 @@ const PropertyPDFDrawer = ({
                       className="border-black/30 border-y-[2px] text-tiny text-center"
                     >
                       {/* <td className="p-4 border-black/30  font-bold">
-                    {item.Number}
-                  </td> */}
+                        {item.Number}
+                      </td> */}
                       <td className={`p-4 border-black/30 border-y-[2px]`}>
                         {
                           item.Installments_Translation.find(
@@ -934,11 +953,12 @@ const PropertyPDFDrawer = ({
                       >
                         {item.PercentageOfPayment + "%"}
                       </td>
-                      {/* <td
-                      className={`p-4 border-black/30 border-y-[2px] whitespace-nowrap`}
-                    >
-                      {(unitPrice / 100) * item.PercentageOfPayment}
-                    </td> */}
+                      <td
+                        className={`p-4 border-black/30 border-y-[2px] whitespace-nowrap`}
+                      >
+                        {(units[mainUnit].Price / 100) *
+                          item.PercentageOfPayment}
+                      </td>
                       <td
                         className={`p-4 border-black/30 border-y-[2px] whitespace-nowrap`}
                       >
@@ -1101,7 +1121,7 @@ const PropertyPDFDrawer = ({
       />,
     ];
     setPdfPages(elements);
-  }, [units, drawerID, edit, paymentPlan, pdfLoading]);
+  }, [units, drawerID, edit, paymentPlan, pdfLoading, mainUnit]);
 
   const PDF = () => {
     return (

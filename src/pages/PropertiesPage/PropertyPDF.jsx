@@ -468,6 +468,9 @@ const PropertyPDFDrawer = ({
                             tempUnits.splice(idx, 1);
                             setUnits(tempUnits);
                           }
+                          if (mainUnit == index) {
+                            setMainUnit(0);
+                          }
                         } else {
                           dispatch(
                             showMessage({
@@ -956,7 +959,7 @@ const PropertyPDFDrawer = ({
                       <td
                         className={`p-4 border-black/30 border-y-[2px] whitespace-nowrap`}
                       >
-                        {(units[mainUnit].Price / 100) *
+                        {(units[mainUnit]?.Price / 100) *
                           item.PercentageOfPayment}
                       </td>
                       <td

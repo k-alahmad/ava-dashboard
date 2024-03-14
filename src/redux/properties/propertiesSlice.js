@@ -4,6 +4,7 @@ import { apiSlice } from "../api/apiSlice";
 const propertiesAdapter = createEntityAdapter();
 const propertiesRentAdapter = createEntityAdapter();
 const propertiesBuyAdapter = createEntityAdapter();
+const propertiesActiveBuyAdapter = createEntityAdapter();
 const propertiesActiveAdapter = createEntityAdapter();
 
 const initialState = propertiesAdapter.getInitialState({
@@ -15,6 +16,10 @@ const initialRentState = propertiesRentAdapter.getInitialState({
   normalData: [],
 });
 const initialBuyState = propertiesBuyAdapter.getInitialState({
+  count: "",
+  normalData: [],
+});
+const initialActiveBuyState = propertiesActiveBuyAdapter.getInitialState({
   count: "",
   normalData: [],
 });
@@ -38,8 +43,11 @@ export const propertiesApiSlice = apiSlice.injectEndpoints({
         const loadedProperties = responseData.Properties;
         initialBuyState.count = buy.length;
         initialRentState.count = rent.length;
+        const activeBuy = buy.filter((x) => x.ActiveStatus == true);
+        initialActiveBuyState.count = activeBuy.length;
         const loadedRentProperties = rent;
         const loadedBuyProperties = buy;
+        const loadedActiveBuyProperties = activeBuy;
 
         return {
           allProperties: propertiesAdapter.setAll(
@@ -54,6 +62,10 @@ export const propertiesApiSlice = apiSlice.injectEndpoints({
             initialBuyState,
             loadedBuyProperties
           ),
+          activeBuyProperties: propertiesActiveBuyAdapter.setAll(
+            initialActiveBuyState,
+            loadedActiveBuyProperties
+          ),
         };
       },
       providesTags: (result, error, arg) => [
@@ -61,6 +73,10 @@ export const propertiesApiSlice = apiSlice.injectEndpoints({
         ...result.allProperties.ids.map((id) => ({ type: "Properties", id })),
         ...result.rentProperties.ids.map((id) => ({ type: "Properties", id })),
         ...result.buyProperties.ids.map((id) => ({ type: "Properties", id })),
+        ...result.activeBuyProperties.ids.map((id) => ({
+          type: "Properties",
+          id,
+        })),
       ],
     }),
     getActiveProperties: builder.query({

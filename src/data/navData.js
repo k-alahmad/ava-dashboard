@@ -44,6 +44,11 @@ export const data = [
         name: "Payment Plans",
         link: "/payment-plan",
       },
+      {
+        icon: property,
+        name: "Sales Offer",
+        link: "/sales-offer",
+      },
     ],
   },
   {

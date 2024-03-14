@@ -31,6 +31,7 @@ import ListingPage from "./pages/ListingsPage/ListingsPage";
 import PaymentPlanPage from "./pages/PaymentPlanPage/PaymentPlanPage";
 import { useGetProfileQuery } from "./redux/auth/authApiSlice";
 import OpenHousePage from "./pages/OpenHousePage/OpenHousePage";
+import SalesOfferPage from "./pages/SalesOfferPage/SalesOfferPage";
 const App = () => {
   const { data, isSuccess } = useGetProfileQuery();
 
@@ -318,6 +319,7 @@ const App = () => {
               }
             />
             <Route path="/open-house" element={<OpenHousePage />} />
+            <Route path="/sales-offer" element={<SalesOfferPage />} />
             <Route path="*" element={<DashboardPage />} />
           </>
         )}

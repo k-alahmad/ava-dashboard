@@ -40,7 +40,9 @@ const PageModal = ({
           // ref={ref}
         >
           {/*content*/}
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+          <div
+            className={`border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none`}
+          >
             {/*header*/}
             <header className="flex items-center justify-between p-4 border-b border-solid border-slate-200 rounded-t relative overflow-hidden bg-secondary shadow-lg">
               <div className="h-[500px] w-1/2 rounded-full bg-primary/50 blur-[120px] absolute -top-[250px] -right-[10%]" />

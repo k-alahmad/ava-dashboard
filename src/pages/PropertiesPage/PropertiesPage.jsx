@@ -191,7 +191,7 @@ const PropertyPage = () => {
         setDrawerID={setDrawerBuyID}
       />
       <PropertyPDF
-        drawerOpen={DrawerPDFID}
+        drawerOpen={DrawerPDFOpen}
         setDrawerOpen={setDrawerPDFOpen}
         drawerID={DrawerPDFID}
         setDrawerID={setDrawerPDFID}

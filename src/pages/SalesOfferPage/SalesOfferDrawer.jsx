@@ -159,9 +159,9 @@ const PropertyPDFDrawer = ({
   }) => {
     return flip ? (
       <>
-        <div className={`absolute bottom-5 w-[95%] h-px ${bgColor}`} />
+        <div className={`absolute bottom-5 w-[95%] h-px z-20 ${bgColor}`} />
         <div
-          className={`absolute bottom-2.5 right-[5%] h-6 w-6 ${bgColor} ${numberColor} rounded-full text-center font-semibold`}
+          className={`absolute bottom-2.5 right-[5%] h-6 w-6 ${bgColor} ${numberColor} rounded-full text-center font-semibold z-20`}
         >
           <p
             className={`absolute left-1/2 -translate-x-1/2 ${
@@ -174,9 +174,11 @@ const PropertyPDFDrawer = ({
       </>
     ) : (
       <>
-        <div className={`absolute bottom-5 w-[95%] right-0 h-px ${bgColor}`} />
         <div
-          className={`absolute bottom-2.5 left-[5%] h-6 w-6 ${bgColor} ${numberColor} rounded-full text-center font-semibold`}
+          className={`absolute bottom-5 w-[95%] right-0 h-px z-20 ${bgColor}`}
+        />
+        <div
+          className={`absolute bottom-2.5 left-[5%] h-6 w-6 z-20 ${bgColor} ${numberColor} rounded-full text-center font-semibold`}
         >
           <p
             className={`absolute left-1/2 -translate-x-1/2 ${
@@ -258,18 +260,29 @@ const PropertyPDFDrawer = ({
           alt="pdf1"
         />
 
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 p-12 bg-[#141330] w-[35%] text-white">
+        <div
+          className="absolute left-0 top-1/2 -translate-y-1/2 p-12 bg-[#141330] w-[35%] text-white"
+          style={{
+            padding: 3 * pdfScaler + "rem",
+          }}
+        >
           <p
-            className={`font-bold text-med ${
-              pdfLoading ? "-translate-y-3" : ""
-            }`}
+            className={`font-bold ${pdfLoading ? "-translate-y-3" : ""}`}
+            style={{
+              fontSize: 28 * pdfScaler + "px",
+            }}
           >
             {
               values?.Property_Translation?.find((x) => x.Language.Code == "En")
                 .Name
             }
           </p>
-          <p className={`text-small ${pdfLoading ? "-translate-y-3" : ""}`}>
+          <p
+            className={`${pdfLoading ? "-translate-y-3" : ""}`}
+            style={{
+              fontSize: 24 * pdfScaler + "px",
+            }}
+          >
             {
               values?.Developer?.Developer_Translation?.find(
                 (x) => x.Language.Code == "En"
@@ -278,15 +291,28 @@ const PropertyPDFDrawer = ({
             <span className="text-primary"> _____________</span>
           </p>
         </div>
-        <div className="absolute right-7 top-1/2 -translate-y-1/2 backdrop-blur-md bg-gray-300/50 rounded-2xl p-8 w-[35%]">
+        <div
+          className="absolute right-7 top-1/2 -translate-y-1/2 backdrop-blur-md bg-gray-300/50 rounded-2xl p-8 w-[35%]"
+          style={{
+            padding: 2 * pdfScaler + "rem",
+          }}
+        >
           <p
-            className={`text-med font-bold text-[#141330] ${
+            className={`font-bold text-[#141330] ${
               pdfLoading ? "-translate-y-3" : ""
             }`}
+            style={{
+              fontSize: 28 * pdfScaler + "px",
+            }}
           >
             {profile.Name}
           </p>
-          <div className="grid grid-cols-3 text-white text-tiny mt-4 gap-4">
+          <div
+            className="grid grid-cols-3 text-white  mt-4 gap-4"
+            style={{
+              fontSize: 18 * pdfScaler + "px",
+            }}
+          >
             <p className={`col-span-1 ${pdfLoading ? "-translate-y-3" : ""}`}>
               Address:
             </p>
@@ -328,8 +354,12 @@ const PropertyPDFDrawer = ({
         <div className="bg-primary absolute h-[85%] w-[5%] left-[6%] top-1/2 -translate-y-1/2" />
         <img
           src={API_BASE_URL + values?.Developer?.Image.URL}
-          className="absolute left-[12%] bottom-[7%] w-[200px] h-[150px] z-10"
+          className="absolute left-[12%] bottom-[7%]  z-10"
           alt="pdf2Logo"
+          style={{
+            width: 200 * pdfScaler + "px",
+            height: 150 * pdfScaler + "px",
+          }}
         />
         <PageNumber number={i - 1} key={i} flip={i % 2 == 0} />
       </div>
@@ -354,9 +384,12 @@ const PropertyPDFDrawer = ({
 
           <div className="col-span-5 flex flex-col justify-start items-center w-[95%] h-[90%] overflow-hidden">
             <p
-              className={`text-med font-bold text-primary ${
+              className={` font-bold text-primary ${
                 pdfLoading ? "-translate-y-3" : ""
               }`}
+              style={{
+                fontSize: 28 * pdfScaler + "px",
+              }}
             >
               Description
             </p>
@@ -411,12 +444,20 @@ const PropertyPDFDrawer = ({
         }}
       >
         {viewTitle && (
-          <div className="bg-[#141330] w-[500px] flex  justify-center items-center p-4">
+          <div
+            className="bg-[#141330] flex justify-center items-center p-4"
+            style={{
+              width: 500 * pdfScaler + "px",
+            }}
+          >
             <div>
               <p
-                className={`text-primary text-[40px] font-bold ${
+                className={`text-primary font-bold ${
                   pdfLoading ? "-translate-y-2" : "translate-y-0"
                 }`}
+                style={{
+                  fontSize: 40 * pdfScaler + "px",
+                }}
               >
                 Inventory
               </p>
@@ -490,14 +531,30 @@ const PropertyPDFDrawer = ({
                       <Delete sx={{ color: "white" }} fontSize="medium" />
                     </div>
                   )}
-                  <div className="absolute -top-[30px] -left-[30px] h-[100px] w-[100px] bg-primary p-0.5 z-0">
+                  <div
+                    className="absolute bg-primary p-0.5 z-0"
+                    style={{
+                      height: 100 * pdfScaler + "px",
+                      width: 100 * pdfScaler + "px",
+                      top: -30 * pdfScaler + "px",
+                      left: -30 * pdfScaler + "px",
+                    }}
+                  >
                     <div className="w-full h-full bg-gray-50" />
                   </div>
-                  <div className="bg-[#141330] p-4 flex flex-col justify-start items-center text-white relative min-h-[40%]">
+                  <div
+                    className="bg-[#141330] p-4 flex flex-col justify-start items-center text-white relative min-h-[40%]"
+                    style={{
+                      padding: 1 * pdfScaler + "rem",
+                    }}
+                  >
                     <p
-                      className={`text-small font-bold ${
+                      className={`font-bold ${
                         pdfLoading ? "-translate-y-2" : ""
                       }`}
+                      style={{
+                        fontSize: 24 * pdfScaler + "px",
+                      }}
                     >
                       {item?.Bedrooms > 0
                         ? item?.Bedrooms + " Bedroom"
@@ -1175,8 +1232,7 @@ const PropertyPDFDrawer = ({
               <div
                 className="flex justify-center items-center border-r-2 border-white cursor-pointer"
                 onClick={() => {
-                  // if (pdfScaler > 1)
-                  setPdfScaler(pdfScaler - 0.25);
+                  if (pdfScaler > 0.75) setPdfScaler(pdfScaler - 0.25);
                 }}
               >
                 <Remove sx={{ color: "white" }} />

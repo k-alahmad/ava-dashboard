@@ -27,6 +27,7 @@ import forms from "../assets/icons/forms.svg";
 import userInfo from "../assets/icons/user-info.svg";
 import paymentplan from "../assets/icons/paymentplan.svg";
 import invite from "../assets/icons/invite.svg";
+import salesOffer from "../assets/icons/sales-offer.svg";
 
 export const data = [
   { icon: dashboard, name: "Dashboard", link: "/" },
@@ -45,7 +46,7 @@ export const data = [
         link: "/payment-plan",
       },
       {
-        icon: property,
+        icon: salesOffer,
         name: "Sales Offer",
         link: "/sales-offer",
       },

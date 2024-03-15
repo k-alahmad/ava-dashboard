@@ -1,7 +1,18 @@
 import React, { useRef, useEffect } from "react";
 import { Close } from "@mui/icons-material";
 
-const PdfModal = ({ children, isOpen, title, onCancelClick }) => {
+const PdfModal = ({
+  children,
+  isOpen,
+  title,
+  onSaveClick,
+  onCancelClick,
+  newItem,
+  editable,
+  disabled,
+  pdf,
+  pdfLoading,
+}) => {
   return (
     <>
       <div
@@ -32,6 +43,20 @@ const PdfModal = ({ children, isOpen, title, onCancelClick }) => {
             >
               {children}
             </div>
+
+            <button
+              onClick={onSaveClick}
+              className={`cursor-pointer text-smaller absolute bottom-5 right-10 bg-primary rounded-full shadow-2xl drop-shadow-2xl px-2 py-1 border-2 border-secondary  ${
+                disabled ? "text-gray-600" : "text-secondary"
+              } ${pdfLoading && "animate-bounce font-bold"}`}
+              disabled={pdfLoading}
+            >
+              {editable
+                ? newItem
+                  ? "Save"
+                  : "Save Changes"
+                : pdf && (pdfLoading ? "GENERATING FILE" : "Download PDF")}
+            </button>
           </div>
         </div>
       </div>

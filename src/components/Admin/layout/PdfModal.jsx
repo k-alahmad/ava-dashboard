@@ -46,7 +46,7 @@ const PdfModal = ({
 
             <button
               onClick={onSaveClick}
-              className={`cursor-pointer text-smaller absolute bottom-5 right-10 bg-primary rounded-full shadow-2xl drop-shadow-2xl px-2 py-1 border-2 border-secondary  ${
+              className={`z-50 cursor-pointer text-smaller absolute bottom-5 right-10 bg-primary rounded-full shadow-2xl drop-shadow-2xl px-2 py-1 border-2 border-secondary  ${
                 disabled ? "text-gray-600" : "text-secondary"
               } ${pdfLoading && "animate-bounce font-bold"}`}
               disabled={pdfLoading}

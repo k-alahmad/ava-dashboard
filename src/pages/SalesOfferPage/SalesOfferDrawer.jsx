@@ -1196,6 +1196,7 @@ const PropertyPDFDrawer = ({
           className={`space-y-4`}
           style={{
             width: 1024 * pdfScaler + "px",
+            minWidth: 1024 * pdfScaler + "px",
           }}
         >
           {pdfPages}

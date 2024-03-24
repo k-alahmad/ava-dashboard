@@ -125,12 +125,12 @@ export const ComposeColumns = (onDelete, onDownload) => {
       sortable: false,
       Cell: ({ row }) => (
         <div className="flex items-center z-40">
-          <IconButton
+          {/* <IconButton
             className="p-4"
             onClick={(ev) => onDownload(ev, row.original)}
           >
             <Download color="action" />
-          </IconButton>
+          </IconButton> */}
           <IconButton
             className="p-4"
             onClick={(ev) => onDelete(ev, row.original)}

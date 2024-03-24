@@ -48,7 +48,6 @@ export const propertiesApiSlice = apiSlice.injectEndpoints({
         const loadedRentProperties = rent;
         const loadedBuyProperties = buy;
         const loadedActiveBuyProperties = activeBuy;
-
         return {
           allProperties: propertiesAdapter.setAll(
             initialState,

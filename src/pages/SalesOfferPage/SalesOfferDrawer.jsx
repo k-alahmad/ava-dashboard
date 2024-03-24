@@ -817,21 +817,24 @@ const PropertyPDFDrawer = ({
     return (
       <div
         id={"pdf" + i}
-        className={`w-full relative  bg-gray-50 pt-10`}
+        className={`w-full relative bg-gray-50 pt-10`}
         style={{
           height: 780 * pdfScaler + "px",
         }}
       >
-        <div className="bg-[#141330] w-[500px] flex  justify-center items-center p-4">
+        <div className="bg-[#141330] w-[80%] min-w-[500px] flex  justify-center items-center p-4">
           <div>
             <p
               className={`text-primary text-[40px] font-bold ${
                 pdfLoading ? "-translate-y-3" : "translate-y-0"
               }`}
             >
-              Payment Plan
+              {"Payment Plan For " +
+                (units[mainUnit]?.Bedrooms > 0
+                  ? units[mainUnit]?.Bedrooms + " Bedroom"
+                  : "Studio")}
             </p>
-            <div className="w-[100px] h-px bg-white" />
+            <div className="min-w-[100px] w-[50%] h-px bg-white" />
           </div>
         </div>
 
@@ -844,10 +847,13 @@ const PropertyPDFDrawer = ({
             />
             <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
               {"Down Payment: " +
-                data?.propertyUnits[0]?.Paymentplan[0]?.DownPayemnt}
+                Math.round(
+                  (data?.propertyUnits[0]?.Paymentplan[0]?.DownPayemnt / 100) *
+                    data?.propertyUnits[mainUnit]?.Price
+                )}
             </p>
           </div>
-          <div className="flex gap-x-1 justify-start items-center">
+          {/* <div className="flex gap-x-1 justify-start items-center">
             <img
               src={paymentIcon}
               className="w-[50px] h-[50px] scale-150"
@@ -858,7 +864,7 @@ const PropertyPDFDrawer = ({
                 data?.propertyUnits[0]?.Paymentplan[0]
                   ?.DuringConstructionMonths}
             </p>
-          </div>
+          </div> */}
           <div className="flex gap-x-1 justify-start items-center">
             <img
               src={paymentIcon}
@@ -908,7 +914,7 @@ const PropertyPDFDrawer = ({
                   : "NO")}
             </p>
           </div>
-          <div className="flex gap-x-1 justify-start items-center">
+          {/* <div className="flex gap-x-1 justify-start items-center">
             <img
               src={paymentIcon}
               className="w-[50px] h-[50px] scale-150"
@@ -918,7 +924,7 @@ const PropertyPDFDrawer = ({
               {"Post Handover No /M: " +
                 data?.propertyUnits[0]?.Paymentplan[0]?.NoOfPosthandoverMonths}
             </p>
-          </div>
+          </div> */}
           <div className="flex gap-x-1 justify-start items-center">
             <img
               src={paymentIcon}
@@ -930,7 +936,7 @@ const PropertyPDFDrawer = ({
                 data?.propertyUnits[0]?.Paymentplan[0]?.PosthandoverPercentage}
             </p>
           </div>
-          <div className="flex gap-x-1 justify-start items-center">
+          {/* <div className="flex gap-x-1 justify-start items-center">
             <img
               src={paymentIcon}
               className="w-[50px] h-[50px] scale-150"
@@ -940,7 +946,7 @@ const PropertyPDFDrawer = ({
               {"Total Installments: " +
                 data?.propertyUnits[0]?.Paymentplan[0]?.TotalMonths}
             </p>
-          </div>
+          </div> */}
         </div>
         <PageNumber
           key={i}

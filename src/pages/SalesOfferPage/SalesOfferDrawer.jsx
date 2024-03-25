@@ -846,7 +846,9 @@ const PropertyPDFDrawer = ({
               alt="payment1"
             />
             <p className={`${pdfLoading ? "-translate-y-3" : ""}`}>
-              {"Down Payment: " +
+              {"Down Payment " +
+                data?.propertyUnits[0]?.Paymentplan[0]?.DownPayemnt +
+                "% : " +
                 Math.round(
                   (data?.propertyUnits[0]?.Paymentplan[0]?.DownPayemnt / 100) *
                     data?.propertyUnits[mainUnit]?.Price
